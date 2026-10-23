@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="linceGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#090A0F" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="linceBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4" />
+      <stop offset="50%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#8B5CF6" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background rounded card -->
+  <rect x="10" y="10" width="180" height="180" rx="36" fill="#11141E" stroke="#1E2332" stroke-width="3" />
+  <circle cx="100" cy="100" r="70" fill="url(#linceGlow)" />
+
+  <!-- Outer Almond Lynx Eye -->
+  <path d="M30 100 C50 65, 80 45, 100 45 C120 45, 150 65, 170 100 C150 135, 120 155, 100 155 C80 155, 50 135, 30 100 Z" 
+        fill="none" stroke="url(#linceBorder)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Radar Iris Arc -->
+  <circle cx="100" cy="100" r="32" fill="#090A0F" stroke="#10B981" stroke-width="3" stroke-dasharray="6 4" />
+
+  <!-- Inner Reticle Rings -->
+  <circle cx="100" cy="100" r="18" fill="none" stroke="#06B6D4" stroke-width="2" stroke-opacity="0.6" />
+
+  <!-- Vertical Slit Pupil -->
+  <path d="M100 80 L100 120" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" />
+
+  <!-- Ear Tuft Antenna Accents (Signature Lynx Ears) -->
+  <path d="M60 50 L42 28" stroke="#06B6D4" stroke-width="4" stroke-linecap="round" />
+  <path d="M140 50 L158 28" stroke="#06B6D4" stroke-width="4" stroke-linecap="round" />
+
+  <!-- Core Pupil Glint -->
+  <circle cx="96" cy="92" r="3" fill="#06B6D4" />
+</svg>

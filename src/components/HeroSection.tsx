@@ -1,133 +1,148 @@
 "use client";
 
 import React from "react";
-import { TrendingUp, Radio, Zap, ShieldCheck, Search, ArrowRight } from "lucide-react";
+import { TrendingUp, Zap, Radio, ShieldCheck, ArrowRight } from "lucide-react";
 
 interface HeroSectionProps {
-  searchQuery: string;
-  setSearchQuery: (q: string) => void;
-  onSelectNarrativeTab: () => void;
-  onSelectDivergenceTab: () => void;
+  onScrollToSection: (sectionId: string) => void;
 }
 
-export default function HeroSection({
-  searchQuery,
-  setSearchQuery,
-  onSelectNarrativeTab,
-  onSelectDivergenceTab,
-}: HeroSectionProps) {
+export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
   return (
-    <section className="relative pt-12 pb-10 border-b border-[#1E2332] overflow-hidden">
-      {/* Background radial glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[320px] bg-gradient-to-b from-cyan-500/10 via-emerald-500/5 to-transparent blur-3xl pointer-events-none -z-10" />
-
+    <section className="relative pt-16 pb-14 border-b border-[#242421]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Top Badges */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-cyan-950/40 text-cyan-300 border border-cyan-500/30">
-            <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span>CONTINUOUS MULTI-PLATFORM INDEXING</span>
-          </span>
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-purple-950/40 text-purple-300 border border-purple-500/30">
-            <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
-            <span>VENICE AI ZERO-LOGGING INTELLIGENCE</span>
+        {/* Top Kicker (Noumen style) */}
+        <div className="flex items-center gap-2 mb-6">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
+          <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[#b5b3ac]">
+            CROSS-PLATFORM SOCIAL MINDSHARE · VISTA DE LINCE
           </span>
         </div>
 
-        {/* Hero Title */}
-        <div className="text-center max-w-3xl mx-auto mb-8">
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-[1.15]">
-            The Signal Within the Noise.
+        {/* Hero Title (Instrument Serif) */}
+        <div className="max-w-4xl mb-6">
+          <h1 className="font-serif-editorial text-5xl sm:text-7xl lg:text-8xl tracking-tight text-[#f6f4ef] leading-[1.02] font-normal">
+            The signal, within reach.
           </h1>
-          <p className="text-sm sm:text-base text-neutral-400 leading-relaxed max-w-2xl mx-auto">
-            <span className="text-neutral-200 font-semibold italic">Vista de Lince</span> for Web3 markets. 
-            Real-time mindshare velocity, social sentiment, and KOL consensus indexed across six platforms—spotting 
-            early alpha before it is already priced in.
+        </div>
+
+        {/* Hero Description & Action Buttons */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-14">
+          <p className="text-base sm:text-lg text-[#b5b3ac] leading-relaxed max-w-[52ch] font-sans">
+            Lince indexes crypto mindshare velocity, sentiment polarity, and KOL consensus across six platforms—spotting 
+            early alpha divergences before they are priced in by retail.
           </p>
-        </div>
 
-        {/* Global Search / Command Bar */}
-        <div className="max-w-2xl mx-auto mb-10">
-          <div className="relative flex items-center">
-            <Search className="w-4 h-4 text-neutral-400 absolute left-4 pointer-events-none" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search narratives, tokens (e.g. AI, SPECTRE, DePIN), or KOL calls..."
-              className="w-full pl-11 pr-24 py-3 rounded-xl bg-[#11141E] border border-[#1E2332] text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/50 transition-all font-sans"
-            />
-            <div className="absolute right-3 flex items-center gap-1.5">
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-neutral-400">
-                FILTER
-              </span>
-            </div>
+          <div className="flex flex-wrap items-center gap-3 shrink-0">
+            <button
+              onClick={() => onScrollToSection("narratives-section")}
+              className="px-5 py-2.5 rounded-md bg-[#f7f6f1] hover:bg-[#e5e2db] text-[#111110] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+            >
+              <span>Explore live signals</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => onScrollToSection("copilot-section")}
+              className="px-5 py-2.5 rounded-md bg-transparent hover:bg-[#1a1a18] border border-[#2c2c28] text-[#f6f4ef] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer"
+            >
+              Open AI Copilot
+            </button>
           </div>
         </div>
 
-        {/* 4 Telemetry Metrics Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          {/* Card 1: Leading Narrative */}
-          <div
-            onClick={onSelectNarrativeTab}
-            className="p-4 rounded-xl bg-[#11141E] border border-[#1E2332] hover:border-cyan-500/40 cursor-pointer transition-all group"
-          >
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
-              <span>TOP NARRATIVE 24H</span>
-              <TrendingUp className="w-3.5 h-3.5 text-cyan-400" />
+        {/* Horizontal Section Index Bar (Noumen signature style) */}
+        <div className="w-full border-t border-[#242421] pt-4 mb-8 overflow-x-auto">
+          <div className="flex items-center justify-between min-w-[650px] text-[11px] font-mono-tech text-[#73716a]">
+            <span className="text-[#b5b3ac] font-bold">INTELLIGENCE FRAMEWORK</span>
+            <button
+              onClick={() => onScrollToSection("narratives-section")}
+              className="hover:text-[#f6f4ef] transition-colors cursor-pointer"
+            >
+              NARRATIVES 01
+            </button>
+            <button
+              onClick={() => onScrollToSection("divergence-section")}
+              className="hover:text-[#f6f4ef] transition-colors cursor-pointer"
+            >
+              ALPHA RADAR 02
+            </button>
+            <button
+              onClick={() => onScrollToSection("kols-section")}
+              className="hover:text-[#f6f4ef] transition-colors cursor-pointer"
+            >
+              KOL CONSENSUS 03
+            </button>
+            <button
+              onClick={() => onScrollToSection("copilot-section")}
+              className="hover:text-[#f6f4ef] transition-colors cursor-pointer"
+            >
+              AI COPILOT 04
+            </button>
+            <button
+              onClick={() => onScrollToSection("mcp-section")}
+              className="hover:text-[#f6f4ef] transition-colors cursor-pointer"
+            >
+              MCP SERVER 05
+            </button>
+          </div>
+        </div>
+
+        {/* 4 Telemetry Metrics Grid (Noumen clean grid styling) */}
+        <div className="grid grid-cols-2 md:grid-cols-4 border-t border-b border-[#242421] divide-x divide-y md:divide-y-0 divide-[#242421] bg-[#111110]/50">
+          {/* Metric 1 */}
+          <div className="p-5">
+            <span className="text-[10px] font-mono-tech uppercase tracking-[0.14em] text-[#73716a] block mb-2">
+              01 / TOP NARRATIVE 24H
+            </span>
+            <div className="font-serif-editorial text-2xl sm:text-3xl text-[#f6f4ef] mb-1">
+              Autonomous AI
             </div>
-            <div className="text-lg sm:text-xl font-bold text-white mb-1 group-hover:text-cyan-300 transition-colors">
-              AI Agents
-            </div>
-            <div className="flex items-center gap-1.5 text-xs font-mono text-emerald-400">
+            <div className="text-xs font-mono-tech text-[#10b981] flex items-center gap-1">
+              <TrendingUp className="w-3.5 h-3.5" />
               <span>+18.2% mindshare</span>
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
             </div>
           </div>
 
-          {/* Card 2: Highest Alpha Divergence */}
-          <div
-            onClick={onSelectDivergenceTab}
-            className="p-4 rounded-xl bg-[#11141E] border border-[#1E2332] hover:border-emerald-500/40 cursor-pointer transition-all group"
-          >
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
-              <span>ALPHA DIVERGENCE</span>
-              <Zap className="w-3.5 h-3.5 text-emerald-400" />
+          {/* Metric 2 */}
+          <div className="p-5">
+            <span className="text-[10px] font-mono-tech uppercase tracking-[0.14em] text-[#73716a] block mb-2">
+              02 / HIGHEST DIVERGENCE
+            </span>
+            <div className="font-serif-editorial text-2xl sm:text-3xl text-[#f6f4ef] mb-1">
+              SPECTRE <span className="text-sm font-mono-tech text-[#73716a]">($18.4M)</span>
             </div>
-            <div className="text-lg sm:text-xl font-bold text-white mb-1 group-hover:text-emerald-300 transition-colors">
-              SPECTRE <span className="text-xs text-neutral-500 font-mono">(Base)</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-xs font-mono text-emerald-400">
-              <span>96/100 Signal Score</span>
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            <div className="text-xs font-mono-tech text-[#10b981] flex items-center gap-1">
+              <Zap className="w-3.5 h-3.5" />
+              <span>96/100 Early Accumulation</span>
             </div>
           </div>
 
-          {/* Card 3: Top KOL Consensus */}
-          <div className="p-4 rounded-xl bg-[#11141E] border border-[#1E2332]">
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
-              <span>KOL HIT RATE</span>
-              <Radio className="w-3.5 h-3.5 text-purple-400" />
-            </div>
-            <div className="text-lg sm:text-xl font-bold text-white mb-1">
+          {/* Metric 3 */}
+          <div className="p-5">
+            <span className="text-[10px] font-mono-tech uppercase tracking-[0.14em] text-[#73716a] block mb-2">
+              03 / ANALYST HIT RATE
+            </span>
+            <div className="font-serif-editorial text-2xl sm:text-3xl text-[#f6f4ef] mb-1">
               81% Verified
             </div>
-            <div className="text-xs font-mono text-neutral-400">
-              18 prominent analysts tracked
+            <div className="text-xs font-mono-tech text-[#b5b3ac] flex items-center gap-1">
+              <Radio className="w-3.5 h-3.5 text-[#06b6d4]" />
+              <span>18 prominent KOLs</span>
             </div>
           </div>
 
-          {/* Card 4: Model Context Protocol */}
-          <div className="p-4 rounded-xl bg-[#11141E] border border-[#1E2332]">
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-400 mb-2">
-              <span>AI COMPLIANCE</span>
-              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+          {/* Metric 4 */}
+          <div className="p-5">
+            <span className="text-[10px] font-mono-tech uppercase tracking-[0.14em] text-[#73716a] block mb-2">
+              04 / PRIVACY STANDARD
+            </span>
+            <div className="font-serif-editorial text-2xl sm:text-3xl text-[#f6f4ef] mb-1">
+              Zero Retention
             </div>
-            <div className="text-lg sm:text-xl font-bold text-white mb-1">
-              MCP Native
-            </div>
-            <div className="text-xs font-mono text-cyan-400">
-              Ready for Cursor &amp; Claude
+            <div className="text-xs font-mono-tech text-purple-400 flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Venice AI Powered</span>
             </div>
           </div>
         </div>

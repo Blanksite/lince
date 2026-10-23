@@ -3,11 +3,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { CopilotMessage } from "@/lib/types";
 import {
-  Terminal,
   Send,
   Shield,
   RotateCcw,
   Cpu,
+  Sparkles,
 } from "lucide-react";
 
 interface CopilotTerminalProps {
@@ -27,7 +27,7 @@ export default function CopilotTerminal({
       role: "assistant",
       content: `Welcome to Lince Copilot (Vista de Lince). I analyze cross-platform mindshare, KOL attention, and early divergence signals across 1,200+ crypto assets.
 
-Ask any question in plain English or click a preset below to explore current alpha.`,
+Ask any question in plain English or select a preset below to explore current alpha.`,
       timestamp: "Just now",
       modelUsed: "Lince Intelligence Engine",
       citations: ["Multi-Platform Indexer", "KOL Consensus Model"],
@@ -128,34 +128,41 @@ Ask any question in plain English or click a preset below to explore current alp
   ];
 
   return (
-    <section id="copilot-section" className="py-12 border-b border-[#1E2332]">
+    <section id="copilot-section" className="py-20 border-b border-[#242421] bg-[#0d0d0c]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Section Index Kicker */}
+        <div className="flex items-center gap-2 mb-4">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#06b6d4]" />
+          <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[#b5b3ac]">
+            [ 04 / COPILOT TERMINAL ]
+          </span>
+        </div>
+
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Terminal className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs font-mono text-cyan-400 font-semibold tracking-wider uppercase">
-                AI Intelligence Copilot
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              Ask Lince in Plain English
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+          <div className="max-w-3xl">
+            <h2 className="font-serif-editorial text-4xl sm:text-6xl text-[#f6f4ef] font-normal tracking-tight leading-[1.08] mb-3">
+              Private intelligence, without data retention.
             </h2>
-            <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-              Grounded in multi-platform social chatter, KOL mentions, and on-chain sentiment.
+            <p className="text-sm sm:text-base text-[#b5b3ac] leading-relaxed max-w-[62ch]">
+              Query cross-platform sentiment, early narrative velocity, and KOL consensus in plain English.
+              Powered by verifiable zero-logging private inference or instant deterministic analysis.
             </p>
           </div>
 
-          {/* Venice AI Integration Notice */}
-          <div className="flex items-center gap-3">
+          {/* Venice AI Integration Notice & Controls */}
+          <div className="flex items-center gap-2.5 shrink-0">
             <button
               onClick={onOpenVeniceModal}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-purple-950/20 border border-purple-500/30 hover:bg-purple-900/30 text-xs font-mono text-purple-300 transition-colors"
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-mono-tech transition-colors cursor-pointer ${
+                customApiKey
+                  ? "bg-[#1f172e] border-purple-500/40 text-purple-200"
+                  : "bg-[#141413] hover:bg-[#1a1a18] border-[#2c2c28] text-[#b5b3ac] hover:text-[#f6f4ef]"
+              }`}
             >
               <Shield className="w-3.5 h-3.5 text-purple-400" />
               <span>
-                {customApiKey ? "Venice AI: Custom Key Active" : "Powered by Venice AI"}
+                {customApiKey ? "Venice: Custom Key Active" : "Venice AI: Private Inference"}
               </span>
             </button>
 
@@ -171,32 +178,32 @@ Ask any question in plain English or click a preset below to explore current alp
                   },
                 ])
               }
-              className="p-2 rounded-xl bg-[#11141E] border border-[#1E2332] text-neutral-400 hover:text-white transition-colors"
-              title="Reset Chat"
+              className="p-1.5 rounded-md bg-[#141413] hover:bg-[#1a1a18] border border-[#2c2c28] text-[#b5b3ac] hover:text-[#f6f4ef] transition-colors cursor-pointer"
+              title="Reset Chat Session"
             >
               <RotateCcw className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        {/* Terminal Container */}
-        <div className="rounded-2xl border border-[#1E2332] bg-[#0E111A] overflow-hidden shadow-2xl flex flex-col h-[520px]">
+        {/* Terminal Window Container */}
+        <div className="rounded-xl border border-[#242421] bg-[#121211] overflow-hidden shadow-2xl flex flex-col h-[560px]">
           {/* Terminal Titlebar */}
-          <div className="px-4 py-2.5 bg-[#141824] border-b border-[#1E2332] flex items-center justify-between text-xs font-mono text-neutral-400">
-            <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-              <span className="ml-2 font-semibold text-white">lince-copilot-v1.0.sh</span>
+          <div className="px-4 py-3 bg-[#161614] border-b border-[#242421] flex items-center justify-between text-xs font-mono-tech text-[#b5b3ac]">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#383733]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#383733]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[#383733]" />
+              <span className="ml-2 font-medium text-[#f6f4ef]">lince-copilot-v1.0.sh</span>
             </div>
             <div className="flex items-center gap-2 text-[11px]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>STREAMING READY</span>
+              <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
+              <span className="text-[#10b981] tracking-wider uppercase font-semibold">STREAMING READY</span>
             </div>
           </div>
 
           {/* Messages Scroll Area */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 font-mono text-xs">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 text-xs sm:text-sm">
             {messages.map((m) => (
               <div
                 key={m.id}
@@ -206,40 +213,40 @@ Ask any question in plain English or click a preset below to explore current alp
               >
                 {/* Message Bubble */}
                 <div
-                  className={`max-w-2xl rounded-2xl p-4 leading-relaxed ${
+                  className={`max-w-2xl rounded-lg p-4 leading-relaxed transition-all ${
                     m.role === "user"
-                      ? "bg-cyan-500/10 border border-cyan-500/30 text-cyan-200"
-                      : "bg-[#141824] border border-[#1E2332] text-neutral-200"
+                      ? "bg-[#1c1b18] border border-[#383733] text-[#f6f4ef]"
+                      : "bg-[#141413] border border-[#242421] text-[#b5b3ac]"
                   }`}
                 >
                   {/* Assistant Header info */}
                   {m.role === "assistant" && (
-                    <div className="flex items-center justify-between gap-2 pb-2 mb-2 border-b border-[#1E2332] text-[10px] text-neutral-400">
-                      <span className="flex items-center gap-1.5 text-cyan-400 font-bold">
-                        <Cpu className="w-3 h-3" />
+                    <div className="flex items-center justify-between gap-3 pb-2.5 mb-2.5 border-b border-[#242421] text-[11px] font-mono-tech text-[#73716a]">
+                      <span className="flex items-center gap-1.5 text-[#06b6d4] font-medium">
+                        <Cpu className="w-3.5 h-3.5" />
                         {m.modelUsed || "Lince Intelligence Engine"}
                       </span>
                       {m.sentimentGauge !== undefined && (
-                        <span className="text-emerald-400 font-bold">
+                        <span className="text-[#10b981] font-semibold">
                           SENTIMENT: {(m.sentimentGauge * 100).toFixed(0)}% BULLISH
                         </span>
                       )}
                     </div>
                   )}
 
-                  {/* Message Content (Pre-wrap format) */}
-                  <div className="whitespace-pre-wrap font-sans text-xs sm:text-sm">
+                  {/* Message Content */}
+                  <div className="whitespace-pre-wrap font-sans text-xs sm:text-sm text-[#f6f4ef] leading-relaxed">
                     {m.content}
                   </div>
 
                   {/* Mentioned Tokens Badges */}
                   {m.tokensMentioned && m.tokensMentioned.length > 0 && (
-                    <div className="mt-3 pt-2 border-t border-[#1E2332] flex flex-wrap items-center gap-1.5 text-[10px]">
-                      <span className="text-neutral-500 font-mono">TOKENS DETECTED:</span>
+                    <div className="mt-3.5 pt-2.5 border-t border-[#242421] flex flex-wrap items-center gap-1.5 text-[11px]">
+                      <span className="text-[#73716a] font-mono-tech">DETECTED:</span>
                       {m.tokensMentioned.map((tok) => (
                         <span
                           key={tok}
-                          className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-cyan-300 font-bold font-mono"
+                          className="px-2 py-0.5 rounded bg-[#1c1c1a] border border-[#2c2c28] text-[#06b6d4] font-semibold font-mono-tech"
                         >
                           ${tok}
                         </span>
@@ -249,12 +256,12 @@ Ask any question in plain English or click a preset below to explore current alp
 
                   {/* Citations Footer */}
                   {m.citations && m.citations.length > 0 && (
-                    <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px] text-neutral-500">
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[10px] font-mono-tech text-[#73716a]">
                       <span>SOURCES:</span>
                       {m.citations.map((c) => (
                         <span
                           key={c}
-                          className="px-1.5 py-0.2 rounded bg-[#090A0F] text-neutral-400 border border-[#1E2332]"
+                          className="px-1.5 py-0.5 rounded bg-[#10100f] text-[#b5b3ac] border border-[#242421]"
                         >
                           {c}
                         </span>
@@ -266,24 +273,24 @@ Ask any question in plain English or click a preset below to explore current alp
             ))}
 
             {isLoading && (
-              <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                <span>Reading social signals and synthesizing alpha...</span>
+              <div className="flex items-center gap-2.5 text-[#06b6d4] font-mono-tech text-xs">
+                <span className="w-2 h-2 rounded-full bg-[#06b6d4] animate-ping" />
+                <span>Reading cross-platform signals and synthesizing alpha...</span>
               </div>
             )}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Quick Presets Bar */}
-          <div className="px-4 py-2 bg-[#121622] border-t border-[#1E2332] overflow-x-auto flex items-center gap-2">
-            <span className="text-[10px] font-mono text-neutral-500 shrink-0">
-              ALPHA PRESETS:
+          <div className="px-4 py-2.5 bg-[#141413] border-t border-[#242421] overflow-x-auto flex items-center gap-2">
+            <span className="text-[10px] font-mono-tech text-[#73716a] shrink-0 uppercase tracking-wider flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-[#f59e0b]" /> PRESETS:
             </span>
             {PRESETS.map((p) => (
               <button
                 key={p}
                 onClick={() => handleSend(p)}
-                className="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] font-mono text-neutral-300 hover:text-white shrink-0 transition-colors"
+                className="px-3 py-1 rounded-md bg-[#1a1a18] hover:bg-[#222220] border border-[#2c2c28] hover:border-[#403f3a] text-xs font-mono-tech text-[#b5b3ac] hover:text-[#f6f4ef] shrink-0 transition-colors cursor-pointer"
               >
                 {p}
               </button>
@@ -296,22 +303,23 @@ Ask any question in plain English or click a preset below to explore current alp
               e.preventDefault();
               handleSend();
             }}
-            className="p-3 bg-[#141824] border-t border-[#1E2332] flex items-center gap-2"
+            className="p-3 bg-[#161614] border-t border-[#242421] flex items-center gap-2.5"
           >
             <input
               type="text"
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
               placeholder="Ask anything (e.g. 'Which Base ecosystem tokens have highest social spike?')..."
-              className="flex-1 px-4 py-2.5 rounded-xl bg-[#090A0F] border border-[#1E2332] text-xs sm:text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-500/50 font-sans"
+              className="flex-1 px-4 py-2.5 rounded-md bg-[#0d0d0c] border border-[#242421] text-xs sm:text-sm text-[#f6f4ef] placeholder-[#73716a] focus:outline-none focus:border-[#403f3a] font-sans"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading || !inputQuery.trim()}
-              className="p-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 text-black font-bold transition-all shadow-md shadow-cyan-500/20 active:scale-95"
+              className="px-4 py-2.5 rounded-md bg-[#f7f6f1] hover:bg-[#e5e2db] disabled:opacity-40 text-[#111110] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Send</span>
             </button>
           </form>
         </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import LynxLogo from "./LynxLogo";
+import Image from "next/image";
 import { Terminal, Cpu, Shield } from "lucide-react";
 
 interface HeaderProps {
@@ -22,8 +22,15 @@ export default function Header({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Left: Brand Identity */}
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#11141E] border border-[#1E2332] shadow-inner">
-            <LynxLogo size={22} />
+          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#11141E] border border-[#1E2332] overflow-hidden shadow-inner shrink-0">
+            <Image
+              src="/logo.jpg"
+              alt="Lince Lynx Logo"
+              width={40}
+              height={40}
+              className="w-full h-full object-cover"
+              priority
+            />
           </div>
           <div>
             <div className="flex items-center gap-2">

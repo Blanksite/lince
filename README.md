@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/logo.svg" alt="Lince Lynx Eye Logo" width="140" />
+  <img src="./public/logo.jpg" alt="Lince Lynx Logo" width="160" style="border-radius: 24px;" />
 </p>
 
 <h1 align="center">Lince</h1>

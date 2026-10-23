@@ -7,7 +7,7 @@ import LiveExplorer from "@/components/LiveExplorer";
 import CopilotTerminal from "@/components/CopilotTerminal";
 import McpModal from "@/components/McpModal";
 import VeniceKeyModal from "@/components/VeniceKeyModal";
-import LynxLogo from "@/components/LynxLogo";
+import Image from "next/image";
 import {
   NARRATIVES_DATA,
   ALPHA_DIVERGENCE_DATA,
@@ -149,8 +149,14 @@ export default function LinceHome() {
       <footer className="border-t border-[#1E2332] bg-[#07080D] py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#11141E] border border-[#1E2332]">
-              <LynxLogo size={18} />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#11141E] border border-[#1E2332] overflow-hidden shrink-0">
+              <Image
+                src="/logo.jpg"
+                alt="Lince Lynx Logo"
+                width={32}
+                height={32}
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <span className="font-extrabold text-sm text-white tracking-tight">LINCE</span>

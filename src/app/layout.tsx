@@ -17,7 +17,8 @@ export const metadata: Metadata = {
   description:
     "The sharpest eyes on crypto mindshare, narrative velocity, and KOL consensus. Real-time alpha divergence, multi-platform social tracking, and native Model Context Protocol (MCP) server.",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/logo.jpg",
+    apple: "/logo.jpg",
   },
 };
 

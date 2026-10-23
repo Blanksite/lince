@@ -103,7 +103,8 @@ lince/
 │       ├── types.ts                    # TypeScript interfaces for Narratives, Divergences, KOLs, and MCP
 │       └── data.ts                     # Real-time multi-platform data engine & seeded social metrics
 ├── public/
-│   └── logo.svg                        # Official high-resolution Lince brand vector
+│   ├── logo.jpg                        # Official Lince brand emblem (Obsidian Glassmorphic Lynx)
+│   └── logo.png                        # Web3 brand icon asset
 ├── next.config.ts                      # Next.js 16 Turbopack configuration
 ├── tsconfig.json                       # Strict TypeScript configuration
 └── package.json                        # Dependencies (Next.js 16, React 19, Lucide, Tailwind v4)

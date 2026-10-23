@@ -197,4 +197,4 @@ npm run build
 
 ## License
 
-MIT License. Open source personal portfolio project.
+MIT License. Open-source crypto intelligence infrastructure.

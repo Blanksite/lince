@@ -184,7 +184,7 @@ export default function LinceHome() {
           </div>
 
           <p className="text-[11px] font-mono text-neutral-600">
-            &copy; 2026 Lince. Open Source Portfolio Project.
+            &copy; 2026 Lince Labs. All rights reserved.
           </p>
         </div>
       </footer>

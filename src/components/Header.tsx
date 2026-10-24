@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Terminal, Cpu, Shield } from "lucide-react";
 
 interface HeaderProps {
@@ -62,12 +63,12 @@ export default function Header({
           >
             03 / KOL CONSENSUS
           </button>
-          <button
-            onClick={() => onScrollToSection("copilot-section")}
-            className="hover:text-[#f6f4ef] transition-colors cursor-pointer"
+          <Link
+            href="/terminal"
+            className="hover:text-[#f6f4ef] transition-colors cursor-pointer text-[#06b6d4] font-semibold"
           >
-            04 / COPILOT
-          </button>
+            04 / TERMINAL APP
+          </Link>
           <button
             onClick={() => onScrollToSection("mcp-section")}
             className="hover:text-[#f6f4ef] transition-colors cursor-pointer"
@@ -105,13 +106,13 @@ export default function Header({
           </button>
 
           {/* Launch Terminal CTA (Solid Ivory Button Noumen Style) */}
-          <button
-            onClick={() => onScrollToSection("copilot-section")}
+          <Link
+            href="/terminal"
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-[#f7f6f1] hover:bg-[#e5e2db] text-[#111110] font-semibold text-xs font-sans transition-all active:scale-95 cursor-pointer"
           >
             <Terminal className="w-3.5 h-3.5" />
             <span>Open Terminal</span>
-          </button>
+          </Link>
         </div>
       </div>
     </header>

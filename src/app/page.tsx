@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
 import LiveExplorer from "@/components/LiveExplorer";
@@ -415,13 +416,13 @@ export default function LinceHome() {
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <button
-                onClick={() => scrollToSection("copilot-section")}
+              <Link
+                href="/terminal"
                 className="px-6 py-3 rounded-md bg-[#f7f6f1] hover:bg-[#e5e2db] text-[#111110] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer flex items-center gap-2"
               >
                 <Terminal className="w-4 h-4" />
-                <span>Launch Copilot Terminal</span>
-              </button>
+                <span>Launch Full Terminal App</span>
+              </Link>
 
               <button
                 onClick={() => setIsMcpModalOpen(true)}
@@ -464,12 +465,12 @@ export default function LinceHome() {
             >
               01 / NARRATIVES
             </button>
-            <button
-              onClick={() => scrollToSection("copilot-section")}
-              className="hover:text-[#f6f4ef] transition-colors cursor-pointer"
+            <Link
+              href="/terminal"
+              className="hover:text-[#f6f4ef] transition-colors cursor-pointer text-[#06b6d4] font-semibold"
             >
-              04 / COPILOT
-            </button>
+              04 / TERMINAL APP
+            </Link>
             <button
               onClick={() => setIsMcpModalOpen(true)}
               className="hover:text-[#f6f4ef] transition-colors cursor-pointer"

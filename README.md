@@ -83,7 +83,9 @@ flowchart LR
 lince/
 ├── src/
 │   ├── app/
-│   │   ├── page.tsx                    # Master Terminal: Hero, Live Explorer, Copilot & Showcase
+│   │   ├── page.tsx                    # Master Overview: Hero, Live Explorer, Showcase, FAQ
+│   │   ├── terminal/
+│   │   │   └── page.tsx                # Dedicated Full-Screen Terminal App (Multi-Session Workspace & Telemetry)
 │   │   ├── layout.tsx                  # Root layout with Geist font & Precision Carbon theme
 │   │   ├── globals.css                 # Tailwind CSS v4 styling & dark mode palette
 │   │   └── api/

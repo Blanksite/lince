@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { CopilotMessage } from "@/lib/types";
 import {
   Send,
@@ -8,6 +9,8 @@ import {
   RotateCcw,
   Cpu,
   Sparkles,
+  Terminal,
+  ArrowRight,
 } from "lucide-react";
 
 interface CopilotTerminalProps {
@@ -151,7 +154,16 @@ Ask any question in plain English or select a preset below to explore current al
           </div>
 
           {/* Venice AI Integration Notice & Controls */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+            <Link
+              href="/terminal"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#f7f6f1] hover:bg-[#e5e2db] text-[#111110] font-semibold text-xs font-sans transition-all active:scale-95 cursor-pointer"
+            >
+              <Terminal className="w-3.5 h-3.5" />
+              <span>Full Terminal App</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+
             <button
               onClick={onOpenVeniceModal}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-mono-tech transition-colors cursor-pointer ${
@@ -162,7 +174,7 @@ Ask any question in plain English or select a preset below to explore current al
             >
               <Shield className="w-3.5 h-3.5 text-purple-400" />
               <span>
-                {customApiKey ? "Venice: Custom Key Active" : "Venice AI: Private Inference"}
+                {customApiKey ? "Venice: Active" : "Venice AI"}
               </span>
             </button>
 

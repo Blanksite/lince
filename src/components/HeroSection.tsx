@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { TrendingUp, Zap, Radio, ShieldCheck, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { TrendingUp, Zap, Radio, ShieldCheck, ArrowRight, Terminal } from "lucide-react";
 
 interface HeroSectionProps {
   onScrollToSection: (sectionId: string) => void;
@@ -42,12 +43,13 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
               <ArrowRight className="w-4 h-4" />
             </button>
 
-            <button
-              onClick={() => onScrollToSection("copilot-section")}
-              className="px-5 py-2.5 rounded-md bg-transparent hover:bg-[#1a1a18] border border-[#2c2c28] text-[#f6f4ef] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer"
+            <Link
+              href="/terminal"
+              className="px-5 py-2.5 rounded-md bg-transparent hover:bg-[#1a1a18] border border-[#2c2c28] text-[#f6f4ef] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer flex items-center gap-2"
             >
-              Open AI Copilot
-            </button>
+              <Terminal className="w-4 h-4 text-[#06b6d4]" />
+              <span>Launch Terminal App</span>
+            </Link>
           </div>
         </div>
 

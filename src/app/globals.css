@@ -2,6 +2,33 @@
 @import "tailwindcss";
 
 :root {
+  /* LIGHT MODE (DEFAULT) - Swiss Editorial Warm Parchment / Alabaster */
+  --nm-bg: #f7f6f1;
+  --nm-bg-deep: #eeeae0;
+  --nm-surface: #ffffff;
+  --nm-surface-hover: #f4efe6;
+  --nm-surface-active: #eae4d7;
+  --nm-line: #e3ded5;
+  --nm-line-strong: #c7c1b5;
+  --nm-text: #141413;
+  --nm-text-muted: #5c5a53;
+  --nm-text-subtle: #87847a;
+  --nm-action: #141413;
+  --nm-action-hover: #262624;
+  --nm-action-text: #f7f6f1;
+  --nm-code-bg: #f0ebe2;
+  --nm-code-border: #e0dad0;
+  --nm-badge-bg: #ece7de;
+  --nm-card-bg: #ffffff;
+  --nm-accent-emerald: #059669;
+  --nm-accent-cyan: #0891b2;
+  --nm-accent-amber: #d97706;
+  --nm-accent-purple: #7c3aed;
+}
+
+[data-theme="dark"],
+.dark {
+  /* DARK MODE - Obsidian Luxury AI */
   --nm-bg: #0d0d0c;
   --nm-bg-deep: #080808;
   --nm-surface: #121211;
@@ -14,9 +41,15 @@
   --nm-text-subtle: #73716a;
   --nm-action: #f7f6f1;
   --nm-action-hover: #e5e2db;
+  --nm-action-text: #111110;
+  --nm-code-bg: #0d0d0c;
+  --nm-code-border: #242421;
+  --nm-badge-bg: #1c1c1a;
+  --nm-card-bg: #121211;
   --nm-accent-emerald: #10b981;
   --nm-accent-cyan: #06b6d4;
   --nm-accent-amber: #f59e0b;
+  --nm-accent-purple: #a855f7;
 }
 
 body {
@@ -24,6 +57,7 @@ body {
   color: var(--nm-text);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .font-serif-editorial {

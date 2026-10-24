@@ -37,68 +37,68 @@ export default function VeniceKeyModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <div className="relative w-full max-w-lg bg-[#121211] border border-[#242421] rounded-xl p-6 sm:p-8 shadow-2xl text-[#f6f4ef] font-sans">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md">
+      <div className="relative w-full max-w-lg bg-[var(--nm-surface)] border border-[var(--nm-line)] rounded-xl p-6 sm:p-8 shadow-2xl text-[var(--nm-text)] font-sans">
         {/* Header */}
-        <div className="flex items-start justify-between pb-5 mb-5 border-b border-[#242421]">
+        <div className="flex items-start justify-between pb-5 mb-5 border-b border-[var(--nm-line)]">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <VeniceLogo className="w-3.5 h-3.5 text-purple-400" />
-              <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[#b5b3ac]">
+              <VeniceLogo className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+              <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[var(--nm-muted)]">
                 [ VENICE AI · ZERO-LOGGING INFERENCE ]
               </span>
             </div>
             <div className="flex items-center gap-2.5">
               <div className="p-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30">
-                <VeniceLogo className="w-5 h-5 text-purple-400" />
+                <VeniceLogo className="w-5 h-5 text-purple-600 dark:text-purple-400" />
               </div>
-              <h3 className="font-serif-editorial text-2xl sm:text-3xl text-[#f6f4ef] font-normal tracking-tight">
+              <h3 className="font-serif-editorial text-2xl sm:text-3xl text-[var(--nm-text)] font-normal tracking-tight">
                 Venice AI Configuration
               </h3>
             </div>
-            <p className="text-xs sm:text-sm text-[#b5b3ac] mt-1.5 font-sans">
+            <p className="text-xs sm:text-sm text-[var(--nm-muted)] mt-1.5 font-sans">
               Private, uncensored decentralized intelligence via Llama 3.3 70B &amp; DeepSeek R1.
             </p>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-md hover:bg-[#1a1a18] text-[#73716a] hover:text-[#f6f4ef] transition-colors cursor-pointer"
+            className="p-1.5 rounded-md hover:bg-[var(--nm-surface-hover)] text-[var(--nm-dim)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Informational Banner */}
-        <div className="p-4 rounded-md bg-[#181520] border border-purple-500/25 text-xs text-purple-200/90 leading-relaxed mb-5">
+        <div className="p-4 rounded-md bg-purple-50 dark:bg-[#181520] border border-purple-300 dark:border-purple-500/25 text-xs text-purple-900 dark:text-purple-200/90 leading-relaxed mb-5">
           <p className="mb-2">
-            <strong className="text-purple-100 font-semibold">Zero Data Retention:</strong> Unlike traditional AI vendors that store user prompts and censor crypto inquiries, Venice AI guarantees verifiable private inference without logs.
+            <strong className="text-purple-950 dark:text-purple-100 font-semibold">Zero Data Retention:</strong> Unlike traditional AI vendors that store user prompts and censor crypto inquiries, Venice AI guarantees verifiable private inference without logs.
           </p>
-          <p className="text-[11px] text-[#b5b3ac] font-mono-tech">
+          <p className="text-[11px] text-[var(--nm-muted)] font-mono-tech">
             *Note: If no custom key is configured, Lince automatically uses its built-in free deterministic intelligence engine at Rp 0 cost.
           </p>
         </div>
 
         {/* Input Form */}
         <div className="mb-6 space-y-2">
-          <label className="text-xs font-mono-tech text-[#b5b3ac] block font-medium flex items-center justify-between">
+          <label className="text-xs font-mono-tech text-[var(--nm-muted)] block font-medium flex items-center justify-between">
             <span>VENICE API KEY (OPTIONAL):</span>
             <a
               href="https://venice.ai/settings/api"
               target="_blank"
               rel="noreferrer"
-              className="text-[#f6f4ef] hover:underline inline-flex items-center gap-1 font-sans text-[11px]"
+              className="text-[var(--nm-text)] hover:underline inline-flex items-center gap-1 font-sans text-[11px]"
             >
-              Get Venice Key <ExternalLink className="w-3 h-3 text-[#73716a]" />
+              Get Venice Key <ExternalLink className="w-3 h-3 text-[var(--nm-dim)]" />
             </a>
           </label>
           <div className="relative flex items-center">
-            <Key className="w-4 h-4 text-[#73716a] absolute left-3.5 pointer-events-none" />
+            <Key className="w-4 h-4 text-[var(--nm-dim)] absolute left-3.5 pointer-events-none" />
             <input
               type="password"
               value={keyInput}
               onChange={(e) => setKeyInput(e.target.value)}
               placeholder="Paste your Venice API key (e.g. vnc_live_...)"
-              className="w-full pl-10 pr-4 py-2.5 rounded-md bg-[#0d0d0c] border border-[#242421] text-xs font-mono-tech text-[#f6f4ef] placeholder-[#73716a] focus:outline-none focus:border-[#403f3a]"
+              className="w-full pl-10 pr-4 py-2.5 rounded-md bg-[var(--nm-bg)] border border-[var(--nm-line)] text-xs font-mono-tech text-[var(--nm-text)] placeholder-[var(--nm-dim)] focus:outline-none focus:border-[var(--nm-accent-cyan)]"
             />
           </div>
         </div>
@@ -107,24 +107,24 @@ export default function VeniceKeyModal({
         <div className="flex items-center justify-between pt-2">
           <button
             onClick={handleClear}
-            className="text-xs font-mono-tech text-[#73716a] hover:text-[#f6f4ef] underline cursor-pointer"
+            className="text-xs font-mono-tech text-[var(--nm-dim)] hover:text-[var(--nm-text)] underline cursor-pointer"
           >
             Clear key
           </button>
           <div className="flex items-center gap-2.5">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-md bg-[#141413] hover:bg-[#1a1a18] border border-[#242421] text-xs font-mono-tech text-[#b5b3ac] hover:text-[#f6f4ef] transition-colors cursor-pointer"
+              className="px-4 py-2 rounded-md bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-xs font-mono-tech text-[var(--nm-muted)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              className="px-4 py-2 rounded-md bg-[#f7f6f1] hover:bg-[#e5e2db] text-[#111110] font-semibold text-xs font-sans transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 rounded-md bg-[var(--nm-btn-bg)] hover:bg-[var(--nm-btn-hover)] text-[var(--nm-btn-text)] font-semibold text-xs font-sans transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
             >
               {savedSuccess ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-[#10b981]" />
+                  <Check className="w-3.5 h-3.5 text-[var(--nm-accent-green)]" />
                   <span>Saved</span>
                 </>
               ) : (

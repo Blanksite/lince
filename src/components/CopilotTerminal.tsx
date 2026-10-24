@@ -5,7 +5,6 @@ import Link from "next/link";
 import { CopilotMessage } from "@/lib/types";
 import {
   Send,
-  Shield,
   RotateCcw,
   Cpu,
   Sparkles,
@@ -13,6 +12,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import VeniceLogo from "@/components/VeniceLogo";
+import LiveClock from "@/components/LiveClock";
 
 interface CopilotTerminalProps {
   customApiKey: string;
@@ -132,12 +132,12 @@ Ask any question in plain English or select a preset below to explore current al
   ];
 
   return (
-    <section id="copilot-section" className="py-20 border-b border-[#242421] bg-[#0d0d0c]">
+    <section id="copilot-section" className="py-20 border-b border-[var(--nm-line)] bg-[var(--nm-bg)] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Section Index Kicker */}
         <div className="flex items-center gap-2 mb-4">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#06b6d4]" />
-          <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[#b5b3ac]">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-cyan)]" />
+          <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[var(--nm-text-muted)]">
             [ 04 / COPILOT TERMINAL ]
           </span>
         </div>
@@ -145,10 +145,10 @@ Ask any question in plain English or select a preset below to explore current al
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
           <div className="max-w-3xl">
-            <h2 className="font-serif-editorial text-4xl sm:text-6xl text-[#f6f4ef] font-normal tracking-tight leading-[1.08] mb-3">
+            <h2 className="font-serif-editorial text-4xl sm:text-6xl text-[var(--nm-text)] font-normal tracking-tight leading-[1.08] mb-3">
               Private intelligence, without data retention.
             </h2>
-            <p className="text-sm sm:text-base text-[#b5b3ac] leading-relaxed max-w-[62ch]">
+            <p className="text-sm sm:text-base text-[var(--nm-text-muted)] leading-relaxed max-w-[62ch]">
               Query cross-platform sentiment, early narrative velocity, and KOL consensus in plain English.
               Powered by verifiable zero-logging private inference or instant deterministic analysis.
             </p>
@@ -158,7 +158,7 @@ Ask any question in plain English or select a preset below to explore current al
           <div className="flex flex-wrap items-center gap-2.5 shrink-0">
             <Link
               href="/terminal"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[#f7f6f1] hover:bg-[#e5e2db] text-[#111110] font-semibold text-xs font-sans transition-all active:scale-95 cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] text-[var(--nm-action-text)] font-semibold text-xs font-sans transition-all active:scale-95 cursor-pointer shadow-sm"
             >
               <Terminal className="w-3.5 h-3.5" />
               <span>Full Terminal App</span>
@@ -169,11 +169,11 @@ Ask any question in plain English or select a preset below to explore current al
               onClick={onOpenVeniceModal}
               className={`flex items-center gap-2 px-3 py-1.5 rounded-md border text-xs font-mono-tech transition-colors cursor-pointer ${
                 customApiKey
-                  ? "bg-[#1f172e] border-purple-500/40 text-purple-200"
-                  : "bg-[#141413] hover:bg-[#1a1a18] border-[#2c2c28] text-[#b5b3ac] hover:text-[#f6f4ef]"
+                  ? "bg-purple-950/20 border-purple-500/40 text-purple-400 font-semibold"
+                  : "bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border-[var(--nm-line)] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)]"
               }`}
             >
-              <VeniceLogo className="w-3.5 h-3.5 text-purple-400" />
+              <VeniceLogo className="w-3.5 h-3.5 text-purple-500" />
               <span>
                 {customApiKey ? "Venice: Active" : "Venice AI"}
               </span>
@@ -191,7 +191,7 @@ Ask any question in plain English or select a preset below to explore current al
                   },
                 ])
               }
-              className="p-1.5 rounded-md bg-[#141413] hover:bg-[#1a1a18] border border-[#2c2c28] text-[#b5b3ac] hover:text-[#f6f4ef] transition-colors cursor-pointer"
+              className="p-1.5 rounded-md bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
               title="Reset Chat Session"
             >
               <RotateCcw className="w-4 h-4" />
@@ -200,18 +200,21 @@ Ask any question in plain English or select a preset below to explore current al
         </div>
 
         {/* Terminal Window Container */}
-        <div className="rounded-xl border border-[#242421] bg-[#121211] overflow-hidden shadow-2xl flex flex-col h-[560px]">
-          {/* Terminal Titlebar */}
-          <div className="px-4 py-3 bg-[#161614] border-b border-[#242421] flex items-center justify-between text-xs font-mono-tech text-[#b5b3ac]">
+        <div className="rounded-xl border border-[var(--nm-line)] bg-[var(--nm-surface)] overflow-hidden shadow-xl flex flex-col h-[560px]">
+          {/* Terminal Titlebar with Live Clock */}
+          <div className="px-4 py-3 bg-[var(--nm-code-bg)] border-b border-[var(--nm-line)] flex items-center justify-between text-xs font-mono-tech text-[var(--nm-text-muted)]">
             <div className="flex items-center gap-2.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#383733]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#383733]" />
-              <span className="w-2.5 h-2.5 rounded-full bg-[#383733]" />
-              <span className="ml-2 font-medium text-[#f6f4ef]">lince-copilot-v1.0.sh</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--nm-line-strong)]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--nm-line-strong)]" />
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--nm-line-strong)]" />
+              <span className="ml-2 font-medium text-[var(--nm-text)]">lince-copilot-v1.0.sh</span>
             </div>
-            <div className="flex items-center gap-2 text-[11px]">
-              <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse" />
-              <span className="text-[#10b981] tracking-wider uppercase font-semibold">STREAMING READY</span>
+            <div className="flex items-center gap-3 text-[11px]">
+              <LiveClock />
+              <div className="flex items-center gap-1.5 pl-2 border-l border-[var(--nm-line)]">
+                <span className="w-2 h-2 rounded-full bg-[var(--nm-accent-emerald)] animate-pulse" />
+                <span className="text-[var(--nm-accent-emerald)] tracking-wider uppercase font-semibold">STREAMING</span>
+              </div>
             </div>
           </div>
 
@@ -228,19 +231,19 @@ Ask any question in plain English or select a preset below to explore current al
                 <div
                   className={`max-w-2xl rounded-lg p-4 leading-relaxed transition-all ${
                     m.role === "user"
-                      ? "bg-[#1c1b18] border border-[#383733] text-[#f6f4ef]"
-                      : "bg-[#141413] border border-[#242421] text-[#b5b3ac]"
+                      ? "bg-[var(--nm-badge-bg)] border border-[var(--nm-line-strong)] text-[var(--nm-text)]"
+                      : "bg-[var(--nm-surface)] border border-[var(--nm-line)] text-[var(--nm-text-muted)] shadow-sm"
                   }`}
                 >
                   {/* Assistant Header info */}
                   {m.role === "assistant" && (
-                    <div className="flex items-center justify-between gap-3 pb-2.5 mb-2.5 border-b border-[#242421] text-[11px] font-mono-tech text-[#73716a]">
-                      <span className="flex items-center gap-1.5 text-[#06b6d4] font-medium">
+                    <div className="flex items-center justify-between gap-3 pb-2.5 mb-2.5 border-b border-[var(--nm-line)] text-[11px] font-mono-tech text-[var(--nm-text-subtle)]">
+                      <span className="flex items-center gap-1.5 text-[var(--nm-accent-cyan)] font-medium">
                         <Cpu className="w-3.5 h-3.5" />
                         {m.modelUsed || "Lince Intelligence Engine"}
                       </span>
                       {m.sentimentGauge !== undefined && (
-                        <span className="text-[#10b981] font-semibold">
+                        <span className="text-[var(--nm-accent-emerald)] font-semibold">
                           SENTIMENT: {(m.sentimentGauge * 100).toFixed(0)}% BULLISH
                         </span>
                       )}
@@ -248,18 +251,18 @@ Ask any question in plain English or select a preset below to explore current al
                   )}
 
                   {/* Message Content */}
-                  <div className="whitespace-pre-wrap font-sans text-xs sm:text-sm text-[#f6f4ef] leading-relaxed">
+                  <div className="whitespace-pre-wrap font-sans text-xs sm:text-sm text-[var(--nm-text)] leading-relaxed">
                     {m.content}
                   </div>
 
                   {/* Mentioned Tokens Badges */}
                   {m.tokensMentioned && m.tokensMentioned.length > 0 && (
-                    <div className="mt-3.5 pt-2.5 border-t border-[#242421] flex flex-wrap items-center gap-1.5 text-[11px]">
-                      <span className="text-[#73716a] font-mono-tech">DETECTED:</span>
+                    <div className="mt-3.5 pt-2.5 border-t border-[var(--nm-line)] flex flex-wrap items-center gap-1.5 text-[11px]">
+                      <span className="text-[var(--nm-text-subtle)] font-mono-tech">DETECTED:</span>
                       {m.tokensMentioned.map((tok) => (
                         <span
                           key={tok}
-                          className="px-2 py-0.5 rounded bg-[#1c1c1a] border border-[#2c2c28] text-[#06b6d4] font-semibold font-mono-tech"
+                          className="px-2 py-0.5 rounded bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] text-[var(--nm-accent-cyan)] font-semibold font-mono-tech"
                         >
                           ${tok}
                         </span>
@@ -269,12 +272,12 @@ Ask any question in plain English or select a preset below to explore current al
 
                   {/* Citations Footer */}
                   {m.citations && m.citations.length > 0 && (
-                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[10px] font-mono-tech text-[#73716a]">
+                    <div className="mt-2.5 flex flex-wrap items-center gap-1.5 text-[10px] font-mono-tech text-[var(--nm-text-subtle)]">
                       <span>SOURCES:</span>
                       {m.citations.map((c) => (
                         <span
                           key={c}
-                          className="px-1.5 py-0.5 rounded bg-[#10100f] text-[#b5b3ac] border border-[#242421]"
+                          className="px-1.5 py-0.5 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-muted)] border border-[var(--nm-line)]"
                         >
                           {c}
                         </span>
@@ -286,8 +289,8 @@ Ask any question in plain English or select a preset below to explore current al
             ))}
 
             {isLoading && (
-              <div className="flex items-center gap-2.5 text-[#06b6d4] font-mono-tech text-xs">
-                <span className="w-2 h-2 rounded-full bg-[#06b6d4] animate-ping" />
+              <div className="flex items-center gap-2.5 text-[var(--nm-accent-cyan)] font-mono-tech text-xs">
+                <span className="w-2 h-2 rounded-full bg-[var(--nm-accent-cyan)] animate-ping" />
                 <span>Reading cross-platform signals and synthesizing alpha...</span>
               </div>
             )}
@@ -295,15 +298,15 @@ Ask any question in plain English or select a preset below to explore current al
           </div>
 
           {/* Quick Presets Bar */}
-          <div className="px-4 py-2.5 bg-[#141413] border-t border-[#242421] overflow-x-auto flex items-center gap-2">
-            <span className="text-[10px] font-mono-tech text-[#73716a] shrink-0 uppercase tracking-wider flex items-center gap-1">
-              <Sparkles className="w-3 h-3 text-[#f59e0b]" /> PRESETS:
+          <div className="px-4 py-2.5 bg-[var(--nm-code-bg)] border-t border-[var(--nm-line)] overflow-x-auto flex items-center gap-2">
+            <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] shrink-0 uppercase tracking-wider flex items-center gap-1">
+              <Sparkles className="w-3 h-3 text-[var(--nm-accent-amber)]" /> PRESETS:
             </span>
             {PRESETS.map((p) => (
               <button
                 key={p}
                 onClick={() => handleSend(p)}
-                className="px-3 py-1 rounded-md bg-[#1a1a18] hover:bg-[#222220] border border-[#2c2c28] hover:border-[#403f3a] text-xs font-mono-tech text-[#b5b3ac] hover:text-[#f6f4ef] shrink-0 transition-colors cursor-pointer"
+                className="px-3 py-1 rounded-md bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] hover:border-[var(--nm-line-strong)] text-xs font-mono-tech text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] shrink-0 transition-colors cursor-pointer"
               >
                 {p}
               </button>
@@ -316,20 +319,20 @@ Ask any question in plain English or select a preset below to explore current al
               e.preventDefault();
               handleSend();
             }}
-            className="p-3 bg-[#161614] border-t border-[#242421] flex items-center gap-2.5"
+            className="p-3 bg-[var(--nm-surface)] border-t border-[var(--nm-line)] flex items-center gap-2.5"
           >
             <input
               type="text"
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
               placeholder="Ask anything (e.g. 'Which Base ecosystem tokens have highest social spike?')..."
-              className="flex-1 px-4 py-2.5 rounded-md bg-[#0d0d0c] border border-[#242421] text-xs sm:text-sm text-[#f6f4ef] placeholder-[#73716a] focus:outline-none focus:border-[#403f3a] font-sans"
+              className="flex-1 px-4 py-2.5 rounded-md bg-[var(--nm-bg)] border border-[var(--nm-line)] text-xs sm:text-sm text-[var(--nm-text)] placeholder-[var(--nm-text-subtle)] focus:outline-none focus:border-[var(--nm-line-strong)] font-sans"
               disabled={isLoading}
             />
             <button
               type="submit"
               disabled={isLoading || !inputQuery.trim()}
-              className="px-4 py-2.5 rounded-md bg-[#f7f6f1] hover:bg-[#e5e2db] disabled:opacity-40 text-[#111110] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2.5 rounded-md bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] text-[var(--nm-action-text)] disabled:opacity-40 font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer shadow-sm"
             >
               <Send className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Send</span>

@@ -8,6 +8,7 @@ import LiveExplorer from "@/components/LiveExplorer";
 import CopilotTerminal from "@/components/CopilotTerminal";
 import McpModal from "@/components/McpModal";
 import VeniceKeyModal from "@/components/VeniceKeyModal";
+import VeniceLogo from "@/components/VeniceLogo";
 import Image from "next/image";
 import {
   NARRATIVES_DATA,
@@ -223,7 +224,10 @@ export default function LinceHome() {
                 <div>
                   <div className="flex items-center justify-between mb-6">
                     <span className="text-xs font-mono-tech text-[#73716a] tracking-widest">[ 03 ]</span>
-                    <span className="text-xs font-mono-tech text-purple-400">PRIVACY</span>
+                    <span className="text-xs font-mono-tech text-purple-400 flex items-center gap-1.5">
+                      <VeniceLogo className="w-3.5 h-3.5 text-purple-400" />
+                      <span>VENICE AI</span>
+                    </span>
                   </div>
                   <h3 className="font-serif-editorial text-2xl text-[#f6f4ef] font-normal mb-3">
                     Zero-Logging AI Inference
@@ -479,9 +483,10 @@ export default function LinceHome() {
             </button>
             <button
               onClick={() => setIsVeniceModalOpen(true)}
-              className="hover:text-purple-300 transition-colors cursor-pointer"
+              className="hover:text-purple-300 transition-colors cursor-pointer flex items-center gap-1.5"
             >
-              VENICE AI
+              <VeniceLogo className="w-3 h-3 text-purple-400" />
+              <span>VENICE AI</span>
             </button>
             <a
               href="https://github.com/Blanksite"

@@ -7,6 +7,7 @@ import { CopilotMessage } from "@/lib/types";
 import { NARRATIVES_DATA, ALPHA_DIVERGENCE_DATA, KOLS_DATA } from "@/lib/data";
 import McpModal from "@/components/McpModal";
 import VeniceKeyModal from "@/components/VeniceKeyModal";
+import VeniceLogo from "@/components/VeniceLogo";
 import {
   Terminal,
   Send,
@@ -292,7 +293,7 @@ Select an intelligence thread from the sidebar, run a preset query below, or inp
                 : "bg-[#161614] hover:bg-[#1e1e1b] border-[#242421] text-[#b5b3ac] hover:text-[#f6f4ef]"
             }`}
           >
-            <Shield className="w-3.5 h-3.5 text-purple-400" />
+            <VeniceLogo className="w-3.5 h-3.5 text-purple-400" />
             <span className="hidden sm:inline">
               {veniceApiKey ? "Venice: Active" : "Venice AI"}
             </span>

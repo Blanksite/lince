@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Shield, X, Check, Key, ExternalLink } from "lucide-react";
+import VeniceLogo from "@/components/VeniceLogo";
 
 interface VeniceKeyModalProps {
   isOpen: boolean;
@@ -42,15 +43,20 @@ export default function VeniceKeyModal({
         <div className="flex items-start justify-between pb-5 mb-5 border-b border-[#242421]">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+              <VeniceLogo className="w-3.5 h-3.5 text-purple-400" />
               <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[#b5b3ac]">
-                [ ZERO-LOGGING INFERENCE ]
+                [ VENICE AI · ZERO-LOGGING INFERENCE ]
               </span>
             </div>
-            <h3 className="font-serif-editorial text-2xl sm:text-3xl text-[#f6f4ef] font-normal tracking-tight">
-              Venice AI Configuration
-            </h3>
-            <p className="text-xs sm:text-sm text-[#b5b3ac] mt-1 font-sans">
+            <div className="flex items-center gap-2.5">
+              <div className="p-1.5 rounded-lg bg-purple-500/10 border border-purple-500/30">
+                <VeniceLogo className="w-5 h-5 text-purple-400" />
+              </div>
+              <h3 className="font-serif-editorial text-2xl sm:text-3xl text-[#f6f4ef] font-normal tracking-tight">
+                Venice AI Configuration
+              </h3>
+            </div>
+            <p className="text-xs sm:text-sm text-[#b5b3ac] mt-1.5 font-sans">
               Private, uncensored decentralized intelligence via Llama 3.3 70B &amp; DeepSeek R1.
             </p>
           </div>

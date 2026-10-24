@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Terminal, Cpu, Shield } from "lucide-react";
+import VeniceLogo from "@/components/VeniceLogo";
 
 interface HeaderProps {
   onOpenMcp: () => void;
@@ -98,7 +99,7 @@ export default function Header({
                 : "bg-[#141413] hover:bg-[#1e1e1b] border-[#2c2c28] text-[#b5b3ac] hover:text-[#f6f4ef]"
             }`}
           >
-            <Shield className="w-3.5 h-3.5 text-purple-400" />
+            <VeniceLogo className="w-3.5 h-3.5 text-purple-400" />
             <span className="hidden sm:inline">
               {isVeniceConfigured ? "Venice: Active" : "Venice AI"}
             </span>

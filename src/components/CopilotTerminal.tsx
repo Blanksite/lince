@@ -12,6 +12,7 @@ import {
   Terminal,
   ArrowRight,
 } from "lucide-react";
+import VeniceLogo from "@/components/VeniceLogo";
 
 interface CopilotTerminalProps {
   customApiKey: string;
@@ -172,7 +173,7 @@ Ask any question in plain English or select a preset below to explore current al
                   : "bg-[#141413] hover:bg-[#1a1a18] border-[#2c2c28] text-[#b5b3ac] hover:text-[#f6f4ef]"
               }`}
             >
-              <Shield className="w-3.5 h-3.5 text-purple-400" />
+              <VeniceLogo className="w-3.5 h-3.5 text-purple-400" />
               <span>
                 {customApiKey ? "Venice: Active" : "Venice AI"}
               </span>

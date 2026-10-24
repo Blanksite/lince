@@ -70,14 +70,13 @@ export default function LiveExplorer({
         {/* Section Header (Noumen Style) */}
         <div className="mb-10">
           <span className="text-[10px] font-mono-tech uppercase tracking-[0.2em] text-[#73716a] block mb-2">
-            01 / LIVE NARRATIVE CATALOG
+            [ 02 / REAL-TIME INTELLIGENCE CATALOG ]
           </span>
           <h2 className="font-serif-editorial text-4xl sm:text-5xl lg:text-6xl tracking-tight text-[#f6f4ef] leading-[1.05] mb-4">
-            Track narratives on your terms.
+            Detect capital rotation in real time.
           </h2>
-          <p className="text-sm sm:text-base text-[#b5b3ac] max-w-[54ch] leading-relaxed font-sans">
-            Different market cycles call for different sectors. Lince brings mindshare telemetry, 
-            sentiment polarity, and social volume into one unified interface, so you can spot capital rotation early.
+          <p className="text-sm sm:text-base text-[#b5b3ac] max-w-[56ch] leading-relaxed font-sans">
+            From autonomous AI agents to decentralized compute. Compare cross-platform social mindshare against on-chain liquidity to spot asymmetric accumulation early.
           </p>
         </div>
 

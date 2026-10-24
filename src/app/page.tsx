@@ -413,10 +413,10 @@ export default function LinceHome() {
               [ ACCESS TERMINAL ]
             </span>
             <h2 className="font-serif-editorial text-4xl sm:text-7xl text-[#f6f4ef] font-normal tracking-tight leading-[1.04] mb-6">
-              Put sharper intelligence to work.
+              Turn market noise into structural alpha.
             </h2>
             <p className="text-sm sm:text-base text-[#b5b3ac] leading-relaxed mb-8 max-w-[54ch] mx-auto">
-              Track real mindshare velocity, sentiment polarity, and KOL consensus without the noise. Zero registration required.
+              Monitor cross-platform narrative velocity, sentiment polarities, and verifiable KOL consensus before retail discovery. 100% free with zero registration.
             </p>
 
             <div className="flex flex-wrap items-center justify-center gap-3">

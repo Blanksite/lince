@@ -3,7 +3,6 @@
 import React from "react";
 import Link from "next/link";
 import { TrendingUp, Zap, Radio, ShieldCheck, ArrowRight, Terminal } from "lucide-react";
-import TechText from "@/components/TechText";
 
 interface HeroSectionProps {
   onScrollToSection: (sectionId: string) => void;
@@ -13,52 +12,26 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
   return (
     <section className="relative pt-16 pb-14 border-b border-[#242421]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Top Kicker (Noumen style) */}
+        {/* Top Kicker */}
         <div className="flex items-center gap-2 mb-6">
           <span className="w-1.5 h-1.5 rounded-full bg-[#10b981]" />
           <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[#b5b3ac]">
-            CROSS-PLATFORM SOCIAL MINDSHARE · VISTA DE LINCE
+            [ 01 / VISTA DE LINCE · COGNITIVE MINDSHARE RADAR ]
           </span>
         </div>
 
-        {/* Hero Title (Interactive TechText Animation from ReactBits) */}
-        <div className="max-w-5xl mb-6">
-          <h1 className="sr-only">The signal, within reach.</h1>
-          <div className="w-full h-24 sm:h-36 lg:h-44 -ml-0.5">
-            <TechText
-              text="The signal, within reach."
-              fontFamily="'Instrument Serif', Georgia, serif"
-              fontWeight={400}
-              fontSize={140}
-              color="#f6f4ef"
-              accentColor="#06b6d4"
-              align="left"
-              lineStyle="dashed"
-              reveal="letter"
-              dashLength={4}
-              dashGap={2}
-              strokeWidth={1.5}
-              specks={16}
-              selection={true}
-              labels={true}
-              draggable={true}
-              bounce={0.45}
-              sweep={true}
-              speed={1}
-              clickKick={true}
-              intro="assemble"
-              introDuration={1.8}
-              guides={true}
-              className="w-full h-full cursor-crosshair"
-            />
-          </div>
+        {/* Hero Title (Crisp Editorial Serif) */}
+        <div className="max-w-4xl mb-6">
+          <h1 className="font-serif-editorial text-5xl sm:text-7xl lg:text-8xl tracking-tight text-[#f6f4ef] leading-[1.02] font-normal">
+            Sharp vision in a noisy market.
+          </h1>
         </div>
 
         {/* Hero Description & Action Buttons */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-14">
-          <p className="text-base sm:text-lg text-[#b5b3ac] leading-relaxed max-w-[52ch] font-sans">
-            Lince indexes crypto mindshare velocity, sentiment polarity, and KOL consensus across six platforms—spotting 
-            early alpha divergences before they are priced in by retail.
+          <p className="text-base sm:text-lg text-[#b5b3ac] leading-relaxed max-w-[54ch] font-sans">
+            Lince indexes cross-platform attention velocity, sentiment polarity, and KOL consensus across six channels—spotting 
+            early accumulation anomalies before they are priced in by retail.
           </p>
 
           <div className="flex flex-wrap items-center gap-3 shrink-0">

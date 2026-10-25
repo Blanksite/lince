@@ -121,6 +121,23 @@ export interface LaunchAudit {
   ageHours?: number;
 }
 
+export interface SocialMindshareCorrelation {
+  mindshareScore: number; // 0 - 100 score
+  momentumSpike24h: number; // e.g. +142.5%
+  sentimentPolarityPercent: number; // e.g. 84% Bullish
+  divergenceStatus: string;
+  divergenceGrade: "HIGH_DIVERGENCE" | "ORGANIC_ACCUMULATION" | "BALANCED_FLOW" | "ASTROTURFING_ALERT";
+  warningNote: string;
+  catalystNarrative?: string;
+  platforms: {
+    platform: string;
+    sharePercent: number;
+    volume: string;
+  }[];
+  smartFollowersCount?: number;
+  kolConsensusCount?: number;
+}
+
 export interface ClusterScanResult {
   tokenAddress: string;
   tokenName: string;
@@ -152,10 +169,6 @@ export interface ClusterScanResult {
   clusters: WalletCluster[];
   holdersTable?: HolderDetail[];
   launchAudit?: LaunchAudit;
-  socialMindshareCorrelated?: {
-    mindshareScore: number;
-    divergenceStatus: string;
-    warningNote: string;
-  };
+  socialMindshareCorrelated?: SocialMindshareCorrelation;
   scannedAt: string;
 }

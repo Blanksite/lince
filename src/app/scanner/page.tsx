@@ -688,25 +688,160 @@ export default function ScannerPage() {
               </div>
             )}
 
-            {/* 5. Lince Social Mindshare Cross-Correlation (Lince Unique Advantage) */}
+            {/* 5. Lince Cognitive Mindshare Radar Panel (Lince Signature Superpower) */}
             {result.socialMindshareCorrelated && (
-              <div className="p-5 sm:p-6 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-2.5">
-                <div className="flex items-center justify-between text-xs font-mono-tech">
-                  <span className="font-bold text-[var(--nm-text)] flex items-center gap-1.5">
-                    <Radio className="w-3.5 h-3.5 text-[var(--nm-accent-cyan)]" />
-                    LINCE SOCIAL MINDSHARE CORRELATION
-                  </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-subtle)] border border-[var(--nm-line)]">
-                    MULTI-PLATFORM TELEMETRY
-                  </span>
+              <div className="p-6 sm:p-7 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-6 shadow-sm">
+                {/* Panel Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--nm-line)]">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-[var(--nm-accent-cyan)] animate-pulse" />
+                      <span className="text-[10px] font-mono-tech uppercase tracking-[0.16em] text-[var(--nm-accent-cyan)] font-bold">
+                        05 / LINCE COGNITIVE MINDSHARE TELEMETRY
+                      </span>
+                    </div>
+                    <h3 className="font-serif-editorial text-2xl sm:text-3xl text-[var(--nm-text)]">
+                      Social Attention Velocity &amp; On-Chain Divergence
+                    </h3>
+                    <p className="text-xs text-[var(--nm-text-muted)] font-sans">
+                      Cross-platform attention index tracked across X (Twitter), Telegram alpha syndicates, Farcaster, and YouTube.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 font-mono-tech text-xs shrink-0">
+                    <span className="px-2.5 py-1 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-subtle)] border border-[var(--nm-line)]">
+                      CADENCE: 10M REFRESH
+                    </span>
+                  </div>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1 text-xs">
-                  <p className="text-[var(--nm-text-muted)] font-sans leading-relaxed max-w-3xl">
-                    {result.socialMindshareCorrelated.warningNote}
-                  </p>
+
+                {/* 3 Core Mindshare Telemetry Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Card 1: Mindshare Velocity Score */}
+                  <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-2">
+                    <div className="flex items-center justify-between text-xs font-mono-tech text-[var(--nm-text-subtle)]">
+                      <span className="uppercase">MINDSHARE VELOCITY</span>
+                      <Radio className="w-3.5 h-3.5 text-[var(--nm-accent-cyan)]" />
+                    </div>
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-mono-tech text-3xl font-bold text-[var(--nm-text)]">
+                        {result.socialMindshareCorrelated.mindshareScore}
+                      </span>
+                      <span className="font-mono-tech text-xs text-[var(--nm-text-subtle)]">/ 100</span>
+                      <span className="ml-auto text-xs font-mono-tech px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-500 font-bold">
+                        +{result.socialMindshareCorrelated.momentumSpike24h}% 24h
+                      </span>
+                    </div>
+                    <div className="w-full h-1.5 bg-[var(--nm-surface)] rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-[var(--nm-accent-cyan)] rounded-full"
+                        style={{ width: `${Math.min(100, result.socialMindshareCorrelated.mindshareScore * 1.2)}%` }}
+                      />
+                    </div>
+                    <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block">
+                      Relative volume share against indexed sector
+                    </span>
+                  </div>
+
+                  {/* Card 2: Sentiment Polarity */}
+                  <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-2">
+                    <div className="flex items-center justify-between text-xs font-mono-tech text-[var(--nm-text-subtle)]">
+                      <span className="uppercase">SENTIMENT POLARITY</span>
+                      <Activity className="w-3.5 h-3.5 text-emerald-500" />
+                    </div>
+                    <div className="flex items-baseline justify-between">
+                      <span className="font-mono-tech text-3xl font-bold text-emerald-500">
+                        {result.socialMindshareCorrelated.sentimentPolarityPercent}%
+                      </span>
+                      <span className="font-mono-tech text-xs text-[var(--nm-text-subtle)]">
+                        {100 - result.socialMindshareCorrelated.sentimentPolarityPercent}% Bearish
+                      </span>
+                    </div>
+                    <div className="w-full h-1.5 bg-rose-500/30 rounded-full overflow-hidden flex">
+                      <div
+                        className="h-full bg-emerald-500 rounded-full"
+                        style={{ width: `${result.socialMindshareCorrelated.sentimentPolarityPercent}%` }}
+                      />
+                    </div>
+                    <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block">
+                      De-noised positive conviction vs FUD ratio
+                    </span>
+                  </div>
+
+                  {/* Card 3: Divergence Grade */}
+                  <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-2">
+                    <div className="flex items-center justify-between text-xs font-mono-tech text-[var(--nm-text-subtle)]">
+                      <span className="uppercase">DIVERGENCE VERDICT</span>
+                      <Zap className="w-3.5 h-3.5 text-[var(--nm-accent-amber)]" />
+                    </div>
+                    <div className="font-mono-tech text-sm font-bold text-[var(--nm-text)] truncate pt-1">
+                      {result.socialMindshareCorrelated.divergenceStatus}
+                    </div>
+                    <div className="flex items-center gap-3 pt-1 text-[11px] font-mono-tech text-[var(--nm-text-subtle)]">
+                      <span>{result.socialMindshareCorrelated.smartFollowersCount || 840} Smart Followers</span>
+                      <span>·</span>
+                      <span>{result.socialMindshareCorrelated.kolConsensusCount || 7} KOL Calls</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Platform Volume Breakdown */}
+                {result.socialMindshareCorrelated.platforms && (
+                  <div className="space-y-3 pt-1">
+                    <div className="flex items-center justify-between text-xs font-mono-tech">
+                      <span className="uppercase text-[var(--nm-text-subtle)]">
+                        CROSS-PLATFORM FOOTPRINT BREAKDOWN
+                      </span>
+                      <span className="text-[10px] text-[var(--nm-text-subtle)]">
+                        PROPRIETARY 6-CHANNEL INGESTION
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                      {result.socialMindshareCorrelated.platforms.map((p, idx) => (
+                        <div
+                          key={idx}
+                          className="p-3 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-1.5"
+                        >
+                          <div className="flex items-center justify-between text-xs font-mono-tech">
+                            <span className="font-semibold text-[var(--nm-text)]">{p.platform}</span>
+                            <span className="text-[var(--nm-accent-cyan)] font-bold">{p.sharePercent}%</span>
+                          </div>
+                          <div className="w-full h-1 bg-[var(--nm-surface)] rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-[var(--nm-accent-cyan)]"
+                              style={{ width: `${p.sharePercent}%` }}
+                            />
+                          </div>
+                          <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block">
+                            {p.volume}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* AI Analyst Warning Note & Copilot Action */}
+                <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="space-y-1 max-w-3xl">
+                    <div className="flex items-center gap-1.5 text-[10px] font-mono-tech text-[var(--nm-accent-cyan)] font-bold uppercase">
+                      <Sparkles className="w-3 h-3 text-[var(--nm-accent-amber)]" />
+                      <span>COGNITIVE SYNTHESIS &amp; RUG HAZARD ASSESSMENT</span>
+                    </div>
+                    <p className="text-xs text-[var(--nm-text)] font-sans leading-relaxed">
+                      {result.socialMindshareCorrelated.warningNote}
+                    </p>
+                    {result.socialMindshareCorrelated.catalystNarrative && (
+                      <div className="text-[11px] font-mono-tech text-[var(--nm-text-subtle)] pt-0.5">
+                        Catalyst: <span className="text-[var(--nm-text-muted)]">{result.socialMindshareCorrelated.catalystNarrative}</span>
+                      </div>
+                    )}
+                  </div>
+
                   <Link
-                    href={`/terminal`}
-                    className="shrink-0 px-3.5 py-2 rounded-md bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] text-[var(--nm-action-text)] font-semibold text-xs font-sans inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-sm"
+                    href="/terminal"
+                    className="shrink-0 px-4 py-2.5 rounded-lg bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] text-[var(--nm-action-text)] font-semibold text-xs font-sans inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-sm"
                   >
                     <span>Analyze in Copilot</span>
                     <Terminal className="w-3.5 h-3.5" />

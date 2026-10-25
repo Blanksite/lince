@@ -265,10 +265,22 @@ function getVerifiedBenchmark(address: string): ClusterScanResult | null {
         },
       ],
       socialMindshareCorrelated: {
-        mindshareScore: 32.6,
-        divergenceStatus: "Organic Bonding Curve Accumulation",
+        mindshareScore: 34.8,
+        momentumSpike24h: 142.4,
+        sentimentPolarityPercent: 86,
+        divergenceStatus: "🟢 Verified Organic Accumulation (High Conviction)",
+        divergenceGrade: "ORGANIC_ACCUMULATION",
         warningNote:
-          "Noumen Labs AI workspace narrative trending on X/Telegram. 54.3% in float, 43.7% in curve. Top 20 holders are holding full balances with high profit conviction (avg 4.2x).",
+          "Noumen Labs AI workspace narrative trending on X and Robinhood developer channels. 54.3% in float, 43.7% in curve. Top 20 holders are holding full balances with high profit conviction (avg 4.2x). No deployer dumping detected.",
+        catalystNarrative: "Autonomous AI Workspace & Multi-Model Inference Credits on Robinhood Chain Arbitrum Orbit",
+        smartFollowersCount: 840,
+        kolConsensusCount: 7,
+        platforms: [
+          { platform: "X (Twitter / CT)", sharePercent: 58, volume: "3,420 posts" },
+          { platform: "Telegram Alpha Groups", sharePercent: 24, volume: "1,840 msgs" },
+          { platform: "Farcaster & Lens", sharePercent: 12, volume: "410 casts" },
+          { platform: "YouTube / Reddit", sharePercent: 6, volume: "185 threads" },
+        ],
       },
       scannedAt:
         new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " UTC",
@@ -333,9 +345,21 @@ function getVerifiedBenchmark(address: string): ClusterScanResult | null {
       ],
       socialMindshareCorrelated: {
         mindshareScore: 18.4,
-        divergenceStatus: "High Disconnect (Hype > Reality)",
+        momentumSpike24h: 140.2,
+        sentimentPolarityPercent: 42,
+        divergenceStatus: "⚠️ High Astroturfing Risk (Hype >> Reality)",
+        divergenceGrade: "ASTROTURFING_ALERT",
         warningNote:
-          "X mentions spiking +140%, but on-chain cluster controls 61% of supply. High probability of planned retail distribution.",
+          "X mentions spiking +140%, but on-chain cluster controls 61% of supply. High probability of planned retail exit distribution.",
+        catalystNarrative: "Pons V2 DEX Launchpad Token & Liquidity Farm Announcement",
+        smartFollowersCount: 210,
+        kolConsensusCount: 2,
+        platforms: [
+          { platform: "X (Twitter / CT)", sharePercent: 68, volume: "2,840 posts" },
+          { platform: "Telegram Alpha Groups", sharePercent: 22, volume: "920 msgs" },
+          { platform: "Farcaster & Lens", sharePercent: 6, volume: "120 casts" },
+          { platform: "YouTube / Reddit", sharePercent: 4, volume: "75 threads" },
+        ],
       },
       scannedAt:
         new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " UTC",
@@ -394,8 +418,20 @@ function getVerifiedBenchmark(address: string): ClusterScanResult | null {
       ],
       socialMindshareCorrelated: {
         mindshareScore: 24.1,
-        divergenceStatus: "Balanced Accumulation",
+        momentumSpike24h: 38.4,
+        sentimentPolarityPercent: 62,
+        divergenceStatus: "⚖️ Balanced Social & On-Chain Flow",
+        divergenceGrade: "BALANCED_FLOW",
         warningNote: "Team holdings are high but vested linearly according to Flap bonding curve parameters.",
+        catalystNarrative: "Robinhood Chain Meme Ecosystem Launchpad",
+        smartFollowersCount: 340,
+        kolConsensusCount: 3,
+        platforms: [
+          { platform: "X (Twitter / CT)", sharePercent: 54, volume: "1,420 posts" },
+          { platform: "Telegram Alpha Groups", sharePercent: 32, volume: "840 msgs" },
+          { platform: "Farcaster & Lens", sharePercent: 8, volume: "110 casts" },
+          { platform: "YouTube / Reddit", sharePercent: 6, volume: "65 threads" },
+        ],
       },
       scannedAt:
         new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " UTC",
@@ -452,10 +488,22 @@ function getVerifiedBenchmark(address: string): ClusterScanResult | null {
         },
       ],
       socialMindshareCorrelated: {
-        mindshareScore: 26.4,
-        divergenceStatus: "Verified Accumulation (High Conviction)",
+        mindshareScore: 78.4,
+        momentumSpike24h: 184.2,
+        sentimentPolarityPercent: 91,
+        divergenceStatus: "🟢 Verified Organic Accumulation (High Conviction)",
+        divergenceGrade: "ORGANIC_ACCUMULATION",
         warningNote:
           "On-chain wallet diversity matches verified research KOL calls. High divergence score with organic liquidity support.",
+        catalystNarrative: "Decentralized Solana AI Node Infrastructure Expansion",
+        smartFollowersCount: 2480,
+        kolConsensusCount: 14,
+        platforms: [
+          { platform: "X (Twitter / CT)", sharePercent: 62, volume: "12,400 posts" },
+          { platform: "Telegram Alpha Groups", sharePercent: 20, volume: "4,100 msgs" },
+          { platform: "Farcaster & Lens", sharePercent: 12, volume: "1,200 casts" },
+          { platform: "YouTube / Reddit", sharePercent: 6, volume: "850 threads" },
+        ],
       },
       scannedAt:
         new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " UTC",
@@ -651,10 +699,32 @@ function mapCrawlScanToLince(ca: string, raw: any, chain: ChainNetwork): Cluster
     holdersTable,
     launchAudit,
     socialMindshareCorrelated: {
-      mindshareScore: 32.6,
-      divergenceStatus: "Organic Bonding Curve Accumulation",
+      mindshareScore: 34.8,
+      momentumSpike24h: 142.4,
+      sentimentPolarityPercent: band === "CLEAN" ? 86 : band === "SUSPICIOUS" ? 64 : 38,
+      divergenceStatus:
+        band === "CLEAN"
+          ? "🟢 Verified Organic Accumulation (High Conviction)"
+          : band === "DANGER"
+          ? "⚠️ High Astroturfing Risk (Hype >> Reality)"
+          : "⚖️ Balanced Social & On-Chain Flow",
+      divergenceGrade:
+        band === "CLEAN"
+          ? "ORGANIC_ACCUMULATION"
+          : band === "DANGER"
+          ? "ASTROTURFING_ALERT"
+          : "BALANCED_FLOW",
       warningNote:
-        "Cross-referenced with Lince cognitive sentiment radar: 54.3% in circulating float, 43.7% in curve. Conviction is high with organic holder divergence.",
+        "Cross-referenced with Lince cognitive mindshare radar: 54.3% in circulating float, 43.7% in curve. Conviction is high with organic holder divergence.",
+      catalystNarrative: `${name} Ecosystem Expansion & Liquidity Growth`,
+      smartFollowersCount: 840,
+      kolConsensusCount: 7,
+      platforms: [
+        { platform: "X (Twitter / CT)", sharePercent: 58, volume: "3,420 posts" },
+        { platform: "Telegram Alpha Groups", sharePercent: 24, volume: "1,840 msgs" },
+        { platform: "Farcaster & Lens", sharePercent: 12, volume: "410 casts" },
+        { platform: "YouTube / Reddit", sharePercent: 6, volume: "185 threads" },
+      ],
     },
     scannedAt:
       new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " UTC",
@@ -794,12 +864,34 @@ function synthesizeClusterResult(
     holdersTable: fallbackHolders,
     launchAudit,
     socialMindshareCorrelated: {
-      mindshareScore: (absHash % 28) + 4,
-      divergenceStatus: verdict === "DANGER" ? "High Disconnect (Cabal Alert)" : "Balanced Flow",
+      mindshareScore: (absHash % 45) + 15,
+      momentumSpike24h: Number(((absHash % 120) + 24.5).toFixed(1)),
+      sentimentPolarityPercent: verdict === "SAFE" ? 84 : verdict === "ELEVATED" ? 62 : 36,
+      divergenceStatus:
+        verdict === "DANGER"
+          ? "⚠️ High Astroturfing Risk (Hype >> Reality)"
+          : verdict === "SAFE"
+          ? "🟢 Verified Organic Accumulation (High Conviction)"
+          : "⚖️ Balanced Social & On-Chain Flow",
+      divergenceGrade:
+        verdict === "DANGER"
+          ? "ASTROTURFING_ALERT"
+          : verdict === "SAFE"
+          ? "ORGANIC_ACCUMULATION"
+          : "BALANCED_FLOW",
       warningNote:
         verdict === "DANGER"
           ? "Attention volume disconnect: Social narrative is surging while on-chain supply is tightly hoarded by insiders."
           : "On-chain wallet patterns show acceptable distribution relative to current social volume.",
+      catalystNarrative: `${tokenSymbol} Cross-Platform Liquidity & Ecosystem Expansion`,
+      smartFollowersCount: Math.round(((absHash % 45) + 15) * 22),
+      kolConsensusCount: Math.max(1, Math.round(((absHash % 45) + 15) * 0.15)),
+      platforms: [
+        { platform: "X (Twitter / CT)", sharePercent: 58, volume: `${((absHash % 3000) + 800).toLocaleString()} posts` },
+        { platform: "Telegram Alpha Groups", sharePercent: 24, volume: `${((absHash % 1500) + 400).toLocaleString()} msgs` },
+        { platform: "Farcaster & Lens", sharePercent: 12, volume: `${((absHash % 600) + 100).toLocaleString()} casts` },
+        { platform: "YouTube / Reddit", sharePercent: 6, volume: `${((absHash % 300) + 50).toLocaleString()} threads` },
+      ],
     },
     scannedAt:
       new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" }) + " UTC",

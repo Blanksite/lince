@@ -89,7 +89,7 @@ export interface WalletCluster {
   walletCount: number;
   totalSupplyPercent: number;
   estimatedValue: string;
-  riskTag: "CRITICAL_CONCENTRATION" | "SUSPICIOUS_FUNDING" | "ORGANIC_DISTRIBUTION";
+  riskTag: "CRITICAL_CONCENTRATION" | "SUSPICIOUS_FUNDING" | "ORGANIC_DISTRIBUTION" | "COORDINATED_SNIPER" | "LIQUIDITY_POOL";
   wallets: WalletClusterNode[];
 }
 
@@ -98,7 +98,7 @@ export interface ClusterScanResult {
   tokenName: string;
   tokenSymbol: string;
   chain: ChainNetwork;
-  launchpad?: "Pons V2" | "Flap" | "pump.fun" | "Raydium" | "Aerodrome" | "Uniswap v3";
+  launchpad?: "Pons V2" | "Flap" | "pump.fun" | "Raydium" | "Aerodrome" | "Uniswap v3" | string;
   marketCap: string;
   liquidityUsd: string;
   priceUsd: string;

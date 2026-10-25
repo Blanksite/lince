@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { scanContractAddress, detectChainFromAddress } from "@/lib/scanner";
+import { scanContractAddressAsync, detectChainFromAddress } from "@/lib/scanner";
 import { ChainNetwork } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     }
 
     const chain = detectChainFromAddress(address, requestedChain);
-    const scanResult = scanContractAddress(address, chain);
+    const scanResult = await scanContractAddressAsync(address, chain);
 
     return NextResponse.json(scanResult);
   } catch (error) {

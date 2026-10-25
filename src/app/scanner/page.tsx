@@ -35,7 +35,7 @@ import { ChainNetwork, ClusterScanResult } from "@/lib/types";
 
 export default function ScannerPage() {
   const [selectedChain, setSelectedChain] = useState<ChainNetwork>("robinhood");
-  const [addressInput, setAddressInput] = useState<string>("0x9c42c7e8a9f24510b1a03e1e2d778d91a9807b1a");
+  const [addressInput, setAddressInput] = useState<string>("0xe9b7b7d55ed2ca56b017c569f3c5dd30dd31fefc");
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const [scanStep, setScanStep] = useState<number>(0);
   const [result, setResult] = useState<ClusterScanResult | null>(null);
@@ -63,24 +63,46 @@ export default function ScannerPage() {
     setScanStep(0);
     setResult(null);
 
-    // Simulate multi-stage graph crawler progression
+    const activeChain = chainHint || selectedChain;
+
+    // Asynchronously call the live /api/scan endpoint
+    const scanPromise = fetch("/api/scan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: addr, chain: activeChain }),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Scan API returned status " + res.status);
+        return res.json();
+      })
+      .catch((err) => {
+        console.warn("Falling back to local scanner:", err);
+        return scanContractAddress(addr, activeChain);
+      });
+
+    // Animate crawl stages for crisp institutional feedback
     let currentStep = 0;
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       currentStep++;
       if (currentStep < CRAWL_STEPS.length) {
         setScanStep(currentStep);
       } else {
         clearInterval(interval);
-        const scanRes = scanContractAddress(addr, chainHint || selectedChain);
-        setResult(scanRes);
-        setIsScanning(false);
+        try {
+          const scanRes = await scanPromise;
+          setResult(scanRes);
+        } catch {
+          setResult(scanContractAddress(addr, activeChain));
+        } finally {
+          setIsScanning(false);
+        }
       }
-    }, 280);
+    }, 240);
   };
 
-  // Initial scan on mount
+  // Initial scan on mount (defaults to verified Noumen CA on Robinhood Chain)
   useEffect(() => {
-    executeScan("0x9c42c7e8a9f24510b1a03e1e2d778d91a9807b1a", "robinhood");
+    executeScan("0xe9b7b7d55ed2ca56b017c569f3c5dd30dd31fefc", "robinhood");
   }, []);
 
   const handleSelectPreset = (preset: (typeof PRESET_SCAN_TARGETS)[0]) => {

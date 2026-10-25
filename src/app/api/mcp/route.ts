@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { NARRATIVES_DATA, ALPHA_DIVERGENCE_DATA, KOLS_DATA, SOCIAL_PLATFORMS_DATA } from "@/lib/data";
-import { scanContractAddress, detectChainFromAddress } from "@/lib/scanner";
+import { scanContractAddressAsync, detectChainFromAddress } from "@/lib/scanner";
 import { ChainNetwork } from "@/lib/types";
 
 interface JsonRpcRequest {
@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
           });
         }
         const chain = detectChainFromAddress(addr, requestedChain);
-        const result = scanContractAddress(addr, chain);
+        const result = await scanContractAddressAsync(addr, chain);
         return NextResponse.json({
           jsonrpc: "2.0",
           id,

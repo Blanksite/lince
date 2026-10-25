@@ -121,6 +121,16 @@ export interface LaunchAudit {
   ageHours?: number;
 }
 
+export interface XQuoteItem {
+  handle: string;
+  authorName: string;
+  text: string;
+  followers?: string;
+  sentiment: "bullish" | "neutral" | "cautious";
+  timestamp: string;
+  tweetUrl: string;
+}
+
 export interface SocialMindshareCorrelation {
   mindshareScore: number; // 0 - 100 score
   momentumSpike24h: number; // e.g. +142.5%
@@ -129,13 +139,21 @@ export interface SocialMindshareCorrelation {
   divergenceGrade: "HIGH_DIVERGENCE" | "ORGANIC_ACCUMULATION" | "BALANCED_FLOW" | "ASTROTURFING_ALERT";
   warningNote: string;
   catalystNarrative?: string;
-  platforms: {
+  xHandle?: string; // e.g. "@NoumenLabs"
+  xProfileUrl?: string; // e.g. "https://x.com/NoumenLabs"
+  xCashtag?: string; // e.g. "$NOUMEN"
+  xSearchUrl?: string; // e.g. "https://x.com/search?q=%24NOUMEN"
+  xCaSearchUrl?: string; // e.g. "https://x.com/search?q=0xe9b7b7d55ed2ca56b017c569f3c5dd30dd31fefc"
+  posts24h?: string; // e.g. "3,420 posts"
+  uniqueAuthorsCount?: number;
+  smartFollowersCount?: number;
+  kolConsensusCount?: number;
+  recentXQuotes?: XQuoteItem[];
+  platforms?: {
     platform: string;
     sharePercent: number;
     volume: string;
   }[];
-  smartFollowersCount?: number;
-  kolConsensusCount?: number;
 }
 
 export interface ClusterScanResult {

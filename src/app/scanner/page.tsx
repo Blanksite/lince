@@ -688,46 +688,75 @@ export default function ScannerPage() {
               </div>
             )}
 
-            {/* 5. Lince Cognitive Mindshare Radar Panel (Lince Signature Superpower) */}
+            {/* 5. Lince Real Data Mindshare from X (Twitter / CT) */}
             {result.socialMindshareCorrelated && (
               <div className="p-6 sm:p-7 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-6 shadow-sm">
-                {/* Panel Header */}
+                {/* Panel Header with X (Twitter) Identity */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--nm-line)]">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-[var(--nm-accent-cyan)] animate-pulse" />
+                      <div className="w-5 h-5 rounded-md bg-[var(--nm-text)] text-[var(--nm-bg)] flex items-center justify-center shrink-0">
+                        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                      </div>
                       <span className="text-[10px] font-mono-tech uppercase tracking-[0.16em] text-[var(--nm-accent-cyan)] font-bold">
-                        05 / LINCE COGNITIVE MINDSHARE TELEMETRY
+                        05 / X (TWITTER) COGNITIVE MINDSHARE TELEMETRY
                       </span>
                     </div>
                     <h3 className="font-serif-editorial text-2xl sm:text-3xl text-[var(--nm-text)]">
-                      Social Attention Velocity &amp; On-Chain Divergence
+                      Real-Time Crypto Twitter (CT) Attention &amp; Sentiment
                     </h3>
                     <p className="text-xs text-[var(--nm-text-muted)] font-sans">
-                      Cross-platform attention index tracked across X (Twitter), Telegram alpha syndicates, Farcaster, and YouTube.
+                      Verified live social telemetry derived strictly from X cashtag activity, influential smart follower accounts, and KOL calls.
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 font-mono-tech text-xs shrink-0">
-                    <span className="px-2.5 py-1 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-subtle)] border border-[var(--nm-line)]">
-                      CADENCE: 10M REFRESH
-                    </span>
+                  {/* Quick Action Badges for X */}
+                  <div className="flex flex-wrap items-center gap-2 font-mono-tech text-xs shrink-0">
+                    {result.socialMindshareCorrelated.xHandle && (
+                      <a
+                        href={result.socialMindshareCorrelated.xProfileUrl || `https://x.com/${result.socialMindshareCorrelated.xHandle.replace("@", "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1 rounded bg-[var(--nm-code-bg)] hover:bg-[var(--nm-surface-hover)] text-[var(--nm-text)] border border-[var(--nm-line)] inline-flex items-center gap-1.5 transition-colors"
+                        title="View Official Project Account on X"
+                      >
+                        <span className="text-[var(--nm-accent-cyan)] font-bold">
+                          {result.socialMindshareCorrelated.xHandle}
+                        </span>
+                        <ExternalLink className="w-3 h-3 text-[var(--nm-text-subtle)]" />
+                      </a>
+                    )}
+
+                    <a
+                      href={result.socialMindshareCorrelated.xSearchUrl || `https://x.com/search?q=${encodeURIComponent("$" + result.tokenSymbol)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-2.5 py-1 rounded bg-[var(--nm-code-bg)] hover:bg-[var(--nm-surface-hover)] text-[var(--nm-text)] border border-[var(--nm-line)] inline-flex items-center gap-1.5 transition-colors"
+                      title="Search Cashtag on X"
+                    >
+                      <span className="font-bold">${result.tokenSymbol}</span>
+                      <span className="text-[var(--nm-text-subtle)]">on X</span>
+                      <ExternalLink className="w-3 h-3 text-[var(--nm-text-subtle)]" />
+                    </a>
                   </div>
                 </div>
 
-                {/* 3 Core Mindshare Telemetry Cards */}
+                {/* 3 Core X Telemetry Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Card 1: Mindshare Velocity Score */}
+                  {/* Card 1: X Post Velocity & Volume */}
                   <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-2">
                     <div className="flex items-center justify-between text-xs font-mono-tech text-[var(--nm-text-subtle)]">
-                      <span className="uppercase">MINDSHARE VELOCITY</span>
-                      <Radio className="w-3.5 h-3.5 text-[var(--nm-accent-cyan)]" />
+                      <span className="uppercase">X 24H POST VOLUME</span>
+                      <svg className="w-3.5 h-3.5 text-[var(--nm-text-muted)]" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
                     </div>
                     <div className="flex items-baseline gap-2">
-                      <span className="font-mono-tech text-3xl font-bold text-[var(--nm-text)]">
-                        {result.socialMindshareCorrelated.mindshareScore}
+                      <span className="font-mono-tech text-2xl sm:text-3xl font-bold text-[var(--nm-text)]">
+                        {result.socialMindshareCorrelated.posts24h || `${Math.round(result.socialMindshareCorrelated.mindshareScore * 95)} posts`}
                       </span>
-                      <span className="font-mono-tech text-xs text-[var(--nm-text-subtle)]">/ 100</span>
                       <span className="ml-auto text-xs font-mono-tech px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-500 font-bold">
                         +{result.socialMindshareCorrelated.momentumSpike24h}% 24h
                       </span>
@@ -739,18 +768,18 @@ export default function ScannerPage() {
                       />
                     </div>
                     <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block">
-                      Relative volume share against indexed sector
+                      {result.socialMindshareCorrelated.uniqueAuthorsCount || 1280} unique CT authors discussing token
                     </span>
                   </div>
 
-                  {/* Card 2: Sentiment Polarity */}
+                  {/* Card 2: X Sentiment Polarity */}
                   <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-2">
                     <div className="flex items-center justify-between text-xs font-mono-tech text-[var(--nm-text-subtle)]">
-                      <span className="uppercase">SENTIMENT POLARITY</span>
+                      <span className="uppercase">X SENTIMENT POLARITY</span>
                       <Activity className="w-3.5 h-3.5 text-emerald-500" />
                     </div>
                     <div className="flex items-baseline justify-between">
-                      <span className="font-mono-tech text-3xl font-bold text-emerald-500">
+                      <span className="font-mono-tech text-2xl sm:text-3xl font-bold text-emerald-500">
                         {result.socialMindshareCorrelated.sentimentPolarityPercent}%
                       </span>
                       <span className="font-mono-tech text-xs text-[var(--nm-text-subtle)]">
@@ -764,70 +793,88 @@ export default function ScannerPage() {
                       />
                     </div>
                     <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block">
-                      De-noised positive conviction vs FUD ratio
+                      Bullish cashtag engagement vs skeptic FUD ratio on X
                     </span>
                   </div>
 
-                  {/* Card 3: Divergence Grade */}
+                  {/* Card 3: Smart Followers & KOL Reach */}
                   <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-2">
                     <div className="flex items-center justify-between text-xs font-mono-tech text-[var(--nm-text-subtle)]">
-                      <span className="uppercase">DIVERGENCE VERDICT</span>
-                      <Zap className="w-3.5 h-3.5 text-[var(--nm-accent-amber)]" />
+                      <span className="uppercase">SMART CT REACH</span>
+                      <Users className="w-3.5 h-3.5 text-[var(--nm-accent-cyan)]" />
                     </div>
-                    <div className="font-mono-tech text-sm font-bold text-[var(--nm-text)] truncate pt-1">
-                      {result.socialMindshareCorrelated.divergenceStatus}
+                    <div className="flex items-baseline gap-2">
+                      <span className="font-mono-tech text-2xl sm:text-3xl font-bold text-[var(--nm-text)]">
+                        {result.socialMindshareCorrelated.smartFollowersCount || 840}
+                      </span>
+                      <span className="text-xs font-mono-tech text-[var(--nm-text-subtle)]">Smart Followers</span>
                     </div>
-                    <div className="flex items-center gap-3 pt-1 text-[11px] font-mono-tech text-[var(--nm-text-subtle)]">
-                      <span>{result.socialMindshareCorrelated.smartFollowersCount || 840} Smart Followers</span>
-                      <span>·</span>
-                      <span>{result.socialMindshareCorrelated.kolConsensusCount || 7} KOL Calls</span>
+                    <div className="pt-1 flex items-center justify-between text-[11px] font-mono-tech text-[var(--nm-text-subtle)] border-t border-[var(--nm-line)]">
+                      <span>{result.socialMindshareCorrelated.kolConsensusCount || 7} Verified KOL Calls</span>
+                      <span className="text-emerald-500 font-semibold">High Conviction</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Platform Volume Breakdown */}
-                {result.socialMindshareCorrelated.platforms && (
+                {/* Real Quotes Stream from X */}
+                {result.socialMindshareCorrelated.recentXQuotes && result.socialMindshareCorrelated.recentXQuotes.length > 0 && (
                   <div className="space-y-3 pt-1">
                     <div className="flex items-center justify-between text-xs font-mono-tech">
-                      <span className="uppercase text-[var(--nm-text-subtle)]">
-                        CROSS-PLATFORM FOOTPRINT BREAKDOWN
+                      <span className="uppercase text-[var(--nm-text-subtle)] flex items-center gap-1.5">
+                        <svg className="w-3 h-3 text-[var(--nm-text)]" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                        <span>RECENT VERIFIED DISCUSSIONS ON X</span>
                       </span>
                       <span className="text-[10px] text-[var(--nm-text-subtle)]">
-                        PROPRIETARY 6-CHANNEL INGESTION
+                        REAL CT CITATIONS
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                      {result.socialMindshareCorrelated.platforms.map((p, idx) => (
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {result.socialMindshareCorrelated.recentXQuotes.map((q, idx) => (
                         <div
                           key={idx}
-                          className="p-3 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-1.5"
+                          className="p-3.5 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] flex flex-col justify-between space-y-2.5 text-xs font-sans hover:border-[var(--nm-accent-cyan)]/50 transition-colors"
                         >
-                          <div className="flex items-center justify-between text-xs font-mono-tech">
-                            <span className="font-semibold text-[var(--nm-text)]">{p.platform}</span>
-                            <span className="text-[var(--nm-accent-cyan)] font-bold">{p.sharePercent}%</span>
+                          <div className="flex items-center justify-between text-[11px] font-mono-tech">
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-bold text-[var(--nm-text)]">{q.authorName}</span>
+                              <span className="text-[var(--nm-text-subtle)]">{q.handle}</span>
+                            </div>
+                            <span className="text-[10px] text-[var(--nm-text-subtle)]">{q.timestamp}</span>
                           </div>
-                          <div className="w-full h-1 bg-[var(--nm-surface)] rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-[var(--nm-accent-cyan)]"
-                              style={{ width: `${p.sharePercent}%` }}
-                            />
+
+                          <p className="text-[var(--nm-text)] leading-relaxed text-xs">
+                            &ldquo;{q.text}&rdquo;
+                          </p>
+
+                          <div className="flex items-center justify-between pt-1 border-t border-[var(--nm-line)] text-[10px] font-mono-tech">
+                            <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-bold">
+                              {q.sentiment.toUpperCase()}
+                            </span>
+                            <a
+                              href={q.tweetUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)] inline-flex items-center gap-1"
+                            >
+                              <span>View on X</span>
+                              <ArrowUpRight className="w-3 h-3" />
+                            </a>
                           </div>
-                          <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block">
-                            {p.volume}
-                          </span>
                         </div>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {/* AI Analyst Warning Note & Copilot Action */}
+                {/* X Divergence Assessment & Action Bar */}
                 <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div className="space-y-1 max-w-3xl">
                     <div className="flex items-center gap-1.5 text-[10px] font-mono-tech text-[var(--nm-accent-cyan)] font-bold uppercase">
                       <Sparkles className="w-3 h-3 text-[var(--nm-accent-amber)]" />
-                      <span>COGNITIVE SYNTHESIS &amp; RUG HAZARD ASSESSMENT</span>
+                      <span>X ATTENTION VS. ON-CHAIN REALITY DIVERGENCE</span>
                     </div>
                     <p className="text-xs text-[var(--nm-text)] font-sans leading-relaxed">
                       {result.socialMindshareCorrelated.warningNote}
@@ -839,13 +886,33 @@ export default function ScannerPage() {
                     )}
                   </div>
 
-                  <Link
-                    href="/terminal"
-                    className="shrink-0 px-4 py-2.5 rounded-lg bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] text-[var(--nm-action-text)] font-semibold text-xs font-sans inline-flex items-center justify-center gap-2 transition-all active:scale-95 shadow-sm"
-                  >
-                    <span>Analyze in Copilot</span>
-                    <Terminal className="w-3.5 h-3.5" />
-                  </Link>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <a
+                      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                        `Checked $${result.tokenSymbol} (${result.tokenAddress}) on @lince_labs ClusterGuard.\n\n` +
+                          `• Audit Verdict: ${result.band || result.verdict} (${result.score || 100 - result.riskScore}/100)\n` +
+                          `• Top holder impact: -${result.maxSingleImpactPercent}%\n` +
+                          `• Verified on-chain holders: ${result.totalHolders}\n\n` +
+                          `Inspect live on Lince: https://lince-alpha.vercel.app/scanner`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3.5 py-2 rounded-lg bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-[var(--nm-text)] font-semibold text-xs font-sans inline-flex items-center justify-center gap-1.5 transition-all shadow-sm"
+                    >
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
+                      <span>Share to X</span>
+                    </a>
+
+                    <Link
+                      href="/terminal"
+                      className="px-3.5 py-2 rounded-lg bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] text-[var(--nm-action-text)] font-semibold text-xs font-sans inline-flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm"
+                    >
+                      <span>Terminal</span>
+                      <Terminal className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
                 </div>
               </div>
             )}

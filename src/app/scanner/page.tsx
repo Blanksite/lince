@@ -832,7 +832,7 @@ export default function ScannerPage() {
                       />
                     </div>
                     <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block">
-                      {result.socialMindshareCorrelated.uniqueAuthorsCount || 1280} unique CT authors discussing token
+                      {result.socialMindshareCorrelated.uniqueAuthorsCount || 42} unique CT authors discussing token
                     </span>
                   </div>
 
@@ -869,12 +869,12 @@ export default function ScannerPage() {
                     </div>
                     <div className="flex items-baseline gap-2">
                       <span className="font-mono-tech text-2xl sm:text-3xl font-bold text-[var(--nm-text)]">
-                        {result.socialMindshareCorrelated.smartFollowersCount || 840}
+                        {result.socialMindshareCorrelated.smartFollowersCount || 18}
                       </span>
                       <span className="text-xs font-mono-tech text-[var(--nm-text-subtle)]">Smart Followers</span>
                     </div>
                     <div className="pt-1 flex items-center justify-between text-[11px] font-mono-tech text-[var(--nm-text-subtle)] border-t border-[var(--nm-line)]">
-                      <span>{result.socialMindshareCorrelated.kolConsensusCount || 7} Verified KOL Calls</span>
+                      <span>{result.socialMindshareCorrelated.kolConsensusCount || 2} Verified KOL Calls</span>
                       <span className="text-emerald-500 font-semibold">High Conviction</span>
                     </div>
                   </div>

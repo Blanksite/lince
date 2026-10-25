@@ -3,28 +3,29 @@
 import React, { useState, useMemo } from "react";
 import {
   Search,
-  Maximize2,
   Info,
-  TrendingUp,
-  Users,
-  Award,
   Sparkles,
   ArrowUpRight,
   ExternalLink,
+  MessageSquare,
+  Users,
+  Activity,
+  Radio,
 } from "lucide-react";
+import { XQuoteItem } from "@/lib/types";
 
-interface TreemapSector {
+interface TokenMindshareItem {
   id: string;
   name: string;
-  mindsharePercent: number; // e.g. 27.5
-  historicalDelta: number; // e.g. +14.2%
-  smartFollowers: number; // e.g. 14200
-  kolCount: number; // e.g. 28
+  subtitle: string;
+  sharePercent: number; // e.g. 34.2
+  postsCount: string; // e.g. "1,170 posts"
+  sentiment: "bullish" | "cautious" | "neutral" | "high_velocity";
+  sentimentPercent: number; // e.g. 94%
   color: string;
   textColor?: string;
-  isTokenNarrative?: boolean;
-  topTokens: string[];
-  posts24h: string;
+  xSearchQuery: string;
+  keywords: string[];
 }
 
 interface MindshareTreemapProps {
@@ -33,6 +34,10 @@ interface MindshareTreemapProps {
   tokenAddress: string;
   chain: string;
   xHandle?: string;
+  posts24h?: string;
+  recentQuotes?: XQuoteItem[];
+  catalystNarrative?: string;
+  sentimentPolarityPercent?: number;
 }
 
 export function MindshareTreemap({
@@ -41,331 +46,543 @@ export function MindshareTreemap({
   tokenAddress,
   chain,
   xHandle,
+  posts24h = "3,420 posts",
+  recentQuotes = [],
+  catalystNarrative,
+  sentimentPolarityPercent = 86,
 }: MindshareTreemapProps) {
   const [metricMode, setMetricMode] = useState<
-    "MINDSHARE" | "HISTORICAL" | "MAXIS" | "SMART_FOLLOWERS"
-  >("MINDSHARE");
-  const [timeframe, setTimeframe] = useState<"24H" | "7D" | "30D">("30D");
+    "TOPICS" | "ACCOUNTS" | "CATALYSTS" | "CHANNELS"
+  >("TOPICS");
+  const [timeframe, setTimeframe] = useState<"24H" | "7D" | "30D">("24H");
   const [isRelative, setIsRelative] = useState<boolean>(true);
-  const [hoveredSector, setHoveredSector] = useState<TreemapSector | null>(null);
-  const [selectedSector, setSelectedSector] = useState<TreemapSector | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<TokenMindshareItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<TokenMindshareItem | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const isNoumen = tokenSymbol.toUpperCase() === "NOUMEN";
+  const isNoumen =
+    tokenSymbol.toUpperCase() === "NOUMEN" ||
+    tokenAddress.toLowerCase() === "0xe9b7b7d55ed2ca56b017c569f3c5dd30dd31fefc";
+  const isPons =
+    tokenSymbol.toUpperCase() === "PONS" ||
+    tokenAddress.toLowerCase() === "0x9c42c7e8a9f24510b1a03e1e2d778d91a9807b1a";
+  const isRobin =
+    tokenSymbol.toUpperCase() === "ROBIN" ||
+    tokenAddress.toLowerCase() === "0x7b12d59a29e13462f1c84d2b3e819b45a1928c03";
+  const isSpectre =
+    tokenSymbol.toUpperCase() === "SPECTRE" ||
+    tokenAddress.toLowerCase() === "9bb6nfecjbctnnlfko2fqvqb8hhm13kcyycdqbgpump";
 
-  // Curated Sector Mindshare dataset matching the reference layout
-  const sectors: TreemapSector[] = useMemo(() => {
+  // Deterministic seed for arbitrary tokens
+  const hashSeed = useMemo(() => {
+    let hash = 0;
+    for (let i = 0; i < tokenAddress.length; i++) {
+      hash = (hash << 5) - hash + tokenAddress.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash);
+  }, [tokenAddress]);
+
+  // Mode 1: Topic Sub-themes strictly for THIS token
+  const topicItems: TokenMindshareItem[] = useMemo(() => {
+    if (isNoumen) {
+      return [
+        {
+          id: "t1",
+          name: "Autonomous AI Agent Workspace",
+          subtitle: "Multi-model reasoning, autonomous task orchestration",
+          sharePercent: 34.2,
+          postsCount: "1,170 posts",
+          sentiment: "bullish",
+          sentimentPercent: 94,
+          color: "#dc2626", // Red (largest block matching screenshot)
+          textColor: "#ffffff",
+          xSearchQuery: `$NOUMEN workspace OR AI`,
+          keywords: ["#AI", "#Agents", "Multi-Model", "Workspace"],
+        },
+        {
+          id: "t2",
+          name: "Robinhood Orbit L2 Settlement",
+          subtitle: "Arbitrum Orbit gas speed, on-chain execution",
+          sharePercent: 24.6,
+          postsCount: "842 posts",
+          sentiment: "bullish",
+          sentimentPercent: 88,
+          color: "#0284c7", // Sky blue
+          textColor: "#ffffff",
+          xSearchQuery: `$NOUMEN Robinhood OR Orbit`,
+          keywords: ["Robinhood Chain", "Orbit", "Arbitrum", "Low Gas"],
+        },
+        {
+          id: "t3",
+          name: "Private Inference Billing Credits",
+          subtitle: "Cryptographic privacy & API billing tokens",
+          sharePercent: 16.4,
+          postsCount: "560 posts",
+          sentiment: "bullish",
+          sentimentPercent: 91,
+          color: "#ea580c", // Orange
+          textColor: "#ffffff",
+          xSearchQuery: `$NOUMEN inference OR billing`,
+          keywords: ["Private Credits", "Inference", "Billing", "Tokens"],
+        },
+        {
+          id: "t4",
+          name: "Pons V2 Bonding Curve Graduation",
+          subtitle: "56% curve filled, AMM pool migration discussions",
+          sharePercent: 12.5,
+          postsCount: "428 posts",
+          sentiment: "high_velocity",
+          sentimentPercent: 82,
+          color: "#ca8a04", // Gold/olive
+          textColor: "#ffffff",
+          xSearchQuery: `$NOUMEN Pons V2 curve`,
+          keywords: ["Pons V2", "Bonding Curve", "Graduation", "DEX"],
+        },
+        {
+          id: "t5",
+          name: "Zero Deployer Dump & Cluster Audit",
+          subtitle: "Holding All signals, organic 20 holder spread",
+          sharePercent: 7.8,
+          postsCount: "266 posts",
+          sentiment: "bullish",
+          sentimentPercent: 96,
+          color: "#7c3aed", // Vibrant purple
+          textColor: "#ffffff",
+          xSearchQuery: `$NOUMEN audit OR holders`,
+          keywords: ["ClusterGuard", "0% Dev", "Safe Distribution"],
+        },
+        {
+          id: "t6",
+          name: "Open Source Developer SDK",
+          subtitle: "APIs & Python integrations in developer channels",
+          sharePercent: 4.5,
+          postsCount: "154 posts",
+          sentiment: "bullish",
+          sentimentPercent: 89,
+          color: "#059669", // Sea green
+          textColor: "#ffffff",
+          xSearchQuery: `$NOUMEN SDK OR github`,
+          keywords: ["Developer API", "SDK", "GitHub", "Python"],
+        },
+      ];
+    }
+
+    if (isPons) {
+      return [
+        {
+          id: "p1",
+          name: "Pons V2 DEX Launchpad Deployments",
+          subtitle: "Bonding curve factory contracts on Robinhood chain",
+          sharePercent: 38.5,
+          postsCount: "1,090 posts",
+          sentiment: "bullish",
+          sentimentPercent: 82,
+          color: "#dc2626",
+          textColor: "#ffffff",
+          xSearchQuery: `$PONS launchpad OR DEX`,
+          keywords: ["Launchpad", "Bonding Curve", "Robinhood L2"],
+        },
+        {
+          id: "p2",
+          name: "Liquidity Provider Yield Farming",
+          subtitle: "LP pool incentives & Robinhood mainnet rewards",
+          sharePercent: 26.2,
+          postsCount: "744 posts",
+          sentiment: "bullish",
+          sentimentPercent: 78,
+          color: "#0284c7",
+          textColor: "#ffffff",
+          xSearchQuery: `$PONS yield OR farm`,
+          keywords: ["Yield", "Staking", "LP Farm", "APY"],
+        },
+        {
+          id: "p3",
+          name: "Sniper Cluster Concentration Alert",
+          subtitle: "On-chain warnings of 3 wallets holding 61% float",
+          sharePercent: 19.8,
+          postsCount: "562 posts",
+          sentiment: "cautious",
+          sentimentPercent: 42,
+          color: "#ea580c",
+          textColor: "#ffffff",
+          xSearchQuery: `$PONS sniper OR dump`,
+          keywords: ["Cluster Risk", "Sniper Wallets", "Cabal Alert"],
+        },
+        {
+          id: "p4",
+          name: "Bridge & Arbitrum Orbit Routing",
+          subtitle: "Cross-chain bridge volume from Arbitrum One",
+          sharePercent: 15.5,
+          postsCount: "440 posts",
+          sentiment: "neutral",
+          sentimentPercent: 65,
+          color: "#ca8a04",
+          textColor: "#ffffff",
+          xSearchQuery: `$PONS bridge OR orbit`,
+          keywords: ["Bridge", "Cross-chain", "Orbit L2"],
+        },
+      ];
+    }
+
+    // Default dynamic topics generated for arbitrary token
     return [
       {
-        id: "l1",
-        name: "L1 & Orbit Chains",
-        mindsharePercent: 27.5,
-        historicalDelta: 18.4,
-        smartFollowers: 34200,
-        kolCount: 42,
-        color: "#dc2626", // Red
+        id: "d1",
+        name: `${tokenSymbol} Core Protocol Utility & Narrative`,
+        subtitle: `Primary product thesis & catalyst discussions on CT`,
+        sharePercent: 36.4,
+        postsCount: `${Math.round((hashSeed % 1500) + 800)} posts`,
+        sentiment: "bullish",
+        sentimentPercent: 88,
+        color: "#dc2626",
         textColor: "#ffffff",
-        isTokenNarrative: true,
-        topTokens: [tokenSymbol, "ETH", "ARB", "ROBIN"],
-        posts24h: "48,200 posts",
+        xSearchQuery: `$${tokenSymbol} utility OR narrative`,
+        keywords: [tokenSymbol, "Product", "Utility", "CT"],
       },
       {
-        id: "ai-agents",
-        name: "AI-Agents & LLMs",
-        mindsharePercent: isNoumen ? 18.5 : 8.5,
-        historicalDelta: 42.1,
-        smartFollowers: 28900,
-        kolCount: 38,
-        color: "#0284c7", // Sky blue
+        id: "d2",
+        name: `${chain.toUpperCase()} Liquidity Pool Dynamics`,
+        subtitle: `Bonding curve reserves & DEX volume telemetry`,
+        sharePercent: 25.1,
+        postsCount: `${Math.round((hashSeed % 900) + 500)} posts`,
+        sentiment: "high_velocity",
+        sentimentPercent: 81,
+        color: "#0284c7",
         textColor: "#ffffff",
-        isTokenNarrative: true,
-        topTokens: [tokenSymbol, "VIRTUAL", "AIXBT", "NOUMEN"],
-        posts24h: "36,400 posts",
+        xSearchQuery: `$${tokenSymbol} liquidity OR pool`,
+        keywords: ["DEX Pool", "Liquidity", "Volume", chain],
       },
       {
-        id: "crypto-stocks",
-        name: "Crypto-Stocks",
-        mindsharePercent: 5.5,
-        historicalDelta: 6.2,
-        smartFollowers: 8200,
-        kolCount: 12,
-        color: "#ea580c", // Orange
+        id: "d3",
+        name: `Holder Distribution & Anti-Sybil Audit`,
+        subtitle: `On-chain wallet clustering & dump impact analysis`,
+        sharePercent: 18.5,
+        postsCount: `${Math.round((hashSeed % 600) + 300)} posts`,
+        sentiment: "neutral",
+        sentimentPercent: 74,
+        color: "#ea580c",
         textColor: "#ffffff",
-        topTokens: ["COIN", "MSTR"],
-        posts24h: "14,200 posts",
+        xSearchQuery: `$${tokenSymbol} holders OR audit`,
+        keywords: ["Audit", "Holders", "Distribution", "ClusterGuard"],
       },
       {
-        id: "derivatives",
-        name: "Derivatives",
-        mindsharePercent: 4.4,
-        historicalDelta: -2.4,
-        smartFollowers: 7100,
-        kolCount: 9,
-        color: "#ca8a04", // Gold/olive
+        id: "d4",
+        name: `Speculative Momentum & Price Targets`,
+        subtitle: `KOL breakout charts & retail accumulation flow`,
+        sharePercent: 12.8,
+        postsCount: `${Math.round((hashSeed % 400) + 200)} posts`,
+        sentiment: "bullish",
+        sentimentPercent: 79,
+        color: "#ca8a04",
         textColor: "#ffffff",
-        topTokens: ["GMX", "DYDX", "HYPER"],
-        posts24h: "9,800 posts",
+        xSearchQuery: `$${tokenSymbol} chart OR breakout`,
+        keywords: ["Breakout", "Chart", "Alpha", "Price"],
       },
       {
-        id: "nft",
-        name: "NFT & Collectibles",
-        mindsharePercent: 4.0,
-        historicalDelta: -8.1,
-        smartFollowers: 6400,
-        kolCount: 8,
-        color: "#f43f5e", // Coral
+        id: "d5",
+        name: `Community Memetics & Ecosystem Virality`,
+        subtitle: `Telegram alpha bridge & social sentiment spread`,
+        sharePercent: 7.2,
+        postsCount: `${Math.round((hashSeed % 250) + 100)} posts`,
+        sentiment: "bullish",
+        sentimentPercent: 86,
+        color: "#7c3aed",
         textColor: "#ffffff",
-        topTokens: ["PUDGY", "BAYC"],
-        posts24h: "8,900 posts",
-      },
-      {
-        id: "stablecoins",
-        name: "Stablecoins",
-        mindsharePercent: 3.9,
-        historicalDelta: 1.5,
-        smartFollowers: 9500,
-        kolCount: 11,
-        color: "#eab308", // Yellow
-        textColor: "#18181b",
-        topTokens: ["USDT", "USDC", "USDS"],
-        posts24h: "11,200 posts",
-      },
-      {
-        id: "memecoins",
-        name: "Memecoins",
-        mindsharePercent: 3.8,
-        historicalDelta: 24.8,
-        smartFollowers: 18200,
-        kolCount: 24,
-        color: "#f97316", // Bright orange
-        textColor: "#ffffff",
-        topTokens: ["DOGE", "PEPE", "ROBIN"],
-        posts24h: "29,400 posts",
-      },
-      {
-        id: "defi",
-        name: "DeFi & Yield",
-        mindsharePercent: 3.6,
-        historicalDelta: 4.8,
-        smartFollowers: 12400,
-        kolCount: 16,
-        color: "#7c3aed", // Vibrant purple
-        textColor: "#ffffff",
-        topTokens: ["AAVE", "UNI", "PONS"],
-        posts24h: "14,800 posts",
-      },
-      {
-        id: "pre-token",
-        name: "Pre-Token & Points",
-        mindsharePercent: 3.5,
-        historicalDelta: 12.0,
-        smartFollowers: 11200,
-        kolCount: 15,
-        color: "#9333ea", // Dark magenta
-        textColor: "#ffffff",
-        topTokens: ["BERA", "MONAD"],
-        posts24h: "12,100 posts",
-      },
-      {
-        id: "privacy",
-        name: "Privacy & ZK",
-        mindsharePercent: 2.9,
-        historicalDelta: 5.3,
-        smartFollowers: 6800,
-        kolCount: 7,
-        color: "#475569", // Dark slate
-        textColor: "#ffffff",
-        topTokens: ["ZEC", "RAIL"],
-        posts24h: "7,400 posts",
-      },
-      {
-        id: "launchpads",
-        name: "Launchpads",
-        mindsharePercent: 2.7,
-        historicalDelta: 16.4,
-        smartFollowers: 8900,
-        kolCount: 14,
-        color: "#78716c", // Stone
-        textColor: "#ffffff",
-        isTokenNarrative: true,
-        topTokens: ["Pons V2", "Flap", "Pump.fun"],
-        posts24h: "11,800 posts",
-      },
-      {
-        id: "cex",
-        name: "CEX & Infrastructure",
-        mindsharePercent: 2.6,
-        historicalDelta: -1.2,
-        smartFollowers: 14200,
-        kolCount: 10,
-        color: "#0d9488", // Soft teal
-        textColor: "#ffffff",
-        topTokens: ["BNB", "OKB"],
-        posts24h: "9,200 posts",
-      },
-      {
-        id: "l2",
-        name: "L2 & Rollups",
-        mindsharePercent: 2.5,
-        historicalDelta: 8.4,
-        smartFollowers: 16400,
-        kolCount: 18,
-        color: "#16a34a", // Emerald green
-        textColor: "#ffffff",
-        isTokenNarrative: true,
-        topTokens: ["Robinhood Orbit", "Base", "OP"],
-        posts24h: "16,400 posts",
-      },
-      {
-        id: "dex",
-        name: "DEX & AMM",
-        mindsharePercent: 1.7,
-        historicalDelta: 9.1,
-        smartFollowers: 7400,
-        kolCount: 9,
-        color: "#059669", // Sea green
-        textColor: "#ffffff",
-        topTokens: ["Pons", "Uniswap", "Raydium"],
-        posts24h: "8,200 posts",
-      },
-      {
-        id: "lending",
-        name: "Lending",
-        mindsharePercent: 1.7,
-        historicalDelta: 3.2,
-        smartFollowers: 5800,
-        kolCount: 6,
-        color: "#c026d3", // Fuchsia
-        textColor: "#ffffff",
-        topTokens: ["Morpho", "Euler"],
-        posts24h: "6,100 posts",
-      },
-      {
-        id: "ai",
-        name: "General AI",
-        mindsharePercent: 1.6,
-        historicalDelta: 15.6,
-        smartFollowers: 19400,
-        kolCount: 22,
-        color: "#0891b2", // Cyan
-        textColor: "#ffffff",
-        isTokenNarrative: true,
-        topTokens: [tokenSymbol, "TAO", "RENDER"],
-        posts24h: "24,800 posts",
-      },
-      {
-        id: "oracles",
-        name: "Oracles",
-        mindsharePercent: 1.4,
-        historicalDelta: 2.1,
-        smartFollowers: 6100,
-        kolCount: 8,
-        color: "#14b8a6", // Mint
-        textColor: "#ffffff",
-        topTokens: ["LINK", "PYTH"],
-        posts24h: "7,500 posts",
-      },
-      {
-        id: "rwa",
-        name: "RWA & Tokenization",
-        mindsharePercent: 1.2,
-        historicalDelta: 11.4,
-        smartFollowers: 8200,
-        kolCount: 10,
-        color: "#94a3b8", // Light silver
-        textColor: "#18181b",
-        topTokens: ["ONDO", "CFG"],
-        posts24h: "6,800 posts",
-      },
-      {
-        id: "modular",
-        name: "Modular",
-        mindsharePercent: 1.0,
-        historicalDelta: -3.5,
-        smartFollowers: 5400,
-        kolCount: 6,
-        color: "#64748b", // Grey
-        textColor: "#ffffff",
-        topTokens: ["TIA", "DYM"],
-        posts24h: "5,400 posts",
-      },
-      {
-        id: "data",
-        name: "Data & Storage",
-        mindsharePercent: 0.9,
-        historicalDelta: 1.2,
-        smartFollowers: 4100,
-        kolCount: 5,
-        color: "#1e293b", // Deep navy
-        textColor: "#ffffff",
-        topTokens: ["FIL", "AR"],
-        posts24h: "4,200 posts",
+        xSearchQuery: `$${tokenSymbol} community OR viral`,
+        keywords: ["Community", "Memetics", "Viral", "Alpha"],
       },
     ];
-  }, [tokenSymbol, isNoumen]);
+  }, [isNoumen, isPons, tokenSymbol, chain, hashSeed]);
+
+  // Mode 2: Top X Accounts / KOLs discussing THIS token
+  const accountItems: TokenMindshareItem[] = useMemo(() => {
+    if (isNoumen) {
+      return [
+        {
+          id: "a1",
+          name: "@NoumenLabs (Official Project)",
+          subtitle: "Autonomous AI workspace connecting 100+ models",
+          sharePercent: 41.5,
+          postsCount: "14.2K Followers · 1,420 Mentions",
+          sentiment: "bullish",
+          sentimentPercent: 98,
+          color: "#0284c7",
+          textColor: "#ffffff",
+          xSearchQuery: `from:NoumenLabs`,
+          keywords: ["Official", "Deployer", "Verified"],
+        },
+        {
+          id: "a2",
+          name: "@DeFi_Robin (Robinhood Alpha)",
+          subtitle: "Orbit L2 ecosystem researcher & early caller",
+          sharePercent: 24.8,
+          postsCount: "8.4K Followers · 840 Mentions",
+          sentiment: "bullish",
+          sentimentPercent: 92,
+          color: "#dc2626",
+          textColor: "#ffffff",
+          xSearchQuery: `@DeFi_Robin $NOUMEN`,
+          keywords: ["KOL", "Robinhood Alpha", "Orbit L2"],
+        },
+        {
+          id: "a3",
+          name: "@crypto_sentinel (Security Watch)",
+          subtitle: "ClusterGuard & on-chain dump risk audit reviews",
+          sharePercent: 18.2,
+          postsCount: "24.1K Followers · 620 Mentions",
+          sentiment: "bullish",
+          sentimentPercent: 94,
+          color: "#ca8a04",
+          textColor: "#ffffff",
+          xSearchQuery: `@crypto_sentinel $NOUMEN`,
+          keywords: ["Audit", "Security", "Holder Flow"],
+        },
+        {
+          id: "a4",
+          name: "@ai_agent_scout (AI Agent CT)",
+          subtitle: "Autonomous agent token benchmarking tracker",
+          sharePercent: 15.5,
+          postsCount: "16.8K Followers · 540 Mentions",
+          sentiment: "bullish",
+          sentimentPercent: 89,
+          color: "#059669",
+          textColor: "#ffffff",
+          xSearchQuery: `@ai_agent_scout $NOUMEN`,
+          keywords: ["AI Agents", "Inference", "Virtuals"],
+        },
+      ];
+    }
+
+    // Default accounts for other tokens
+    return [
+      {
+        id: "da1",
+        name: xHandle ? `${xHandle} (Official)` : `@${tokenSymbol.toLowerCase()}_official`,
+        subtitle: `Official community announcements & updates`,
+        sharePercent: 44.0,
+        postsCount: "12.4K Followers · Primary Source",
+        sentiment: "bullish",
+        sentimentPercent: 96,
+        color: "#0284c7",
+        textColor: "#ffffff",
+        xSearchQuery: xHandle || `$${tokenSymbol}`,
+        keywords: ["Official", "Team", "Updates"],
+      },
+      {
+        id: "da2",
+        name: `@${chain}_alpha_radar`,
+        subtitle: `${chain.toUpperCase()} ecosystem tracker & breakout watch`,
+        sharePercent: 28.5,
+        postsCount: "9.8K Followers · Ecosystem Caller",
+        sentiment: "bullish",
+        sentimentPercent: 84,
+        color: "#dc2626",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} ${chain}`,
+        keywords: ["Ecosystem", "Radar", "Calls"],
+      },
+      {
+        id: "da3",
+        name: `@OnChainGuard`,
+        subtitle: `Audit verdicts and wallet cluster analysis`,
+        sharePercent: 16.2,
+        postsCount: "18.5K Followers · Cluster Scanner",
+        sentiment: "neutral",
+        sentimentPercent: 78,
+        color: "#ca8a04",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} audit`,
+        keywords: ["Audit", "Wallets", "Cluster"],
+      },
+      {
+        id: "da4",
+        name: `@DeFi_Degens_Feed`,
+        subtitle: `DEX microcap volume alerts & liquidity tracker`,
+        sharePercent: 11.3,
+        postsCount: "32.1K Followers · DEX Volume Alert",
+        sentiment: "high_velocity",
+        sentimentPercent: 80,
+        color: "#059669",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} dex`,
+        keywords: ["Volume", "Alerts", "Swaps"],
+      },
+    ];
+  }, [isNoumen, xHandle, tokenSymbol, chain]);
+
+  // Mode 3: Sentiment Catalysts for THIS token
+  const catalystItems: TokenMindshareItem[] = useMemo(() => {
+    return [
+      {
+        id: "c1",
+        name: "Product Innovation & Utility Demand",
+        subtitle: "Organic interest in real token utility & features",
+        sharePercent: 51.4,
+        postsCount: "1,758 posts",
+        sentiment: "bullish",
+        sentimentPercent: 94,
+        color: "#059669",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} utility OR product`,
+        keywords: ["Utility", "Product", "Demand"],
+      },
+      {
+        id: "c2",
+        name: `${chain.toUpperCase()} Network Ecosystem Tailwinds`,
+        subtitle: "Growth in chain TVL, bridge inflows & developer users",
+        sharePercent: 26.8,
+        postsCount: "916 posts",
+        sentiment: "bullish",
+        sentimentPercent: 86,
+        color: "#0284c7",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} ${chain}`,
+        keywords: [chain, "Ecosystem", "TVL"],
+      },
+      {
+        id: "c3",
+        name: "Bonding Curve Graduation Speculation",
+        subtitle: "Discussions regarding pool fill rate & price action",
+        sharePercent: 14.2,
+        postsCount: "485 posts",
+        sentiment: "high_velocity",
+        sentimentPercent: 82,
+        color: "#ca8a04",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} curve OR price`,
+        keywords: ["Graduation", "Curve", "Price"],
+      },
+      {
+        id: "c4",
+        name: "Liquidity Depth & AMM Dump FUD / Caution",
+        subtitle: "Skeptics analyzing top holder impact & exit depth",
+        sharePercent: 7.6,
+        postsCount: "261 posts",
+        sentiment: "cautious",
+        sentimentPercent: 38,
+        color: "#dc2626",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} risk OR dump`,
+        keywords: ["Risk", "Caution", "Dump FUD"],
+      },
+    ];
+  }, [tokenSymbol, chain]);
+
+  // Mode 4: CT Discussion Communities discussing THIS token
+  const channelItems: TokenMindshareItem[] = useMemo(() => {
+    return [
+      {
+        id: "ch1",
+        name: "Robinhood Chain & Orbit Dev CT",
+        subtitle: "Builders deploying apps and trading testnet/mainnet",
+        sharePercent: 38.2,
+        postsCount: "1,306 posts",
+        sentiment: "bullish",
+        sentimentPercent: 92,
+        color: "#dc2626",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} builder OR dev`,
+        keywords: ["Builders", "Devs", "Arbitrum Orbit"],
+      },
+      {
+        id: "ch2",
+        name: "Autonomous AI & LLM Agent Watchers",
+        subtitle: "AI researchers & agent liquidity scouts",
+        sharePercent: 32.5,
+        postsCount: "1,111 posts",
+        sentiment: "bullish",
+        sentimentPercent: 95,
+        color: "#0284c7",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} AI OR agent`,
+        keywords: ["AI Agents", "LLMs", "Inference"],
+      },
+      {
+        id: "ch3",
+        name: "Microcap DEX Alpha Channels",
+        subtitle: "Fast-moving early curve rotators & snipers",
+        sharePercent: 18.1,
+        postsCount: "619 posts",
+        sentiment: "high_velocity",
+        sentimentPercent: 78,
+        color: "#ea580c",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} alpha OR degen`,
+        keywords: ["Alpha", "DEX", "Swaps"],
+      },
+      {
+        id: "ch4",
+        name: "On-Chain Forensic & Security Analysts",
+        subtitle: "Cluster checkers verifying deployer holding & wallets",
+        sharePercent: 11.2,
+        postsCount: "384 posts",
+        sentiment: "bullish",
+        sentimentPercent: 91,
+        color: "#7c3aed",
+        textColor: "#ffffff",
+        xSearchQuery: `$${tokenSymbol} forensic OR audit`,
+        keywords: ["Security", "Audit", "ClusterGuard"],
+      },
+    ];
+  }, [tokenSymbol]);
+
+  // Active items based on selected metric mode
+  const currentItems = useMemo(() => {
+    switch (metricMode) {
+      case "ACCOUNTS":
+        return accountItems;
+      case "CATALYSTS":
+        return catalystItems;
+      case "CHANNELS":
+        return channelItems;
+      case "TOPICS":
+      default:
+        return topicItems;
+    }
+  }, [metricMode, topicItems, accountItems, catalystItems, channelItems]);
 
   // Filter based on search query
-  const filteredSectors = useMemo(() => {
-    if (!searchQuery.trim()) return sectors;
+  const filteredItems = useMemo(() => {
+    if (!searchQuery.trim()) return currentItems;
     const q = searchQuery.toLowerCase();
-    return sectors.filter(
-      (s) =>
-        s.name.toLowerCase().includes(q) ||
-        s.topTokens.some((t) => t.toLowerCase().includes(q))
+    return currentItems.filter(
+      (item) =>
+        item.name.toLowerCase().includes(q) ||
+        item.subtitle.toLowerCase().includes(q) ||
+        item.keywords.some((k) => k.toLowerCase().includes(q))
     );
-  }, [sectors, searchQuery]);
+  }, [currentItems, searchQuery]);
 
-  // Compute values dynamically based on active metric
-  const processedSectors = useMemo(() => {
-    return filteredSectors.map((s) => {
-      let metricValue = s.mindsharePercent;
-      let displayValue = `${s.mindsharePercent}%`;
-
-      if (metricMode === "HISTORICAL") {
-        metricValue = Math.max(1, s.historicalDelta + 20);
-        displayValue = `${s.historicalDelta > 0 ? "+" : ""}${s.historicalDelta}%`;
-      } else if (metricMode === "MAXIS") {
-        metricValue = s.kolCount;
-        displayValue = `${s.kolCount} KOLs`;
-      } else if (metricMode === "SMART_FOLLOWERS") {
-        metricValue = s.smartFollowers;
-        displayValue = `${(s.smartFollowers / 1000).toFixed(1)}k`;
-      }
-
-      return {
-        ...s,
-        metricValue,
-        displayValue,
-      };
-    });
-  }, [filteredSectors, metricMode]);
-
-  // Active sector being inspected
-  const activeSector = selectedSector || hoveredSector;
+  const activeItem = selectedItem || hoveredItem || filteredItems[0];
 
   return (
     <div className="rounded-xl border border-[var(--nm-line)] bg-[var(--nm-surface)] overflow-hidden space-y-0">
-      {/* Top Header matching reference image: Title, Controls, Timeframe */}
+      {/* Top Header: Focused 100% on Scanned Token */}
       <div className="p-3.5 sm:p-4 border-b border-[var(--nm-line)] flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[var(--nm-surface-hover)]/30 text-xs font-mono-tech">
-        {/* Left: Title & Info */}
+        {/* Left: Token Title & Identity */}
         <div className="flex items-center gap-2">
           <div className="w-5 h-5 rounded-md bg-[var(--nm-text)] text-[var(--nm-bg)] flex items-center justify-center shrink-0">
             <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
               <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
             </svg>
           </div>
-          <span className="font-bold text-[var(--nm-text)] uppercase tracking-wider">
-            X (CRYPTO TWITTER) SECTOR MINDSHARE HEATMAP
-          </span>
-          <div className="relative group">
-            <Info className="w-3.5 h-3.5 text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)] cursor-pointer" />
-            <div className="absolute left-0 bottom-full mb-1.5 hidden group-hover:block w-64 p-2 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)] shadow-xl text-[10px] text-[var(--nm-text-muted)] font-sans z-50">
-              Proportional treemap sized by total engagement share, cashtag mentions, and influencer discussion velocity on X.
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-[var(--nm-text)] uppercase tracking-wider">
+                ${tokenSymbol} · X (CRYPTO TWITTER) MINDSHARE ARCHITECTURE
+              </span>
+              <span className="px-1.5 py-0.2 rounded bg-emerald-500/15 text-emerald-500 font-bold text-[10px]">
+                CA-SPECIFIC
+              </span>
             </div>
+            <span className="text-[10px] text-[var(--nm-text-subtle)] font-sans">
+              Breakdown of {posts24h} discussing {tokenName} on X across sub-topics, KOL accounts, and catalysts.
+            </span>
           </div>
         </div>
 
-        {/* Right: Search, Relative Toggle, Timeframe Pill */}
+        {/* Right: Search, Relative Toggle, Timeframe */}
         <div className="flex flex-wrap items-center gap-2.5">
           {/* Quick Search */}
           <div className="relative">
@@ -374,7 +591,7 @@ export function MindshareTreemap({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter narrative..."
+              placeholder="Filter topics..."
               className="pl-6 pr-2 py-1 rounded bg-[var(--nm-code-bg)] border border-[var(--nm-line)] text-[11px] text-[var(--nm-text)] placeholder:text-[var(--nm-text-subtle)] focus:outline-none focus:border-[var(--nm-accent-cyan)] w-32 sm:w-36"
             />
           </div>
@@ -394,7 +611,7 @@ export function MindshareTreemap({
             </span>
           </button>
 
-          {/* Timeframe Selector (24H, 7D, 30D) */}
+          {/* Timeframe Selector */}
           <div className="flex items-center rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] p-0.5">
             {(["24H", "7D", "30D"] as const).map((t) => (
               <button
@@ -413,86 +630,91 @@ export function MindshareTreemap({
         </div>
       </div>
 
-      {/* Main Body: Treemap Grid (Left) + Social Metrics Sidebar (Right) */}
+      {/* Main Body: Treemap Grid (Left) + Token Social Metrics Sidebar (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[380px] sm:min-h-[440px]">
         {/* Treemap Viewport (9 Cols) */}
         <div className="lg:col-span-9 p-2.5 sm:p-3 bg-[var(--nm-code-bg)] flex flex-col justify-between">
           <div className="w-full h-full min-h-[360px] sm:min-h-[420px] flex flex-wrap gap-1 content-start overflow-hidden rounded-lg bg-black/40 p-1">
-            {processedSectors.map((sector) => {
-              // Calculate responsive flex-basis / percentage based on mindshare %
-              // High share = large blocks, low share = compact tiles
-              const share = sector.mindsharePercent;
+            {filteredItems.map((item, idx) => {
+              // Calculate responsive flex-basis based on share % of THIS token's mindshare
+              const share = item.sharePercent;
               const flexWidth =
-                share >= 25
-                  ? "w-full md:w-[38%] min-h-[160px] sm:min-h-[200px]"
-                  : share >= 15
-                  ? "w-[48%] md:w-[28%] min-h-[130px] sm:min-h-[160px]"
-                  : share >= 5
-                  ? "w-[48%] md:w-[22%] min-h-[90px] sm:min-h-[110px]"
-                  : share >= 3
-                  ? "w-[31%] md:w-[15%] min-h-[75px] sm:min-h-[90px]"
-                  : "w-[23%] md:w-[11.5%] min-h-[60px] sm:min-h-[75px]";
+                share >= 30
+                  ? "w-full md:w-[48%] min-h-[160px] sm:min-h-[200px]"
+                  : share >= 20
+                  ? "w-[48%] md:w-[35%] min-h-[140px] sm:min-h-[170px]"
+                  : share >= 14
+                  ? "w-[48%] md:w-[26%] min-h-[110px] sm:min-h-[130px]"
+                  : "w-[48%] md:w-[22%] min-h-[90px] sm:min-h-[110px]";
 
-              const isHighlighted =
-                sector.isTokenNarrative && sector.topTokens.includes(tokenSymbol);
-              const isHovered = hoveredSector?.id === sector.id;
+              const isHovered = hoveredItem?.id === item.id;
+              const isSelected = selectedItem?.id === item.id;
 
               return (
                 <div
-                  key={sector.id}
-                  onClick={() => setSelectedSector(sector)}
-                  onMouseEnter={() => setHoveredSector(sector)}
-                  onMouseLeave={() => setHoveredSector(null)}
+                  key={item.id}
+                  onClick={() => setSelectedItem(item)}
+                  onMouseEnter={() => setHoveredItem(item)}
+                  onMouseLeave={() => setHoveredItem(null)}
                   style={{
-                    backgroundColor: sector.color,
-                    color: sector.textColor || "#ffffff",
+                    backgroundColor: item.color,
+                    color: item.textColor || "#ffffff",
                   }}
-                  className={`${flexWidth} grow rounded-md p-2.5 sm:p-3 flex flex-col justify-between cursor-pointer transition-all duration-150 hover:brightness-110 active:scale-[0.99] relative overflow-hidden select-none ${
-                    isHighlighted ? "ring-2 ring-white ring-offset-2 ring-offset-black/50" : ""
+                  className={`${flexWidth} grow rounded-md p-3 sm:p-3.5 flex flex-col justify-between cursor-pointer transition-all duration-150 hover:brightness-110 active:scale-[0.99] relative overflow-hidden select-none ${
+                    isSelected ? "ring-2 ring-white ring-offset-2 ring-offset-black/50" : ""
                   } ${isHovered ? "shadow-2xl z-20 scale-[1.01]" : ""}`}
                 >
-                  {/* Subtle target token badge if matches scanned CA */}
-                  {isHighlighted && (
-                    <div className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/60 backdrop-blur-sm text-[9px] font-mono-tech text-white font-bold flex items-center gap-1 border border-white/30">
-                      <Sparkles className="w-2.5 h-2.5 text-amber-300" />
-                      <span>${tokenSymbol}</span>
-                    </div>
-                  )}
-
-                  {/* Tile Label */}
-                  <div className="space-y-0.5">
-                    <span
-                      className={`font-bold block leading-tight truncate ${
-                        share >= 15
-                          ? "text-base sm:text-xl font-serif-editorial"
-                          : share >= 4
-                          ? "text-xs sm:text-sm font-sans"
-                          : "text-[10px] sm:text-[11px] font-sans"
-                      }`}
-                    >
-                      {sector.name}
-                    </span>
-                    {share >= 3.5 && (
-                      <span className="text-[10px] font-mono-tech opacity-80 block truncate">
-                        {sector.topTokens.slice(0, 3).join(", ")}
+                  {/* Top Header inside tile */}
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <span
+                        className={`font-bold block leading-tight truncate ${
+                          share >= 25
+                            ? "text-base sm:text-xl font-serif-editorial"
+                            : "text-xs sm:text-sm font-sans"
+                        }`}
+                      >
+                        {item.name}
                       </span>
-                    )}
+                      <span className="px-1.5 py-0.5 rounded bg-black/40 text-[9px] font-mono-tech shrink-0 font-bold">
+                        {item.sentimentPercent}% {item.sentiment === "cautious" ? "Risk" : "Bullish"}
+                      </span>
+                    </div>
+
+                    <p className="text-[10px] opacity-85 font-sans line-clamp-2 leading-snug">
+                      {item.subtitle}
+                    </p>
                   </div>
 
-                  {/* Tile Value */}
-                  <div className="pt-2">
+                  {/* Bottom Stats */}
+                  <div className="pt-3 flex items-end justify-between border-t border-white/20 mt-2">
+                    <div>
+                      <span className="text-[10px] font-mono-tech opacity-75 block">
+                        {item.postsCount}
+                      </span>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        {item.keywords.slice(0, 2).map((k) => (
+                          <span
+                            key={k}
+                            className="text-[9px] font-mono-tech px-1 py-0.2 rounded bg-black/30 opacity-90"
+                          >
+                            {k}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Big Percentage */}
                     <div
-                      className={`font-mono-tech font-bold ${
-                        share >= 25
-                          ? "text-2xl sm:text-4xl"
-                          : share >= 15
-                          ? "text-xl sm:text-2xl"
-                          : share >= 4
-                          ? "text-sm sm:text-base"
-                          : "text-xs"
+                      className={`font-mono-tech font-bold leading-none ${
+                        share >= 30
+                          ? "text-3xl sm:text-4xl"
+                          : share >= 20
+                          ? "text-2xl sm:text-3xl"
+                          : "text-xl sm:text-2xl"
                       }`}
                     >
-                      {sector.displayValue}
+                      {item.sharePercent}%
                     </div>
                   </div>
                 </div>
@@ -500,78 +722,75 @@ export function MindshareTreemap({
             })}
           </div>
 
-          {/* Active Sector Quick Ticker Footer */}
-          {activeSector && (
+          {/* Active Token Ticker Footer */}
+          {activeItem && (
             <div className="mt-2 p-2.5 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)] flex flex-wrap items-center justify-between gap-3 text-xs font-mono-tech animate-in fade-in duration-100">
               <div className="flex items-center gap-2.5">
                 <span
                   className="w-3 h-3 rounded-full shrink-0"
-                  style={{ backgroundColor: activeSector.color }}
+                  style={{ backgroundColor: activeItem.color }}
                 />
-                <span className="font-bold text-[var(--nm-text)]">{activeSector.name}</span>
+                <span className="font-bold text-[var(--nm-text)]">{activeItem.name}</span>
                 <span className="text-[var(--nm-text-subtle)]">|</span>
                 <span className="text-[var(--nm-accent-cyan)] font-semibold">
-                  {activeSector.posts24h} on X
+                  {activeItem.postsCount}
                 </span>
                 <span className="text-[var(--nm-text-subtle)]">|</span>
                 <span className="text-emerald-500 font-semibold">
-                  +{activeSector.historicalDelta}% velocity
+                  {activeItem.sentimentPercent}% {activeItem.sentiment.toUpperCase()}
                 </span>
               </div>
 
               <div className="flex items-center gap-2 text-[11px]">
-                <span className="text-[var(--nm-text-subtle)]">Leading cashtags:</span>
-                <div className="flex items-center gap-1">
-                  {activeSector.topTokens.map((t) => (
-                    <a
-                      key={t}
-                      href={`https://x.com/search?q=%24${t}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-1.5 py-0.5 rounded bg-[var(--nm-code-bg)] hover:bg-[var(--nm-surface-hover)] text-[var(--nm-text)] border border-[var(--nm-line)] inline-flex items-center gap-0.5"
-                    >
-                      <span>${t}</span>
-                      <ArrowUpRight className="w-2.5 h-2.5 text-[var(--nm-text-subtle)]" />
-                    </a>
-                  ))}
-                </div>
+                <span className="text-[var(--nm-text-subtle)]">Query on X:</span>
+                <a
+                  href={`https://x.com/search?q=${encodeURIComponent(activeItem.xSearchQuery)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-2 py-0.5 rounded bg-[var(--nm-code-bg)] hover:bg-[var(--nm-surface-hover)] text-[var(--nm-text)] border border-[var(--nm-line)] inline-flex items-center gap-1 text-[11px]"
+                >
+                  <span className="font-semibold">{activeItem.xSearchQuery}</span>
+                  <ExternalLink className="w-3 h-3 text-[var(--nm-text-subtle)]" />
+                </a>
               </div>
             </div>
           )}
         </div>
 
-        {/* Social Metrics Sidebar (3 Cols - Matching Reference UI) */}
+        {/* Token Mindshare Sidebar (3 Cols) */}
         <div className="lg:col-span-3 p-4 sm:p-5 border-t lg:border-t-0 lg:border-l border-[var(--nm-line)] bg-[var(--nm-surface)] flex flex-col justify-between space-y-4">
           <div className="space-y-4">
             <div className="border-b border-[var(--nm-line)] pb-3">
               <h5 className="font-mono-tech font-bold text-xs uppercase tracking-wider text-[var(--nm-text)]">
-                SOCIAL METRICS
+                ${tokenSymbol} SOCIAL METRICS
               </h5>
               <p className="text-[11px] text-[var(--nm-text-muted)] font-sans mt-0.5">
-                Filter Treemap heatmap scaling parameter across Crypto Twitter telemetry.
+                Switch cognitive telemetry lens strictly for this token on Crypto Twitter.
               </p>
             </div>
 
-            {/* Metric Toggle Switches */}
+            {/* Metric Mode Switches */}
             <div className="space-y-3 font-mono-tech text-xs">
-              {/* Option 1: Mindshare */}
+              {/* Option 1: Narrative Sub-Themes */}
               <button
-                onClick={() => setMetricMode("MINDSHARE")}
+                onClick={() => setMetricMode("TOPICS")}
                 className={`w-full p-2.5 rounded-lg border text-left flex items-center justify-between transition-all ${
-                  metricMode === "MINDSHARE"
+                  metricMode === "TOPICS"
                     ? "bg-[var(--nm-code-bg)] border-[var(--nm-accent-cyan)] shadow-sm"
                     : "border-transparent hover:bg-[var(--nm-surface-hover)]"
                 }`}
               >
                 <div className="space-y-0.5">
-                  <span className="font-bold text-[var(--nm-text)] block">Mindshare</span>
+                  <span className="font-bold text-[var(--nm-text)] block">
+                    Discussion Topics
+                  </span>
                   <span className="text-[10px] text-[var(--nm-text-subtle)] block">
-                    Share of total X CT attention
+                    Core narrative sub-themes on X
                   </span>
                 </div>
                 <span
                   className={`w-5 h-2.5 rounded-full p-0.5 flex items-center transition-colors ${
-                    metricMode === "MINDSHARE"
+                    metricMode === "TOPICS"
                       ? "bg-[var(--nm-accent-cyan)] justify-end"
                       : "bg-neutral-600 justify-start"
                   }`}
@@ -580,26 +799,26 @@ export function MindshareTreemap({
                 </span>
               </button>
 
-              {/* Option 2: Historical Mindshare Performance */}
+              {/* Option 2: Top X Accounts / KOLs */}
               <button
-                onClick={() => setMetricMode("HISTORICAL")}
+                onClick={() => setMetricMode("ACCOUNTS")}
                 className={`w-full p-2.5 rounded-lg border text-left flex items-center justify-between transition-all ${
-                  metricMode === "HISTORICAL"
+                  metricMode === "ACCOUNTS"
                     ? "bg-[var(--nm-code-bg)] border-[var(--nm-accent-cyan)] shadow-sm"
                     : "border-transparent hover:bg-[var(--nm-surface-hover)]"
                 }`}
               >
                 <div className="space-y-0.5">
                   <span className="font-bold text-[var(--nm-text)] block">
-                    Historical Velocity
+                    KOL &amp; Key Accounts
                   </span>
                   <span className="text-[10px] text-[var(--nm-text-subtle)] block">
-                    24h momentum change rate
+                    Accounts driving token mentions
                   </span>
                 </div>
                 <span
                   className={`w-5 h-2.5 rounded-full p-0.5 flex items-center transition-colors ${
-                    metricMode === "HISTORICAL"
+                    metricMode === "ACCOUNTS"
                       ? "bg-[var(--nm-accent-cyan)] justify-end"
                       : "bg-neutral-600 justify-start"
                   }`}
@@ -608,26 +827,26 @@ export function MindshareTreemap({
                 </span>
               </button>
 
-              {/* Option 3: Maxis / KOL Consensus */}
+              {/* Option 3: Sentiment Catalysts */}
               <button
-                onClick={() => setMetricMode("MAXIS")}
+                onClick={() => setMetricMode("CATALYSTS")}
                 className={`w-full p-2.5 rounded-lg border text-left flex items-center justify-between transition-all ${
-                  metricMode === "MAXIS"
+                  metricMode === "CATALYSTS"
                     ? "bg-[var(--nm-code-bg)] border-[var(--nm-accent-cyan)] shadow-sm"
                     : "border-transparent hover:bg-[var(--nm-surface-hover)]"
                 }`}
               >
                 <div className="space-y-0.5">
                   <span className="font-bold text-[var(--nm-text)] block">
-                    Maxis &amp; KOLs
+                    Sentiment Drivers
                   </span>
                   <span className="text-[10px] text-[var(--nm-text-subtle)] block">
-                    Verified research calls
+                    Utility vs speculation vs FUD
                   </span>
                 </div>
                 <span
                   className={`w-5 h-2.5 rounded-full p-0.5 flex items-center transition-colors ${
-                    metricMode === "MAXIS"
+                    metricMode === "CATALYSTS"
                       ? "bg-[var(--nm-accent-cyan)] justify-end"
                       : "bg-neutral-600 justify-start"
                   }`}
@@ -636,26 +855,26 @@ export function MindshareTreemap({
                 </span>
               </button>
 
-              {/* Option 4: Smart Followers */}
+              {/* Option 4: Communities & Channels */}
               <button
-                onClick={() => setMetricMode("SMART_FOLLOWERS")}
+                onClick={() => setMetricMode("CHANNELS")}
                 className={`w-full p-2.5 rounded-lg border text-left flex items-center justify-between transition-all ${
-                  metricMode === "SMART_FOLLOWERS"
+                  metricMode === "CHANNELS"
                     ? "bg-[var(--nm-code-bg)] border-[var(--nm-accent-cyan)] shadow-sm"
                     : "border-transparent hover:bg-[var(--nm-surface-hover)]"
                 }`}
               >
                 <div className="space-y-0.5">
                   <span className="font-bold text-[var(--nm-text)] block">
-                    Smart Followers
+                    Community Channels
                   </span>
                   <span className="text-[10px] text-[var(--nm-text-subtle)] block">
-                    High reputation CT accounts
+                    Devs, alpha callers &amp; scouts
                   </span>
                 </div>
                 <span
                   className={`w-5 h-2.5 rounded-full p-0.5 flex items-center transition-colors ${
-                    metricMode === "SMART_FOLLOWERS"
+                    metricMode === "CHANNELS"
                       ? "bg-[var(--nm-accent-cyan)] justify-end"
                       : "bg-neutral-600 justify-start"
                   }`}
@@ -666,25 +885,33 @@ export function MindshareTreemap({
             </div>
           </div>
 
-          {/* Token Positioning Callout Card */}
+          {/* Token Snapshot Footer Card */}
           <div className="p-3.5 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-2 text-xs font-mono-tech">
             <div className="flex items-center gap-1.5 text-[var(--nm-accent-cyan)] font-bold text-[10px] uppercase">
               <Sparkles className="w-3 h-3 text-amber-400" />
-              <span>TOKEN NARRATIVE AUDIT</span>
+              <span>TOKEN CONVICTION RATING</span>
             </div>
-            <p className="text-[11px] text-[var(--nm-text)] font-sans leading-relaxed">
-              ${tokenSymbol} captures high conviction within{" "}
-              <strong className="text-[var(--nm-accent-cyan)]">AI-Agents</strong> and{" "}
-              <strong className="text-emerald-500">Robinhood Orbit</strong> sectors on X.
-            </p>
+            <div className="flex items-baseline justify-between">
+              <span className="text-[11px] text-[var(--nm-text)] font-sans">
+                Bullish CT Mindshare:
+              </span>
+              <span className="font-bold text-emerald-500">
+                {sentimentPolarityPercent}%
+              </span>
+            </div>
+            {catalystNarrative && (
+              <p className="text-[11px] text-[var(--nm-text-muted)] font-sans leading-relaxed pt-1 border-t border-[var(--nm-line)]">
+                {catalystNarrative}
+              </p>
+            )}
             {xHandle && (
               <a
                 href={`https://x.com/${xHandle.replace("@", "")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[11px] text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)] flex items-center gap-1 pt-1 border-t border-[var(--nm-line)]"
+                className="text-[11px] text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)] flex items-center gap-1 pt-1"
               >
-                <span>Official Account: {xHandle}</span>
+                <span>Lead Voice: {xHandle}</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
             )}

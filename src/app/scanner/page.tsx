@@ -880,13 +880,17 @@ export default function ScannerPage() {
                   </div>
                 </div>
 
-                {/* Interactive Sector & Narrative Mindshare Treemap Graphic (Kaito / Cookie.fun style) */}
+                {/* Interactive Token-Specific Cognitive Mindshare Treemap Graphic */}
                 <MindshareTreemap
                   tokenSymbol={result.tokenSymbol}
                   tokenName={result.tokenName}
                   tokenAddress={result.tokenAddress}
                   chain={result.chain}
                   xHandle={result.socialMindshareCorrelated.xHandle}
+                  posts24h={result.socialMindshareCorrelated.posts24h}
+                  recentQuotes={result.socialMindshareCorrelated.recentXQuotes}
+                  catalystNarrative={result.socialMindshareCorrelated.catalystNarrative}
+                  sentimentPolarityPercent={result.socialMindshareCorrelated.sentimentPolarityPercent}
                 />
 
                 {/* Real Quotes Stream from X */}

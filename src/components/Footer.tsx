@@ -74,6 +74,14 @@ export default function Footer({ onOpenMcp, onOpenVenice }: FooterProps) {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/scanner"
+                  className="hover:text-[var(--nm-accent-cyan)] transition-colors flex items-center gap-1.5 text-[var(--nm-accent-cyan)] font-medium"
+                >
+                  <span>ClusterGuard Scanner</span>
+                </Link>
+              </li>
+              <li>
                 <Link href="/#narratives-section" className="hover:text-[var(--nm-text)] transition-colors">
                   Narratives Catalog
                 </Link>

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { NARRATIVES_DATA, ALPHA_DIVERGENCE_DATA, KOLS_DATA, SOCIAL_PLATFORMS_DATA } from "@/lib/data";
+import { scanContractAddress, detectChainFromAddress } from "@/lib/scanner";
+import { ChainNetwork } from "@/lib/types";
 
 interface JsonRpcRequest {
   jsonrpc: "2.0";
@@ -77,6 +79,18 @@ export async function POST(req: NextRequest) {
                 properties: {},
               },
             },
+            {
+              name: "lince_scan_wallet_cluster",
+              description: "Perform on-chain sybil and cabal wallet clustering on a token contract address (Robinhood Chain, Solana, Base, Ethereum). Detects true operator count, concentration %, and rug risk verdict.",
+              inputSchema: {
+                type: "object",
+                properties: {
+                  address: { type: "string", description: "Contract Address (CA) of the token" },
+                  chain: { type: "string", enum: ["robinhood", "solana", "base", "ethereum"], description: "Optional chain hint" },
+                },
+                required: ["address"],
+              },
+            },
           ],
         },
       });
@@ -86,6 +100,27 @@ export async function POST(req: NextRequest) {
     if (method === "tools/call") {
       const toolName = params?.name as string;
       const args = (params?.arguments as Record<string, unknown>) || {};
+
+      if (toolName === "lince_scan_wallet_cluster") {
+        const addr = (args.address as string) || "";
+        const requestedChain = args.chain as ChainNetwork | undefined;
+        if (!addr) {
+          return NextResponse.json({
+            jsonrpc: "2.0",
+            id,
+            error: { code: -32602, message: "Missing address argument" },
+          });
+        }
+        const chain = detectChainFromAddress(addr, requestedChain);
+        const result = scanContractAddress(addr, chain);
+        return NextResponse.json({
+          jsonrpc: "2.0",
+          id,
+          result: {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
+          },
+        });
+      }
 
       if (toolName === "lince_get_narratives") {
         const limit = typeof args.limit === "number" ? args.limit : 8;
@@ -159,6 +194,6 @@ export async function GET() {
     endpoints: {
       jsonrpc: "POST /api/mcp",
     },
-    toolsAvailable: ["lince_get_narratives", "lince_get_alpha_divergence", "lince_get_kols", "lince_get_social_platforms"],
+    toolsAvailable: ["lince_get_narratives", "lince_get_alpha_divergence", "lince_get_kols", "lince_get_social_platforms", "lince_scan_wallet_cluster"],
   });
 }

@@ -70,3 +70,53 @@ export interface CopilotMessage {
   sentimentGauge?: number;
   tokensMentioned?: string[];
 }
+
+export type ChainNetwork = "robinhood" | "solana" | "base" | "ethereum";
+export type ScanVerdict = "SAFE" | "ELEVATED" | "DANGER";
+
+export interface WalletClusterNode {
+  address: string;
+  sharePercent: number;
+  firstFundedAt: string;
+  fundingTx: string;
+  isDevWallet?: boolean;
+}
+
+export interface WalletCluster {
+  id: string;
+  name: string; // e.g. "Cluster Alpha (Cabal Lead #1)"
+  funderAddress: string; // e.g. "0x7a3...c91"
+  walletCount: number;
+  totalSupplyPercent: number;
+  estimatedValue: string;
+  riskTag: "CRITICAL_CONCENTRATION" | "SUSPICIOUS_FUNDING" | "ORGANIC_DISTRIBUTION";
+  wallets: WalletClusterNode[];
+}
+
+export interface ClusterScanResult {
+  tokenAddress: string;
+  tokenName: string;
+  tokenSymbol: string;
+  chain: ChainNetwork;
+  launchpad?: "Pons V2" | "Flap" | "pump.fun" | "Raydium" | "Aerodrome" | "Uniswap v3";
+  marketCap: string;
+  liquidityUsd: string;
+  priceUsd: string;
+  totalHolders: number;
+  scannedHoldersCount: number;
+  realOperatorsCount: number;
+  sybilRatio: number; // percentage of scanned wallets that belong to coordinated clusters
+  verdict: ScanVerdict;
+  riskScore: number; // 0 - 100
+  verdictHeadline: string;
+  verdictDescription: string;
+  cabalConcentrationPercent: number; // sum of coordinated cluster holdings
+  potentialRugDropPercent: number; // estimated price impact if clusters sell
+  clusters: WalletCluster[];
+  socialMindshareCorrelated?: {
+    mindshareScore: number;
+    divergenceStatus: string;
+    warningNote: string;
+  };
+  scannedAt: string;
+}

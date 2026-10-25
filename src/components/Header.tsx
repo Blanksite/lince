@@ -37,7 +37,7 @@ export default function Header({
         </Link>
 
         {/* Center: Clean & Quiet Navigation */}
-        <nav className="hidden md:flex items-center gap-7 text-xs font-mono-tech text-[var(--nm-text-muted)]">
+        <nav className="hidden md:flex items-center gap-6 text-xs font-mono-tech text-[var(--nm-text-muted)]">
           <button
             onClick={() => onScrollToSection("narratives-section")}
             className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"
@@ -50,6 +50,12 @@ export default function Header({
           >
             Alpha Radar
           </button>
+          <Link
+            href="/scanner"
+            className="hover:text-[var(--nm-text)] transition-colors cursor-pointer text-[var(--nm-accent-cyan)] font-semibold"
+          >
+            ClusterGuard
+          </Link>
           <Link
             href="/how-it-works"
             className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"

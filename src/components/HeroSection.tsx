@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { TrendingUp, Zap, Radio, ShieldCheck, ArrowRight, Terminal } from "lucide-react";
+import { TrendingUp, Zap, Radio, ShieldCheck, ShieldAlert, ArrowRight, Terminal } from "lucide-react";
 import TechText from "@/components/TechText";
 import LiveClock from "@/components/LiveClock";
 
@@ -84,11 +84,19 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
             </button>
 
             <Link
+              href="/scanner"
+              className="px-4 sm:px-5 py-2.5 rounded-md bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-[var(--nm-text)] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+            >
+              <ShieldAlert className="w-4 h-4 text-[var(--nm-accent-cyan)]" />
+              <span>ClusterGuard</span>
+            </Link>
+
+            <Link
               href="/terminal"
               className="px-4 sm:px-5 py-2.5 rounded-md bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-[var(--nm-text)] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
             >
-              <Terminal className="w-4 h-4 text-[var(--nm-accent-cyan)]" />
-              <span>Launch Terminal App</span>
+              <Terminal className="w-4 h-4 text-[var(--nm-accent-emerald)]" />
+              <span>Launch Terminal</span>
             </Link>
           </div>
         </div>
@@ -129,16 +137,22 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
               03 / KOL RADAR
             </button>
             <Link
-              href="/terminal"
+              href="/scanner"
               className="px-2.5 py-1.5 rounded bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-left lg:border-none lg:bg-transparent lg:p-0 text-[var(--nm-accent-cyan)] font-semibold transition-colors cursor-pointer"
             >
-              04 / TERMINAL APP
+              04 / CLUSTERGUARD
+            </Link>
+            <Link
+              href="/terminal"
+              className="px-2.5 py-1.5 rounded bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-left lg:border-none lg:bg-transparent lg:p-0 text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
+            >
+              05 / TERMINAL
             </Link>
             <button
               onClick={() => onScrollToSection("mcp-section")}
               className="col-span-2 sm:col-span-1 px-2.5 py-1.5 rounded bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-left lg:border-none lg:bg-transparent lg:p-0 text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
             >
-              05 / MCP PROTOCOL
+              06 / MCP PROTOCOL
             </button>
           </div>
         </div>

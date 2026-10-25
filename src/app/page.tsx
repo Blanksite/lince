@@ -10,6 +10,7 @@ import McpModal from "@/components/McpModal";
 import VeniceKeyModal from "@/components/VeniceKeyModal";
 import VeniceLogo from "@/components/VeniceLogo";
 import LiveClock from "@/components/LiveClock";
+import Footer from "@/components/Footer";
 import Image from "next/image";
 import {
   NARRATIVES_DATA,
@@ -450,71 +451,11 @@ export default function LinceHome() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[var(--nm-bg)] py-14 transition-colors duration-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)] overflow-hidden shrink-0 shadow-sm">
-              <Image
-                src="/logo.jpg"
-                alt="Lince Lynx Logo"
-                width={32}
-                height={32}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div>
-              <span className="font-mono-tech font-bold text-sm tracking-[0.24em] text-[var(--nm-text)]">
-                LINCE
-              </span>
-              <p className="text-[11px] font-mono-tech tracking-[0.1em] text-[var(--nm-text-subtle)]">
-                VISTA DE LINCE · CRYPTO MINDSHARE INTELLIGENCE
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono-tech text-[var(--nm-text-muted)]">
-            <button
-              onClick={() => scrollToSection("narratives-section")}
-              className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"
-            >
-              01 / NARRATIVES
-            </button>
-            <Link
-              href="/terminal"
-              className="hover:text-[var(--nm-text)] transition-colors cursor-pointer text-[var(--nm-accent-cyan)] font-semibold"
-            >
-              04 / TERMINAL APP
-            </Link>
-            <button
-              onClick={() => setIsMcpModalOpen(true)}
-              className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"
-            >
-              06 / MCP PROTOCOL
-            </button>
-            <button
-              onClick={() => setIsVeniceModalOpen(true)}
-              className="hover:text-purple-600 dark:hover:text-purple-300 transition-colors cursor-pointer flex items-center gap-1.5"
-            >
-              <VeniceLogo className="w-3 h-3 text-purple-500" />
-              <span>VENICE AI</span>
-            </button>
-            <a
-              href="https://github.com/Blanksite"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-[var(--nm-text)] transition-colors inline-flex items-center gap-1"
-            >
-              GITHUB <ExternalLink className="w-3 h-3 text-[var(--nm-text-subtle)]" />
-            </a>
-          </div>
-
-          <div className="flex items-center gap-3 text-[11px] font-mono-tech text-[var(--nm-text-subtle)]">
-            <LiveClock prefix="SYS CLOCK:" />
-            <span>&copy; 2026 Lince Labs</span>
-          </div>
-        </div>
-      </footer>
+      {/* Structured Institutional Footer */}
+      <Footer
+        onOpenMcp={() => setIsMcpModalOpen(true)}
+        onOpenVenice={() => setIsVeniceModalOpen(true)}
+      />
 
       {/* Modals */}
       <McpModal isOpen={isMcpModalOpen} onClose={() => setIsMcpModalOpen(false)} />

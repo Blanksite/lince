@@ -50,18 +50,18 @@ export default function Header({
           >
             Alpha Radar
           </button>
-          <button
-            onClick={() => onScrollToSection("kols-section")}
+          <Link
+            href="/how-it-works"
             className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"
           >
-            KOL Consensus
-          </button>
-          <button
-            onClick={() => onScrollToSection("mcp-section")}
+            How it works
+          </Link>
+          <Link
+            href="/docs"
             className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"
           >
-            MCP
-          </button>
+            Docs
+          </Link>
         </nav>
 
         {/* Right: Only Essential Actions (Theme & Terminal) */}

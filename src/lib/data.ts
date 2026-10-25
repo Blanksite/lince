@@ -12,6 +12,8 @@ export const NARRATIVES_DATA: Narrative[] = [
     sentimentScore: 0.91,
     momentum: "surging",
     description: "On-chain autonomous agents executing trading strategies, managing DAOs, and social distribution without human intervention.",
+    lastUpdated: "12:48 UTC",
+    updateCadence: "10m sync",
   },
   {
     id: "prediction-markets",
@@ -24,6 +26,8 @@ export const NARRATIVES_DATA: Narrative[] = [
     sentimentScore: 0.84,
     momentum: "surging",
     description: "Decentralized wagering on geopolitical events, election outcomes, and macroeconomic indicators with record open interest.",
+    lastUpdated: "12:45 UTC",
+    updateCadence: "10m sync",
   },
   {
     id: "depin",
@@ -36,6 +40,8 @@ export const NARRATIVES_DATA: Narrative[] = [
     sentimentScore: 0.79,
     momentum: "steady",
     description: "Decentralized compute, bandwidth, mapping, and sensor hardware networks rewarding node operators via token incentives.",
+    lastUpdated: "12:40 UTC",
+    updateCadence: "10m sync",
   },
   {
     id: "rwa",
@@ -48,6 +54,8 @@ export const NARRATIVES_DATA: Narrative[] = [
     sentimentScore: 0.82,
     momentum: "steady",
     description: "Tokenized US treasuries, private credit, and institutional yields bridging traditional finance liquidity to on-chain protocols.",
+    lastUpdated: "12:35 UTC",
+    updateCadence: "10m sync",
   },
   {
     id: "modular",
@@ -60,6 +68,8 @@ export const NARRATIVES_DATA: Narrative[] = [
     sentimentScore: 0.71,
     momentum: "cooling",
     description: "Separation of execution, settlement, consensus, and data availability layers to scale throughput.",
+    lastUpdated: "12:30 UTC",
+    updateCadence: "10m sync",
   },
   {
     id: "memecoins",
@@ -72,6 +82,8 @@ export const NARRATIVES_DATA: Narrative[] = [
     sentimentScore: 0.65,
     momentum: "cooling",
     description: "Community-driven cultural memetic tokens relying on viral social velocity and high DEX trading volume.",
+    lastUpdated: "12:28 UTC",
+    updateCadence: "10m sync",
   },
   {
     id: "socialfi",
@@ -84,6 +96,8 @@ export const NARRATIVES_DATA: Narrative[] = [
     sentimentScore: 0.77,
     momentum: "surging",
     description: "Decentralized social graphs, tokenized attention curves, and user-owned media distribution protocols.",
+    lastUpdated: "12:25 UTC",
+    updateCadence: "10m sync",
   },
   {
     id: "restaking",
@@ -96,6 +110,8 @@ export const NARRATIVES_DATA: Narrative[] = [
     sentimentScore: 0.73,
     momentum: "steady",
     description: "Leveraging staked ETH and BTC capital to secure external AVS services, bridges, and oracle networks.",
+    lastUpdated: "12:20 UTC",
+    updateCadence: "10m sync",
   },
 ];
 
@@ -113,6 +129,8 @@ export const ALPHA_DIVERGENCE_DATA: AlphaDivergence[] = [
     smartFollowers: 24,
     catalyst: "GitHub commits +340% & autonomous trading agent live on Base mainnet.",
     signalType: "EARLY_ACCUMULATION",
+    lastUpdated: "12:49 UTC",
+    blockHeight: "#21049382",
   },
   {
     id: "div-2",
@@ -127,6 +145,8 @@ export const ALPHA_DIVERGENCE_DATA: AlphaDivergence[] = [
     smartFollowers: 19,
     catalyst: "Exclusive integration with Polymarket resolution feeds announced by founder.",
     signalType: "NARRATIVE_BREAKOUT",
+    lastUpdated: "12:46 UTC",
+    blockHeight: "#21049340",
   },
   {
     id: "div-3",
@@ -141,6 +161,8 @@ export const ALPHA_DIVERGENCE_DATA: AlphaDivergence[] = [
     smartFollowers: 16,
     catalyst: "Benchmark test showing 40% cheaper GPU inference than AWS deployed to devnet.",
     signalType: "EARLY_ACCUMULATION",
+    lastUpdated: "12:41 UTC",
+    blockHeight: "#21049298",
   },
   {
     id: "div-4",
@@ -155,6 +177,8 @@ export const ALPHA_DIVERGENCE_DATA: AlphaDivergence[] = [
     smartFollowers: 31,
     catalyst: "Tier-1 European private bank pilot partnership verified on SEC filing.",
     signalType: "KOL_CONSENSUS",
+    lastUpdated: "12:37 UTC",
+    blockHeight: "#21049210",
   },
   {
     id: "div-5",
@@ -169,6 +193,8 @@ export const ALPHA_DIVERGENCE_DATA: AlphaDivergence[] = [
     smartFollowers: 42,
     catalyst: "Viral waitlist reached 250k users in 48 hours; smart VCs accumulating points.",
     signalType: "NARRATIVE_BREAKOUT",
+    lastUpdated: "12:33 UTC",
+    blockHeight: "#21049180",
   },
   {
     id: "div-6",
@@ -183,6 +209,8 @@ export const ALPHA_DIVERGENCE_DATA: AlphaDivergence[] = [
     smartFollowers: 14,
     catalyst: "10,000 physical IoT nodes deployed across East Asia announced at Token2049.",
     signalType: "EARLY_ACCUMULATION",
+    lastUpdated: "12:29 UTC",
+    blockHeight: "#21049120",
   },
 ];
 
@@ -199,6 +227,7 @@ export const KOLS_DATA: KOLProfile[] = [
       ticker: "VIRTUAL",
       thesis: "Tokenized AI personalities have product-market fit with revenue flywheel.",
       timestamp: "18h ago",
+      exactTime: "18:24 UTC yesterday",
       status: "validated",
     },
   },
@@ -214,6 +243,7 @@ export const KOLS_DATA: KOLProfile[] = [
       ticker: "SPECTRE",
       thesis: "Undervalued autonomous terminal with growing daily active volume on Base.",
       timestamp: "1d ago",
+      exactTime: "10:15 UTC yesterday",
       status: "active",
     },
   },
@@ -229,6 +259,7 @@ export const KOLS_DATA: KOLProfile[] = [
       ticker: "TALOS",
       thesis: "Decentralized hardware co-location makes economic sense for latency-tolerant models.",
       timestamp: "2d ago",
+      exactTime: "14:40 UTC 2d ago",
       status: "active",
     },
   },
@@ -244,6 +275,7 @@ export const KOLS_DATA: KOLProfile[] = [
       ticker: "ONDO",
       thesis: "Tokenized short-term yields will capture 5% of all offshore institutional cash.",
       timestamp: "3d ago",
+      exactTime: "09:30 UTC 3d ago",
       status: "validated",
     },
   },
@@ -256,6 +288,7 @@ export const SOCIAL_PLATFORMS_DATA: SocialPlatformShare[] = [
     volume: "1.42M posts/day",
     growth24h: "+14.2%",
     dominantNarrative: "Autonomous AI Agents",
+    lastUpdated: "12:50 UTC",
   },
   {
     platform: "Telegram",
@@ -263,6 +296,7 @@ export const SOCIAL_PLATFORMS_DATA: SocialPlatformShare[] = [
     volume: "820K msgs/day",
     growth24h: "+8.9%",
     dominantNarrative: "Meme Alpha & Early DEX Launches",
+    lastUpdated: "12:50 UTC",
   },
   {
     platform: "YouTube",
@@ -270,6 +304,7 @@ export const SOCIAL_PLATFORMS_DATA: SocialPlatformShare[] = [
     volume: "42.8K videos/day",
     growth24h: "+4.1%",
     dominantNarrative: "DePIN Node Guides & Market Outlook",
+    lastUpdated: "12:50 UTC",
   },
   {
     platform: "Farcaster",
@@ -277,6 +312,7 @@ export const SOCIAL_PLATFORMS_DATA: SocialPlatformShare[] = [
     volume: "210K casts/day",
     growth24h: "+26.5%",
     dominantNarrative: "Builder Discussion & Frames/Mini-apps",
+    lastUpdated: "12:50 UTC",
   },
   {
     platform: "Reddit",
@@ -284,6 +320,7 @@ export const SOCIAL_PLATFORMS_DATA: SocialPlatformShare[] = [
     volume: "128K comments/day",
     growth24h: "-1.8%",
     dominantNarrative: "Macro Discussions & Beginner Inquiries",
+    lastUpdated: "12:50 UTC",
   },
   {
     platform: "TikTok",
@@ -291,5 +328,6 @@ export const SOCIAL_PLATFORMS_DATA: SocialPlatformShare[] = [
     volume: "18.4K clips/day",
     growth24h: "+11.0%",
     dominantNarrative: "Viral Memecoins & Retail Hype",
+    lastUpdated: "12:50 UTC",
   },
 ];

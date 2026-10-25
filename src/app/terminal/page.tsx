@@ -253,6 +253,8 @@ Select an intelligence thread from the sidebar, run a preset query below, or inp
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-green)] animate-pulse" />
             <span>FEEDS: 6/6 ACTIVE</span>
             <span className="text-[var(--nm-dim)]">|</span>
+            <span>TERUPDATE: <strong className="text-[var(--nm-text)]">12:48 UTC</strong></span>
+            <span className="text-[var(--nm-dim)]">|</span>
             <span>LATENCY: 38ms</span>
           </div>
         </div>
@@ -602,10 +604,13 @@ Select an intelligence thread from the sidebar, run a preset query below, or inp
                 <span className="text-[var(--nm-text)] font-semibold tracking-wider uppercase">
                   TELEMETRY RADAR
                 </span>
-                <span className="w-2 h-2 rounded-full bg-[var(--nm-accent-green)] animate-pulse" />
+                <span className="flex items-center gap-1.5 text-[10px] text-[var(--nm-accent-green)] font-semibold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-green)] animate-pulse" />
+                  12:48 UTC
+                </span>
               </div>
               <p className="text-[11px] text-[var(--nm-muted)] font-sans">
-                Cross-indexed multi-platform data feeds. Click any item to trigger Copilot analysis.
+                Cross-indexed multi-platform data feeds. Terupdate setiap 10 menit (batch 12:48 UTC).
               </p>
             </div>
 

@@ -11,6 +11,8 @@ export interface Narrative {
   sentimentScore: number; // 0.00 to 1.00 (e.g. 0.84 = Bullish)
   momentum: NarrativeMomentum;
   description: string;
+  lastUpdated: string; // e.g. "12:42 UTC"
+  updateCadence?: string; // e.g. "10m sync"
 }
 
 export type SignalType = "EARLY_ACCUMULATION" | "NARRATIVE_BREAKOUT" | "KOL_CONSENSUS";
@@ -28,6 +30,8 @@ export interface AlphaDivergence {
   smartFollowers: number;
   catalyst: string;
   signalType: SignalType;
+  lastUpdated: string; // e.g. "12:48 UTC"
+  blockHeight?: string; // e.g. "#21049281"
 }
 
 export interface KOLProfile {
@@ -42,6 +46,7 @@ export interface KOLProfile {
     ticker: string;
     thesis: string;
     timestamp: string;
+    exactTime: string; // e.g. "10:24 UTC today"
     status: "active" | "validated";
   };
 }
@@ -52,6 +57,7 @@ export interface SocialPlatformShare {
   volume: string;
   growth24h: string;
   dominantNarrative: string;
+  lastUpdated: string; // e.g. "12:50 UTC"
 }
 
 export interface CopilotMessage {

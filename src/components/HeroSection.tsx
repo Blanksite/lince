@@ -15,16 +15,22 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
     <section className="relative pt-16 pb-14 border-b border-[var(--nm-line)] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Top Kicker & Live Sync Clock */}
-        <div className="flex items-center justify-between gap-4 mb-6">
+        <div className="flex flex-wrap items-center justify-between gap-2.5 mb-6">
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-emerald)]" />
-            <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[var(--nm-text-muted)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-emerald)] animate-pulse" />
+            <span className="text-[10px] sm:text-[11px] font-mono-tech uppercase tracking-[0.14em] sm:tracking-[0.18em] text-[var(--nm-text-muted)]">
               [ 01 / VISTA DE LINCE · COGNITIVE MINDSHARE RADAR ]
             </span>
           </div>
 
-          <div className="hidden sm:flex items-center px-2 py-0.5 rounded bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] text-[11px] font-mono-tech text-[var(--nm-text-muted)]">
-            <LiveClock prefix="SYNC:" />
+          <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono-tech text-[var(--nm-text-muted)]">
+            <div className="px-2 py-0.5 rounded bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] flex items-center gap-1.5">
+              <span className="text-[var(--nm-text-subtle)]">TERUPDATE:</span>
+              <span className="font-semibold text-[var(--nm-text)]">12:48 UTC</span>
+            </div>
+            <div className="hidden sm:flex items-center px-2 py-0.5 rounded bg-[var(--nm-badge-bg)] border border-[var(--nm-line)]">
+              <LiveClock prefix="SYNC:" />
+            </div>
           </div>
         </div>
 
@@ -62,16 +68,16 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
         </div>
 
         {/* Hero Description & Action Buttons */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8 mb-14">
-          <p className="text-base sm:text-lg text-[var(--nm-text-muted)] leading-relaxed max-w-[54ch] font-sans">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 sm:gap-8 mb-12 sm:mb-14">
+          <p className="text-sm sm:text-base lg:text-lg text-[var(--nm-text-muted)] leading-relaxed max-w-[54ch] font-sans">
             Lince indexes cross-platform attention velocity, sentiment polarity, and KOL consensus across six channels—spotting 
             early accumulation anomalies before they are priced in by retail.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 shrink-0">
             <button
               onClick={() => onScrollToSection("narratives-section")}
-              className="px-5 py-2.5 rounded-md bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] text-[var(--nm-action-text)] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer flex items-center gap-2 shadow-sm"
+              className="px-4 sm:px-5 py-2.5 rounded-md bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] text-[var(--nm-action-text)] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2 shadow-sm"
             >
               <span>Explore live signals</span>
               <ArrowRight className="w-4 h-4" />
@@ -79,7 +85,7 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
 
             <Link
               href="/terminal"
-              className="px-5 py-2.5 rounded-md bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-[var(--nm-text)] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer flex items-center gap-2"
+              className="px-4 sm:px-5 py-2.5 rounded-md bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-[var(--nm-text)] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
             >
               <Terminal className="w-4 h-4 text-[var(--nm-accent-cyan)]" />
               <span>Launch Terminal App</span>
@@ -87,39 +93,52 @@ export default function HeroSection({ onScrollToSection }: HeroSectionProps) {
           </div>
         </div>
 
-        {/* Horizontal Section Index Bar (Editorial style) */}
-        <div className="w-full border-t border-[var(--nm-line)] pt-4 mb-8 overflow-x-auto">
-          <div className="flex items-center justify-between min-w-[650px] text-[11px] font-mono-tech text-[var(--nm-text-subtle)]">
-            <span className="text-[var(--nm-text-muted)] font-bold">INTELLIGENCE FRAMEWORK</span>
+        {/* Section Index Bar (100% Mobile Responsive without Horizontal Clipping) */}
+        <div className="w-full border-t border-[var(--nm-line)] pt-3 pb-2 mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2.5">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-emerald)]" />
+              <span className="text-[10px] sm:text-[11px] font-mono-tech text-[var(--nm-text-muted)] font-bold tracking-wider uppercase">
+                INTELLIGENCE FRAMEWORK
+              </span>
+            </div>
+            <div className="flex items-center gap-2 text-[10px] font-mono-tech text-[var(--nm-text-subtle)]">
+              <span>CADENCE: 10M REFRESH</span>
+              <span>·</span>
+              <span className="text-[var(--nm-accent-emerald)]">SYNCED: 12:48 UTC</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:items-center lg:justify-between gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] font-mono-tech">
             <button
               onClick={() => onScrollToSection("narratives-section")}
-              className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"
+              className="px-2.5 py-1.5 rounded bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-left lg:border-none lg:bg-transparent lg:p-0 text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
             >
-              NARRATIVES 01
+              01 / NARRATIVES
             </button>
             <button
               onClick={() => onScrollToSection("divergence-section")}
-              className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"
+              className="px-2.5 py-1.5 rounded bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-left lg:border-none lg:bg-transparent lg:p-0 text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
             >
-              ALPHA RADAR 02
+              02 / ALPHA RADAR
             </button>
             <button
               onClick={() => onScrollToSection("kols-section")}
-              className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"
+              className="px-2.5 py-1.5 rounded bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-left lg:border-none lg:bg-transparent lg:p-0 text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
             >
-              KOL CONSENSUS 03
+              03 / KOL RADAR
             </button>
             <Link
               href="/terminal"
-              className="hover:text-[var(--nm-text)] transition-colors cursor-pointer text-[var(--nm-accent-cyan)]"
+              className="px-2.5 py-1.5 rounded bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-left lg:border-none lg:bg-transparent lg:p-0 text-[var(--nm-accent-cyan)] font-semibold transition-colors cursor-pointer"
             >
-              TERMINAL COPILOT 04
+              04 / TERMINAL APP
             </Link>
             <button
               onClick={() => onScrollToSection("mcp-section")}
-              className="hover:text-[var(--nm-text)] transition-colors cursor-pointer"
+              className="col-span-2 sm:col-span-1 px-2.5 py-1.5 rounded bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-left lg:border-none lg:bg-transparent lg:p-0 text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
             >
-              MCP PROTOCOL 05
+              05 / MCP PROTOCOL
             </button>
           </div>
         </div>

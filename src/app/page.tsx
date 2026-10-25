@@ -110,22 +110,26 @@ export default function LinceHome() {
 
   return (
     <div className="min-h-screen bg-[var(--nm-bg)] text-[var(--nm-text)] flex flex-col font-sans selection:bg-[var(--nm-action)] selection:text-[var(--nm-action-text)] transition-colors duration-200">
-      {/* Top Banner Notice with Live Synchronized Clock */}
-      <div className="bg-[var(--nm-code-bg)] border-b border-[var(--nm-line)] px-4 py-2 text-center text-xs font-mono-tech text-[var(--nm-text-muted)] flex items-center justify-between sm:justify-center gap-3">
+      {/* Top Banner Notice with Live Synchronized Clock & Last Updated */}
+      <div className="bg-[var(--nm-code-bg)] border-b border-[var(--nm-line)] px-4 py-2 text-xs font-mono-tech text-[var(--nm-text-muted)] flex flex-col sm:flex-row items-center justify-between gap-1.5 sm:gap-3 text-center sm:text-left">
         <div className="flex items-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-emerald)] animate-pulse" />
-          <span className="tracking-wider">LINCE INTELLIGENCE · MULTI-PLATFORM SOCIAL MINDSHARE &amp; ALPHA RADAR</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-emerald)] animate-pulse shrink-0" />
+          <span className="tracking-wider text-[10px] sm:text-xs">
+            DATA PIPELINE: 6 FEEDS ACTIVE · 10M REFRESH CADENCE
+          </span>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="hidden sm:inline text-[var(--nm-text-subtle)]">|</span>
-          <LiveClock className="text-xs font-semibold text-[var(--nm-text)]" />
+        <div className="flex items-center gap-2 text-[10px] sm:text-xs">
+          <span className="text-[var(--nm-text-subtle)]">TERUPDATE:</span>
+          <span className="font-semibold text-[var(--nm-accent-emerald)]">12:48 UTC</span>
+          <span className="text-[var(--nm-text-subtle)]">|</span>
+          <LiveClock className="font-medium text-[var(--nm-text)]" />
           <span className="hidden lg:inline text-[var(--nm-text-subtle)]">|</span>
           <button
             onClick={() => setIsMcpModalOpen(true)}
             className="underline text-[var(--nm-text)] hover:opacity-80 hidden lg:inline-flex items-center gap-1 font-mono-tech cursor-pointer"
           >
-            CONNECT MCP TO CURSOR &amp; CLAUDE <ExternalLink className="w-3 h-3 text-[var(--nm-text-subtle)]" />
+            CONNECT MCP <ExternalLink className="w-3 h-3 text-[var(--nm-text-subtle)]" />
           </button>
         </div>
       </div>

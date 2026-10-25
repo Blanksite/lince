@@ -68,7 +68,7 @@ export default function LiveExplorer({
   return (
     <section id="narratives-section" className="py-16 border-b border-[var(--nm-line)] transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Section Header with Live Clock */}
+        {/* Section Header with Live Clock & Last Updated Batch */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div>
             <div className="flex items-center gap-3 mb-2">
@@ -84,19 +84,27 @@ export default function LiveExplorer({
             </p>
           </div>
 
-          {/* Live Synchronized Clock in Catalog */}
-          <div className="flex items-center gap-2 shrink-0 px-3 py-1.5 rounded-md bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] text-xs font-mono-tech text-[var(--nm-text-muted)]">
-            <LiveClock prefix="INDEXED AT:" />
+          {/* Sync status & Exact Update Time Badge */}
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0 text-xs font-mono-tech">
+            <div className="px-3 py-1.5 rounded-md bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-emerald)] animate-pulse" />
+              <span className="text-[var(--nm-text-subtle)]">TERUPDATE:</span>
+              <span className="font-bold text-[var(--nm-accent-emerald)]">12:48 UTC</span>
+              <span className="text-[var(--nm-text-subtle)] hidden sm:inline">(CADENCE 10M)</span>
+            </div>
+            <div className="px-3 py-1.5 rounded-md bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] text-[var(--nm-text-muted)]">
+              <LiveClock prefix="SYNC:" />
+            </div>
           </div>
         </div>
 
-        {/* Tab Selector & Search Row */}
+        {/* Tab Selector & Search Row (Mobile Optimized Swipeable Tabs) */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--nm-line)] pb-4 mb-6">
           {/* Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-none">
             <button
               onClick={() => setActiveTab("narratives")}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-mono-tech transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-md text-xs font-mono-tech transition-all cursor-pointer shrink-0 ${
                 activeTab === "narratives"
                   ? "bg-[var(--nm-action)] text-[var(--nm-action-text)] font-bold shadow-sm"
                   : "bg-[var(--nm-surface)] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] border border-[var(--nm-line)]"
@@ -107,7 +115,7 @@ export default function LiveExplorer({
 
             <button
               onClick={() => setActiveTab("divergence")}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-mono-tech transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-md text-xs font-mono-tech transition-all cursor-pointer shrink-0 ${
                 activeTab === "divergence"
                   ? "bg-[var(--nm-action)] text-[var(--nm-action-text)] font-bold shadow-sm"
                   : "bg-[var(--nm-surface)] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] border border-[var(--nm-line)]"
@@ -118,7 +126,7 @@ export default function LiveExplorer({
 
             <button
               onClick={() => setActiveTab("kols")}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-mono-tech transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-md text-xs font-mono-tech transition-all cursor-pointer shrink-0 ${
                 activeTab === "kols"
                   ? "bg-[var(--nm-action)] text-[var(--nm-action-text)] font-bold shadow-sm"
                   : "bg-[var(--nm-surface)] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] border border-[var(--nm-line)]"
@@ -129,7 +137,7 @@ export default function LiveExplorer({
 
             <button
               onClick={() => setActiveTab("socials")}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-mono-tech transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-md text-xs font-mono-tech transition-all cursor-pointer shrink-0 ${
                 activeTab === "socials"
                   ? "bg-[var(--nm-action)] text-[var(--nm-action-text)] font-bold shadow-sm"
                   : "bg-[var(--nm-surface)] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] border border-[var(--nm-line)]"
@@ -153,108 +161,184 @@ export default function LiveExplorer({
         </div>
 
         {/* ========================================================================= */}
-        {/* TAB 1: NARRATIVES TABLE                                                   */}
+        {/* TAB 1: NARRATIVES (Responsive Mobile Cards + Desktop Table)                */}
         {/* ========================================================================= */}
         {activeTab === "narratives" && (
-          <div className="overflow-x-auto border-t border-b border-[var(--nm-line)]">
-            <table className="w-full text-left text-xs font-mono-tech">
-              <thead className="border-b border-[var(--nm-line)] text-[var(--nm-text-subtle)] uppercase text-[10px] tracking-[0.14em]">
-                <tr>
-                  <th className="py-3 px-4 font-normal">01 / SECTOR</th>
-                  <th className="py-3 px-4 font-normal">02 / MINDSHARE</th>
-                  <th className="py-3 px-4 font-normal">03 / 24H VELOCITY</th>
-                  <th className="py-3 px-4 font-normal">04 / SENTIMENT</th>
-                  <th className="py-3 px-4 font-normal">05 / KEY TOKENS</th>
-                  <th className="py-3 px-4 font-normal text-right">06 / 24H POSTS</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--nm-line)]">
-                {filteredNarratives.map((item, index) => (
-                  <tr
-                    key={item.id}
-                    className="hover:bg-[var(--nm-surface-hover)] transition-colors group"
-                  >
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-3">
-                        <span className="text-[var(--nm-text-subtle)] text-[11px] w-4">
-                          0{index + 1}
-                        </span>
-                        <div>
-                          <span className="font-serif-editorial text-lg text-[var(--nm-text)] group-hover:text-[var(--nm-accent-cyan)] transition-colors block">
-                            {item.name}
-                          </span>
-                          <span className="text-[10px] text-[var(--nm-text-subtle)] tracking-[0.08em]">
-                            TAG: #{item.tickerTag}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="py-4 px-4 font-bold text-[var(--nm-text)]">
-                      <div className="flex items-center gap-2">
-                        <span>{item.mindshare.toFixed(1)}%</span>
-                        <div className="w-14 h-1.5 bg-[var(--nm-badge-bg)] rounded-full overflow-hidden hidden sm:block">
-                          <div
-                            className="h-full bg-[var(--nm-accent-cyan)]"
-                            style={{ width: `${item.mindshare * 3.5}%` }}
-                          />
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="py-4 px-4">
+          <div>
+            {/* Mobile Cards View (Screen < md) */}
+            <div className="md:hidden space-y-3.5 mb-6">
+              {filteredNarratives.map((item, index) => (
+                <div
+                  key={item.id}
+                  className="p-4 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] shadow-sm space-y-3"
+                >
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block">
+                        0{index + 1} / #{item.tickerTag}
+                      </span>
+                      <h3 className="font-serif-editorial text-xl text-[var(--nm-text)] font-normal">
+                        {item.name}
+                      </h3>
+                    </div>
+                    <div className="text-right">
                       <span
-                        className={`inline-flex items-center gap-0.5 font-bold ${
-                          item.change24h >= 0 ? "text-[var(--nm-accent-emerald)]" : "text-rose-500"
+                        className={`inline-flex items-center gap-0.5 text-xs font-mono-tech font-bold px-2 py-0.5 rounded ${
+                          item.change24h >= 0
+                            ? "bg-[var(--nm-accent-emerald)]/10 text-[var(--nm-accent-emerald)]"
+                            : "bg-rose-500/10 text-rose-500"
                         }`}
                       >
-                        {item.change24h >= 0 ? (
-                          <ArrowUpRight className="w-3.5 h-3.5" />
-                        ) : (
-                          <ArrowDownRight className="w-3.5 h-3.5" />
-                        )}
-                        {item.change24h >= 0 ? `+${item.change24h.toFixed(1)}%` : `${item.change24h.toFixed(1)}%`}
+                        {item.change24h >= 0 ? "+" : ""}{item.change24h.toFixed(1)}%
                       </span>
-                    </td>
+                    </div>
+                  </div>
 
-                    <td className="py-4 px-4">
-                      <div className="flex items-center gap-1.5">
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            item.sentimentScore >= 0.85
-                              ? "bg-[var(--nm-accent-emerald)]"
-                              : item.sentimentScore >= 0.75
-                              ? "bg-[var(--nm-accent-cyan)]"
-                              : "bg-[var(--nm-accent-amber)]"
-                          }`}
-                        />
-                        <span className="text-[var(--nm-text-muted)] font-medium">
-                          {(item.sentimentScore * 100).toFixed(0)}% Bullish
-                        </span>
-                      </div>
-                    </td>
+                  <div className="grid grid-cols-2 gap-2 text-xs font-mono-tech p-2.5 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)]">
+                    <div>
+                      <span className="text-[10px] text-[var(--nm-text-subtle)] block">MINDSHARE</span>
+                      <span className="font-bold text-[var(--nm-text)]">{item.mindshare.toFixed(1)}%</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-[var(--nm-text-subtle)] block">SENTIMENT</span>
+                      <span className="text-[var(--nm-accent-cyan)] font-semibold">
+                        {(item.sentimentScore * 100).toFixed(0)}% Bullish
+                      </span>
+                    </div>
+                  </div>
 
-                    <td className="py-4 px-4">
-                      <div className="flex flex-wrap gap-1.5">
-                        {item.topProjects.map((p) => (
-                          <button
-                            key={p}
-                            onClick={() => onSelectTokenForCopilot(p)}
-                            className="px-2 py-0.5 rounded bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] hover:border-[var(--nm-line-strong)] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] text-[10px] transition-colors cursor-pointer"
-                          >
-                            ${p}
-                          </button>
-                        ))}
-                      </div>
-                    </td>
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] mr-1">TOKENS:</span>
+                    {item.topProjects.map((p) => (
+                      <button
+                        key={p}
+                        onClick={() => onSelectTokenForCopilot(p)}
+                        className="px-2 py-0.5 rounded bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] text-[10px] font-mono-tech text-[var(--nm-text-muted)] hover:text-[var(--nm-text)]"
+                      >
+                        ${p}
+                      </button>
+                    ))}
+                  </div>
 
-                    <td className="py-4 px-4 text-right text-[var(--nm-text-subtle)]">
-                      {item.socialVolume}
-                    </td>
+                  <div className="pt-2.5 border-t border-[var(--nm-line)] flex items-center justify-between text-[11px] font-mono-tech text-[var(--nm-text-subtle)]">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-emerald)]" />
+                      <span>TERUPDATE: <strong className="text-[var(--nm-text)]">{item.lastUpdated}</strong></span>
+                    </span>
+                    <span>{item.socialVolume}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View (Screen >= md) */}
+            <div className="hidden md:block overflow-x-auto border-t border-b border-[var(--nm-line)]">
+              <table className="w-full text-left text-xs font-mono-tech">
+                <thead className="border-b border-[var(--nm-line)] text-[var(--nm-text-subtle)] uppercase text-[10px] tracking-[0.14em]">
+                  <tr>
+                    <th className="py-3 px-4 font-normal">01 / SECTOR</th>
+                    <th className="py-3 px-4 font-normal">02 / MINDSHARE</th>
+                    <th className="py-3 px-4 font-normal">03 / 24H VELOCITY</th>
+                    <th className="py-3 px-4 font-normal">04 / SENTIMENT</th>
+                    <th className="py-3 px-4 font-normal">05 / KEY TOKENS</th>
+                    <th className="py-3 px-4 font-normal">06 / TERUPDATE</th>
+                    <th className="py-3 px-4 font-normal text-right">07 / 24H POSTS</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-[var(--nm-line)]">
+                  {filteredNarratives.map((item, index) => (
+                    <tr
+                      key={item.id}
+                      className="hover:bg-[var(--nm-surface-hover)] transition-colors group"
+                    >
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-3">
+                          <span className="text-[var(--nm-text-subtle)] text-[11px] w-4">
+                            0{index + 1}
+                          </span>
+                          <div>
+                            <span className="font-serif-editorial text-lg text-[var(--nm-text)] group-hover:text-[var(--nm-accent-cyan)] transition-colors block">
+                              {item.name}
+                            </span>
+                            <span className="text-[10px] text-[var(--nm-text-subtle)] tracking-[0.08em]">
+                              TAG: #{item.tickerTag}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="py-4 px-4 font-bold text-[var(--nm-text)]">
+                        <div className="flex items-center gap-2">
+                          <span>{item.mindshare.toFixed(1)}%</span>
+                          <div className="w-14 h-1.5 bg-[var(--nm-badge-bg)] rounded-full overflow-hidden hidden sm:block">
+                            <div
+                              className="h-full bg-[var(--nm-accent-cyan)]"
+                              style={{ width: `${item.mindshare * 3.5}%` }}
+                            />
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="py-4 px-4">
+                        <span
+                          className={`inline-flex items-center gap-0.5 font-bold ${
+                            item.change24h >= 0 ? "text-[var(--nm-accent-emerald)]" : "text-rose-500"
+                          }`}
+                        >
+                          {item.change24h >= 0 ? (
+                            <ArrowUpRight className="w-3.5 h-3.5" />
+                          ) : (
+                            <ArrowDownRight className="w-3.5 h-3.5" />
+                          )}
+                          {item.change24h >= 0 ? `+${item.change24h.toFixed(1)}%` : `${item.change24h.toFixed(1)}%`}
+                        </span>
+                      </td>
+
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${
+                              item.sentimentScore >= 0.85
+                                ? "bg-[var(--nm-accent-emerald)]"
+                                : item.sentimentScore >= 0.75
+                                ? "bg-[var(--nm-accent-cyan)]"
+                                : "bg-[var(--nm-accent-amber)]"
+                            }`}
+                          />
+                          <span className="text-[var(--nm-text-muted)] font-medium">
+                            {(item.sentimentScore * 100).toFixed(0)}% Bullish
+                          </span>
+                        </div>
+                      </td>
+
+                      <td className="py-4 px-4">
+                        <div className="flex flex-wrap gap-1.5">
+                          {item.topProjects.map((p) => (
+                            <button
+                              key={p}
+                              onClick={() => onSelectTokenForCopilot(p)}
+                              className="px-2 py-0.5 rounded bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] hover:border-[var(--nm-line-strong)] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] text-[10px] transition-colors cursor-pointer"
+                            >
+                              ${p}
+                            </button>
+                          ))}
+                        </div>
+                      </td>
+
+                      <td className="py-4 px-4">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[var(--nm-badge-bg)] text-[11px] text-[var(--nm-accent-emerald)] font-semibold border border-[var(--nm-line)]">
+                          {item.lastUpdated}
+                        </span>
+                      </td>
+
+                      <td className="py-4 px-4 text-right text-[var(--nm-text-subtle)]">
+                        {item.socialVolume}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
@@ -285,9 +369,13 @@ export default function LiveExplorer({
                         ${sig.ticker}
                       </span>
                     </h3>
-                    <span className="text-[11px] font-mono-tech text-[var(--nm-text-subtle)]">
-                      {sig.category} · {sig.chain}
-                    </span>
+                    <div className="flex items-center justify-between text-[11px] font-mono-tech text-[var(--nm-text-subtle)] mt-1">
+                      <span>{sig.category} · {sig.chain}</span>
+                      <span className="text-[var(--nm-accent-emerald)] font-semibold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-emerald)]" />
+                        TERUPDATE: {sig.lastUpdated}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3 p-3 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] mb-4 text-xs font-mono-tech">
@@ -371,10 +459,12 @@ export default function LiveExplorer({
                   </div>
                 </div>
 
-                <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)]">
-                  <div className="flex items-center justify-between text-xs font-mono-tech mb-1">
+                <div className="p-4 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] space-y-2">
+                  <div className="flex items-center justify-between text-xs font-mono-tech">
                     <span className="text-[var(--nm-text)] font-bold">${kol.recentCall.ticker}</span>
-                    <span className="text-[var(--nm-text-subtle)]">{kol.recentCall.timestamp}</span>
+                    <span className="text-[var(--nm-accent-emerald)] text-[11px] font-semibold">
+                      TERUPDATE: {kol.recentCall.exactTime}
+                    </span>
                   </div>
                   <p className="text-xs text-[var(--nm-text-muted)] italic font-sans leading-relaxed">
                     &ldquo;{kol.recentCall.thesis}&rdquo;
@@ -423,9 +513,9 @@ export default function LiveExplorer({
                     <span className="text-[var(--nm-accent-emerald)] font-bold">{soc.growth24h}</span>
                   </div>
                   <div className="flex justify-between text-[var(--nm-text-subtle)] pt-2 border-t border-[var(--nm-line)]">
-                    <span>LEADING THEME:</span>
-                    <span className="text-[var(--nm-text-muted)] truncate max-w-[150px]">
-                      {soc.dominantNarrative}
+                    <span>TERUPDATE:</span>
+                    <span className="text-[var(--nm-accent-emerald)] font-semibold">
+                      {soc.lastUpdated}
                     </span>
                   </div>
                 </div>

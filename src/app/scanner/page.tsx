@@ -645,6 +645,7 @@ export default function ScannerPage() {
                     chain={result.chain}
                     circulatingFloatPercent={result.circulatingFloatPercent}
                     curveReservePercent={result.curveReservePercent}
+                    clusters={result.clusters}
                   />
                 )}
 

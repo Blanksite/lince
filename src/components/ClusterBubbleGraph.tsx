@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { HolderDetail, LaunchAudit } from "@/lib/types";
+import dynamic from "next/dynamic";
+import { HolderDetail, LaunchAudit, WalletCluster } from "@/lib/types";
 import {
   ExternalLink,
   Copy,
@@ -13,7 +14,20 @@ import {
   ShieldCheck,
   Layers,
   Filter,
+  Sparkles,
+  Globe,
 } from "lucide-react";
+
+// Dynamic import with ssr: false for WebGL / Three.js Reagraph Engine
+const ReagraphBubbleView = dynamic(() => import("./ReagraphBubbleView"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[520px] sm:h-[580px] flex flex-col items-center justify-center gap-3 bg-[#07090e] rounded-xl text-xs font-mono-tech text-[var(--nm-accent-cyan)] border border-[var(--nm-line)]">
+      <div className="w-8 h-8 rounded-full border-2 border-[var(--nm-accent-cyan)] border-t-transparent animate-spin" />
+      <span className="tracking-wider">INITIALIZING WEBGL 3D COSMOS ENGINE (REAGRAPH)...</span>
+    </div>
+  ),
+});
 
 interface ClusterBubbleGraphProps {
   holders: HolderDetail[];
@@ -22,6 +36,7 @@ interface ClusterBubbleGraphProps {
   chain: string;
   circulatingFloatPercent?: number;
   curveReservePercent?: number;
+  clusters?: WalletCluster[];
 }
 
 export function ClusterBubbleGraph({
@@ -31,7 +46,9 @@ export function ClusterBubbleGraph({
   chain,
   circulatingFloatPercent = 54.3,
   curveReservePercent = 43.7,
+  clusters = [],
 }: ClusterBubbleGraphProps) {
+  const [engineMode, setEngineMode] = useState<"WEBGL" | "SVG">("WEBGL");
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [hoveredNode, setHoveredNode] = useState<HolderDetail | null>(null);
   const [selectedNode, setSelectedNode] = useState<HolderDetail | null>(null);
@@ -115,104 +132,145 @@ export function ClusterBubbleGraph({
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-[10px] font-mono-tech uppercase tracking-[0.16em] text-[var(--nm-accent-cyan)] font-bold">
-              INTERACTIVE ON-CHAIN CLUSTER TOPOLOGY
+              WEBGL ON-CHAIN CLUSTER TOPOLOGY (BUBBLEMAPS ENGINE)
             </span>
           </div>
           <h4 className="font-serif-editorial text-lg sm:text-xl text-[var(--nm-text)]">
             Liquidity Pool &amp; Float Holder Graph
           </h4>
           <p className="text-xs text-[var(--nm-text-muted)] font-sans">
-            Interactive node map showing supply dispersal from Pons V2 bonding curve to top holder clusters.
+            GPU-accelerated WebGL 3D cosmos powered by Reagraph &amp; Three.js. Inspect holder clusters, directional dispersal, and sniper rings.
           </p>
         </div>
 
         {/* Toolbar Controls */}
         <div className="flex flex-wrap items-center gap-2 font-mono-tech text-xs">
-          {/* Filter Pills */}
+          {/* Engine Mode: Reagraph WebGL vs 2D SVG */}
           <div className="flex items-center rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] p-0.5">
             <button
-              onClick={() => setFilterMode("ALL")}
-              className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
-                filterMode === "ALL"
-                  ? "bg-[var(--nm-surface)] text-[var(--nm-text)] shadow-sm"
+              onClick={() => setEngineMode("WEBGL")}
+              className={`px-3 py-1.5 rounded text-[11px] font-bold flex items-center gap-1.5 transition-all ${
+                engineMode === "WEBGL"
+                  ? "bg-[var(--nm-accent-cyan)] text-black shadow-sm"
                   : "text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
               }`}
             >
-              All (20)
+              <Sparkles className="w-3 h-3" />
+              <span>WebGL 3D (Reagraph)</span>
             </button>
             <button
-              onClick={() => setFilterMode("TOP5")}
-              className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
-                filterMode === "TOP5"
+              onClick={() => setEngineMode("SVG")}
+              className={`px-3 py-1.5 rounded text-[11px] font-bold flex items-center gap-1.5 transition-all ${
+                engineMode === "SVG"
                   ? "bg-[var(--nm-surface)] text-[var(--nm-text)] shadow-sm"
                   : "text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
               }`}
             >
-              Top 5
-            </button>
-            <button
-              onClick={() => setFilterMode("SNIPERS")}
-              className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
-                filterMode === "SNIPERS"
-                  ? "bg-[var(--nm-surface)] text-[var(--nm-text)] shadow-sm"
-                  : "text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
-              }`}
-            >
-              Snipers
+              <Globe className="w-3 h-3" />
+              <span>2D SVG</span>
             </button>
           </div>
 
-          {/* Curve Toggle */}
-          <button
-            onClick={() => setShowCurveNode(!showCurveNode)}
-            className={`px-2.5 py-1.5 rounded-lg border text-[11px] font-semibold flex items-center gap-1.5 transition-all ${
-              showCurveNode
-                ? "bg-[var(--nm-accent-cyan)]/10 border-[var(--nm-accent-cyan)]/40 text-[var(--nm-accent-cyan)]"
-                : "bg-[var(--nm-code-bg)] border-[var(--nm-line)] text-[var(--nm-text-subtle)]"
-            }`}
-            title="Toggle Bonding Curve Reserve Hub"
-          >
-            <Layers className="w-3 h-3" />
-            <span>Bonding Pool</span>
-          </button>
+          {engineMode === "SVG" && (
+            <>
+              {/* Filter Pills */}
+              <div className="flex items-center rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] p-0.5">
+                <button
+                  onClick={() => setFilterMode("ALL")}
+                  className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
+                    filterMode === "ALL"
+                      ? "bg-[var(--nm-surface)] text-[var(--nm-text)] shadow-sm"
+                      : "text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
+                  }`}
+                >
+                  All (20)
+                </button>
+                <button
+                  onClick={() => setFilterMode("TOP5")}
+                  className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
+                    filterMode === "TOP5"
+                      ? "bg-[var(--nm-surface)] text-[var(--nm-text)] shadow-sm"
+                      : "text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
+                  }`}
+                >
+                  Top 5
+                </button>
+                <button
+                  onClick={() => setFilterMode("SNIPERS")}
+                  className={`px-2.5 py-1 rounded text-[11px] font-semibold transition-all ${
+                    filterMode === "SNIPERS"
+                      ? "bg-[var(--nm-surface)] text-[var(--nm-text)] shadow-sm"
+                      : "text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
+                  }`}
+                >
+                  Snipers
+                </button>
+              </div>
 
-          {/* Zoom Controls */}
-          <div className="flex items-center gap-1 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] p-0.5">
-            <button
-              onClick={() => setZoomLevel((z) => Math.min(1.4, z + 0.15))}
-              className="p-1 hover:text-[var(--nm-text)] text-[var(--nm-text-subtle)]"
-              title="Zoom In"
-            >
-              <ZoomIn className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={() => setZoomLevel((z) => Math.max(0.7, z - 0.15))}
-              className="p-1 hover:text-[var(--nm-text)] text-[var(--nm-text-subtle)]"
-              title="Zoom Out"
-            >
-              <ZoomOut className="w-3.5 h-3.5" />
-            </button>
-            <button
-              onClick={() => setZoomLevel(1)}
-              className="p-1 hover:text-[var(--nm-text)] text-[var(--nm-text-subtle)]"
-              title="Reset Zoom"
-            >
-              <RotateCcw className="w-3 h-3" />
-            </button>
-          </div>
+              {/* Curve Toggle */}
+              <button
+                onClick={() => setShowCurveNode(!showCurveNode)}
+                className={`px-2.5 py-1.5 rounded-lg border text-[11px] font-semibold flex items-center gap-1.5 transition-all ${
+                  showCurveNode
+                    ? "bg-[var(--nm-accent-cyan)]/10 border-[var(--nm-accent-cyan)]/40 text-[var(--nm-accent-cyan)]"
+                    : "bg-[var(--nm-code-bg)] border-[var(--nm-line)] text-[var(--nm-text-subtle)]"
+                }`}
+                title="Toggle Bonding Curve Reserve Hub"
+              >
+                <Layers className="w-3 h-3" />
+                <span>Bonding Pool</span>
+              </button>
+
+              {/* Zoom Controls */}
+              <div className="flex items-center gap-1 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] p-0.5">
+                <button
+                  onClick={() => setZoomLevel((z) => Math.min(1.4, z + 0.15))}
+                  className="p-1 hover:text-[var(--nm-text)] text-[var(--nm-text-subtle)]"
+                  title="Zoom In"
+                >
+                  <ZoomIn className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={() => setZoomLevel((z) => Math.max(0.7, z - 0.15))}
+                  className="p-1 hover:text-[var(--nm-text)] text-[var(--nm-text-subtle)]"
+                  title="Zoom Out"
+                >
+                  <ZoomOut className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={() => setZoomLevel(1)}
+                  className="p-1 hover:text-[var(--nm-text)] text-[var(--nm-text-subtle)]"
+                  title="Reset Zoom"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
       {/* Main Interactive Graph Viewport */}
-      <div className="relative w-full h-[440px] sm:h-[480px] bg-[radial-gradient(ellipse_at_center,_var(--nm-code-bg)_0%,_var(--nm-surface)_100%)] overflow-hidden cursor-grab active:cursor-grabbing select-none">
-        {/* Ambient Grid Lines */}
-        <div
-          className="absolute inset-0 opacity-15 pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(var(--nm-line) 1px, transparent 1px)`,
-            backgroundSize: "24px 24px",
-          }}
+      {engineMode === "WEBGL" ? (
+        <ReagraphBubbleView
+          holders={holders}
+          launchAudit={launchAudit}
+          tokenSymbol={tokenSymbol}
+          chain={chain}
+          circulatingFloatPercent={circulatingFloatPercent}
+          curveReservePercent={curveReservePercent}
+          clusters={clusters}
         />
+      ) : (
+        <div className="relative w-full h-[440px] sm:h-[480px] bg-[radial-gradient(ellipse_at_center,_var(--nm-code-bg)_0%,_var(--nm-surface)_100%)] overflow-hidden cursor-grab active:cursor-grabbing select-none">
+          {/* Ambient Grid Lines */}
+          <div
+            className="absolute inset-0 opacity-15 pointer-events-none"
+            style={{
+              backgroundImage: `radial-gradient(var(--nm-line) 1px, transparent 1px)`,
+              backgroundSize: "24px 24px",
+            }}
+          />
 
         {/* Orbit Guides */}
         <svg
@@ -546,6 +604,7 @@ export function ClusterBubbleGraph({
           </div>
         )}
       </div>
+      )}
 
       {/* Footer Info Bar */}
       <div className="p-3 sm:p-4 border-t border-[var(--nm-line)] bg-[var(--nm-code-bg)] flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono-tech text-[var(--nm-text-subtle)]">

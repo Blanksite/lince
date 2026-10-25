@@ -10,14 +10,26 @@ import {
   ZoomIn,
   ZoomOut,
   RotateCcw,
-  ShieldAlert,
-  ShieldCheck,
   Layers,
-  Filter,
   Sparkles,
   Globe,
+  Activity,
   Zap,
 } from "lucide-react";
+
+// Dynamic import with ssr: false for AntV G6 Engine (Primary, animated flowing currents)
+const AntVG6BubbleView = dynamic(() => import("./AntVG6BubbleView"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[620px] sm:h-[680px] flex flex-col items-center justify-center gap-3 bg-[#030712] rounded-2xl text-xs font-mono-tech text-cyan-400 border border-white/10 shadow-2xl">
+      <div className="w-10 h-10 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
+      <span className="tracking-widest uppercase font-bold text-white/90">
+        INITIALIZING ANTV G6 WITH ANIMATED FLOWS...
+      </span>
+      <span className="text-[10px] text-white/40">Loading physics topology, glowing bubbles &amp; animated edge currents</span>
+    </div>
+  ),
+});
 
 // Dynamic import with ssr: false for WebGL / Three.js Reagraph Engine
 const ReagraphBubbleView = dynamic(() => import("./ReagraphBubbleView"), {
@@ -68,7 +80,8 @@ export function ClusterBubbleGraph({
   curveReservePercent = 43.7,
   clusters = [],
 }: ClusterBubbleGraphProps) {
-  const [engineMode, setEngineMode] = useState<"WEBGL" | "SVG">("WEBGL");
+  // Default to G6 (AntV G6 with Animated Flow) as requested by the user
+  const [engineMode, setEngineMode] = useState<"G6" | "WEBGL" | "SVG">("G6");
   const [zoomLevel, setZoomLevel] = useState<number>(1);
   const [hoveredNode, setHoveredNode] = useState<HolderDetail | null>(null);
   const [selectedNode, setSelectedNode] = useState<HolderDetail | null>(null);
@@ -91,7 +104,7 @@ export function ClusterBubbleGraph({
   const cx = 400;
   const cy = 250;
 
-  // Compute orbital positions for SVG fallback in a balanced circular layout
+  // Compute orbital positions for SVG fallback
   const positionedNodes = useMemo(() => {
     const list = filteredHolders;
     const total = list.length;
@@ -147,21 +160,34 @@ export function ClusterBubbleGraph({
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]" />
             <span className="text-[10px] font-mono-tech uppercase tracking-[0.16em] text-cyan-400 font-extrabold">
-              ON-CHAIN CLUSTER TOPOLOGY · BUBBLEMAPS WEBGL ENGINE
+              ON-CHAIN CLUSTER TOPOLOGY · {engineMode === "G6" ? "ANTV G6 ANIMATED ENGINE" : engineMode === "WEBGL" ? "REAGRAPH WEBGL" : "2D VECTOR"}
             </span>
           </div>
           <h4 className="font-serif-editorial text-lg sm:text-xl text-white">
             Liquidity Pool &amp; Holder Distribution Graph
           </h4>
           <p className="text-xs text-white/50 font-sans">
-            GPU-accelerated WebGL 3D cosmos powered by Reagraph &amp; Three.js. Inspect wallet clusters, directional token flows, and sniper rings.
+            {engineMode === "G6"
+              ? "AntV G6 physics topology with live animated flowing edge currents and glowing neon cluster halos."
+              : "GPU-accelerated WebGL 3D cosmos powered by Three.js. Inspect wallet clusters, directional token flows, and sniper rings."}
           </p>
         </div>
 
         {/* Toolbar Controls */}
         <div className="flex flex-wrap items-center gap-2 font-mono-tech text-xs">
-          {/* Engine Mode: Reagraph WebGL vs 2D SVG */}
+          {/* Engine Mode Switcher: AntV G6 vs Reagraph WebGL vs 2D SVG */}
           <div className="flex items-center rounded-xl bg-white/5 border border-white/10 p-0.5">
+            <button
+              onClick={() => setEngineMode("G6")}
+              className={`px-3 py-1.5 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all ${
+                engineMode === "G6"
+                  ? "bg-cyan-500 text-black shadow-[0_0_14px_rgba(0,229,255,0.5)]"
+                  : "text-white/60 hover:text-white"
+              }`}
+            >
+              <Activity className="w-3.5 h-3.5 fill-current animate-pulse" />
+              <span>AntV G6 (Animated)</span>
+            </button>
             <button
               onClick={() => setEngineMode("WEBGL")}
               className={`px-3 py-1.5 rounded-lg text-[11px] font-bold flex items-center gap-1.5 transition-all ${
@@ -170,8 +196,8 @@ export function ClusterBubbleGraph({
                   : "text-white/60 hover:text-white"
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
-              <span>WebGL 3D (Reagraph)</span>
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>WebGL 3D</span>
             </button>
             <button
               onClick={() => setEngineMode("SVG")}
@@ -266,7 +292,25 @@ export function ClusterBubbleGraph({
       </div>
 
       {/* Main Interactive Graph Viewport */}
-      {engineMode === "WEBGL" ? (
+      {engineMode === "G6" ? (
+        <AntVG6BubbleView
+          holders={holders}
+          launchAudit={launchAudit}
+          tokenSymbol={tokenSymbol}
+          tokenName={tokenName}
+          tokenAddress={tokenAddress}
+          chain={chain}
+          marketCap={marketCap}
+          liquidityUsd={liquidityUsd}
+          totalHolders={totalHolders}
+          riskScore={riskScore}
+          verdict={verdict}
+          launchpad={launchpad}
+          circulatingFloatPercent={circulatingFloatPercent}
+          curveReservePercent={curveReservePercent}
+          clusters={clusters}
+        />
+      ) : engineMode === "WEBGL" ? (
         <ReagraphBubbleView
           holders={holders}
           launchAudit={launchAudit}
@@ -654,7 +698,7 @@ export function ClusterBubbleGraph({
         </div>
         <div className="text-[10px] text-white/40 flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-          <span>Interactive 3D Orbit: Click any bubble to inspect, drag canvas to rotate</span>
+          <span>AntV G6 Engine: Drag nodes to test physics, hover/click to inspect flowing cluster links</span>
         </div>
       </div>
     </div>

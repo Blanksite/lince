@@ -34,6 +34,8 @@ import { FundingLineageTree } from "@/components/FundingLineageTree";
 import { DumpImpactSimulator } from "@/components/DumpImpactSimulator";
 import { ShareableDossierModal } from "@/components/ShareableDossierModal";
 import { LiveWhaleTape } from "@/components/LiveWhaleTape";
+import { VeniceAuditModal } from "@/components/VeniceAuditModal";
+import VeniceLogo from "@/components/VeniceLogo";
 import {
   scanContractAddress,
   detectChainFromAddress,
@@ -51,6 +53,7 @@ export default function ScannerPage() {
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [holdersViewMode, setHoldersViewMode] = useState<"BOTH" | "GRAPH" | "TABLE">("BOTH");
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
+  const [isVeniceAuditOpen, setIsVeniceAuditOpen] = useState<boolean>(false);
 
   const CRAWL_STEPS = [
     "Reading on-chain contract & bonding curve liquidity...",
@@ -472,6 +475,15 @@ export default function ScannerPage() {
                         {result.reason}
                       </span>
                     )}
+
+                    <button
+                      onClick={() => setIsVeniceAuditOpen(true)}
+                      className="px-2.5 py-1 rounded-md text-xs font-mono-tech font-bold bg-purple-500/15 hover:bg-purple-500/25 text-purple-600 dark:text-purple-300 border border-purple-500/30 flex items-center gap-1.5 transition-all shadow-[0_0_12px_rgba(168,85,247,0.25)] cursor-pointer active:scale-95"
+                      title="Generate Private Forensic Audit Memo via Venice AI"
+                    >
+                      <VeniceLogo className="w-3.5 h-3.5 text-purple-500" />
+                      <span>🤖 Venice AI Brief</span>
+                    </button>
                   </div>
 
                   <h3 className="font-serif-editorial text-2xl sm:text-3xl text-[var(--nm-text)] leading-snug">
@@ -1084,6 +1096,15 @@ export default function ScannerPage() {
                     .toFixed(1)
                 : "26.2"
             }
+          />
+        )}
+
+        {/* Venice AI Private Forensic Audit Memo Modal */}
+        {result && (
+          <VeniceAuditModal
+            isOpen={isVeniceAuditOpen}
+            onClose={() => setIsVeniceAuditOpen(false)}
+            scanResult={result}
           />
         )}
       </main>

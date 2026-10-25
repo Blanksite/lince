@@ -75,6 +75,7 @@ Select an intelligence thread from the sidebar, run a preset query below, or inp
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState<boolean>(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState<boolean>(true);
   const [analysisMode, setAnalysisMode] = useState<"standard" | "deep">("deep");
+  const [activeVeniceModel, setActiveVeniceModel] = useState<"llama-3.3-70b" | "deepseek-r1">("llama-3.3-70b");
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -107,6 +108,7 @@ Select an intelligence thread from the sidebar, run a preset query below, or inp
   ];
 
   const PRESETS = [
+    "Audit contract 0xe9b7b7d55ed2ca56b017c569f3c5dd30dd31fefc ($NOUMEN) for sybil cabal risk",
     "Scan for tokens with Divergence Score > 80",
     "Compare Autonomous AI Agents vs Memecoin mindshare",
     "Summarize recent calls from top-tier research KOLs",
@@ -144,6 +146,7 @@ Select an intelligence thread from the sidebar, run a preset query below, or inp
         body: JSON.stringify({
           query: q,
           customApiKey: veniceApiKey || undefined,
+          model: activeVeniceModel,
         }),
       });
 
@@ -293,19 +296,47 @@ Select an intelligence thread from the sidebar, run a preset query below, or inp
           </div>
 
           {/* Venice AI Key toggle */}
-          <button
-            onClick={() => setIsVeniceModalOpen(true)}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-mono-tech transition-colors cursor-pointer ${
-              veniceApiKey
-                ? "bg-purple-500/10 border-purple-500/40 text-purple-600 dark:text-purple-300"
-                : "bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border-[var(--nm-line)] text-[var(--nm-muted)] hover:text-[var(--nm-text)]"
-            }`}
-          >
-            <VeniceLogo className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-            <span className="hidden sm:inline">
-              {veniceApiKey ? "Venice: Active" : "Venice AI"}
-            </span>
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setIsVeniceModalOpen(true)}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border text-xs font-mono-tech transition-colors cursor-pointer ${
+                veniceApiKey
+                  ? "bg-purple-500/10 border-purple-500/40 text-purple-600 dark:text-purple-300"
+                  : "bg-[var(--nm-surface)] hover:bg-[var(--nm-surface-hover)] border-[var(--nm-line)] text-[var(--nm-muted)] hover:text-[var(--nm-text)]"
+              }`}
+            >
+              <VeniceLogo className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+              <span className="hidden sm:inline">
+                {veniceApiKey ? "Venice: Active" : "Venice AI"}
+              </span>
+            </button>
+
+            {/* Venice Model Switcher */}
+            <div className="hidden lg:flex items-center bg-[var(--nm-bg)] border border-purple-500/30 rounded-md p-0.5 text-[10px] font-mono-tech">
+              <button
+                onClick={() => setActiveVeniceModel("llama-3.3-70b")}
+                className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
+                  activeVeniceModel === "llama-3.3-70b"
+                    ? "bg-purple-600 text-white font-bold"
+                    : "text-[var(--nm-dim)] hover:text-[var(--nm-text)]"
+                }`}
+                title="Llama 3.3 70B (Fast Conversational Alpha)"
+              >
+                Llama 70B
+              </button>
+              <button
+                onClick={() => setActiveVeniceModel("deepseek-r1")}
+                className={`px-2 py-0.5 rounded transition-all cursor-pointer ${
+                  activeVeniceModel === "deepseek-r1"
+                    ? "bg-purple-600 text-white font-bold"
+                    : "text-[var(--nm-dim)] hover:text-[var(--nm-text)]"
+                }`}
+                title="DeepSeek R1 (Deep Chain-of-Thought Reasoning)"
+              >
+                DeepSeek R1
+              </button>
+            </div>
+          </div>
 
           {/* MCP Protocol Modal */}
           <button

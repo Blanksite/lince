@@ -93,6 +93,34 @@ export interface WalletCluster {
   wallets: WalletClusterNode[];
 }
 
+export interface HolderDetail {
+  rank: number;
+  wallet: string;
+  floatSharePercent: number; // e.g. 5.7% of circulating float
+  supplySharePercent: number; // e.g. 3.1% of total supply
+  entryRank?: number;
+  entryTimeDelta?: string; // e.g. "+168s after launch"
+  buyEth?: number;
+  tokensHeld?: string;
+  multiple?: number; // e.g. 2.39
+  signals?: {
+    holdingAll?: boolean;
+    sold?: boolean;
+    sniper?: boolean;
+    virgin?: boolean;
+    isDeployer?: boolean;
+  };
+  explorerUrl?: string;
+}
+
+export interface LaunchAudit {
+  curveAddress?: string;
+  deployerAddress?: string;
+  launchTx?: string;
+  launchBlock?: number;
+  ageHours?: number;
+}
+
 export interface ClusterScanResult {
   tokenAddress: string;
   tokenName: string;
@@ -102,17 +130,28 @@ export interface ClusterScanResult {
   marketCap: string;
   liquidityUsd: string;
   priceUsd: string;
+  volume24hUsd?: string;
   totalHolders: number;
   scannedHoldersCount: number;
   realOperatorsCount: number;
   sybilRatio: number; // percentage of scanned wallets that belong to coordinated clusters
   verdict: ScanVerdict;
   riskScore: number; // 0 - 100
+  band?: "CLEAN" | "SUSPICIOUS" | "DANGER" | "ELEVATED" | "SAFE";
+  score?: number;
+  headline?: string;
+  reason?: string;
+  maxSingleImpactPercent?: number;
+  circulatingFloatPercent?: number;
+  curveReservePercent?: number;
+  tokenImage?: string;
   verdictHeadline: string;
   verdictDescription: string;
   cabalConcentrationPercent: number; // sum of coordinated cluster holdings
   potentialRugDropPercent: number; // estimated price impact if clusters sell
   clusters: WalletCluster[];
+  holdersTable?: HolderDetail[];
+  launchAudit?: LaunchAudit;
   socialMindshareCorrelated?: {
     mindshareScore: number;
     divergenceStatus: string;

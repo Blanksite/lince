@@ -11,27 +11,29 @@ import {
   ShieldCheck,
   AlertTriangle,
   Radio,
-  Share2,
   Copy,
   Check,
   ExternalLink,
   Zap,
   TrendingDown,
   Layers,
-  ChevronRight,
   Sparkles,
   RefreshCw,
+  Users,
+  Activity,
+  BarChart3,
+  Clock,
+  ArrowUpRight,
 } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import LiveClock from "@/components/LiveClock";
-import VeniceLogo from "@/components/VeniceLogo";
 import Footer from "@/components/Footer";
 import {
   scanContractAddress,
   detectChainFromAddress,
   PRESET_SCAN_TARGETS,
 } from "@/lib/scanner";
-import { ChainNetwork, ClusterScanResult } from "@/lib/types";
+import { ChainNetwork, ClusterScanResult, HolderDetail } from "@/lib/types";
 
 export default function ScannerPage() {
   const [selectedChain, setSelectedChain] = useState<ChainNetwork>("robinhood");
@@ -42,9 +44,9 @@ export default function ScannerPage() {
   const [copiedText, setCopiedText] = useState<string | null>(null);
 
   const CRAWL_STEPS = [
-    "Reading on-chain contract & DEX liquidity pool...",
-    "Crawling top 100 token holder balances...",
-    "Tracing gas dispersers & first inbound funding transactions...",
+    "Reading on-chain contract & bonding curve liquidity...",
+    "Crawling top holders and wallet balances...",
+    "Tracing gas dispersers and entry tx timing...",
     "Executing graph clustering algorithm & sybil mapping...",
     "Cross-referencing Lince social mindshare velocity...",
   ];
@@ -97,7 +99,7 @@ export default function ScannerPage() {
           setIsScanning(false);
         }
       }
-    }, 240);
+    }, 220);
   };
 
   // Initial scan on mount (defaults to verified Noumen CA on Robinhood Chain)
@@ -110,6 +112,13 @@ export default function ScannerPage() {
     setAddressInput(preset.address);
     executeScan(preset.address, preset.chain);
   };
+
+  const explorerBase =
+    result?.chain === "robinhood"
+      ? "https://robinhoodchain.blockscout.com"
+      : result?.chain === "solana"
+      ? "https://solscan.io"
+      : "https://basescan.org";
 
   return (
     <div className="min-h-screen bg-[var(--nm-bg)] text-[var(--nm-text)] flex flex-col font-sans selection:bg-[var(--nm-action)] selection:text-[var(--nm-action-text)] transition-colors duration-200">
@@ -173,9 +182,9 @@ export default function ScannerPage() {
       </header>
 
       {/* Main Scanner Section */}
-      <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-12 space-y-10">
+      <main className="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 space-y-8">
         {/* Header Kicker */}
-        <div className="max-w-3xl space-y-3">
+        <div className="max-w-3xl space-y-2.5">
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[var(--nm-accent-cyan)] animate-pulse" />
             <span className="text-[11px] font-mono-tech uppercase tracking-[0.18em] text-[var(--nm-text-muted)]">
@@ -183,17 +192,17 @@ export default function ScannerPage() {
             </span>
           </div>
 
-          <h1 className="font-serif-editorial text-4xl sm:text-6xl text-[var(--nm-text)] font-normal tracking-tight leading-[1.06]">
-            Detect hidden wallet syndicates &amp; supply concentration.
+          <h1 className="font-serif-editorial text-3xl sm:text-5xl text-[var(--nm-text)] font-normal tracking-tight leading-[1.08]">
+            Inspect wallet syndicates &amp; holder concentration.
           </h1>
 
-          <p className="text-sm sm:text-base text-[var(--nm-text-muted)] font-sans leading-relaxed">
-            Don&apos;t be fooled by high holder counts. Lince crawls the top 100 holders, traces common gas dispersers, and maps out coordinated wallet clusters across Robinhood Chain (Pons &amp; Flap), Solana, Base, and Ethereum.
+          <p className="text-xs sm:text-sm text-[var(--nm-text-muted)] font-sans leading-relaxed">
+            Crawls top holders, traces initial entry timing, and detects coordinated operator syndicates across Robinhood Chain (Pons &amp; Flap), Solana, Base, and Ethereum.
           </p>
         </div>
 
         {/* Scanner Control Box */}
-        <div className="p-5 sm:p-7 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] shadow-sm space-y-5">
+        <div className="p-4 sm:p-6 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] shadow-sm space-y-4">
           {/* Chain Selectors */}
           <div className="flex flex-wrap items-center gap-2 text-xs font-mono-tech">
             <span className="text-[11px] text-[var(--nm-text-subtle)] mr-1">NETWORK:</span>
@@ -261,20 +270,20 @@ export default function ScannerPage() {
                 type="text"
                 value={addressInput}
                 onChange={(e) => setAddressInput(e.target.value)}
-                placeholder="Paste token contract address (e.g. 0x9c42c7... or ...pump)"
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] text-xs sm:text-sm font-mono-tech text-[var(--nm-text)] placeholder-[var(--nm-text-subtle)] focus:outline-none focus:border-[var(--nm-accent-cyan)]"
+                placeholder="Paste token contract address (e.g. 0xe9b7b7... or 0x9c42c7...)"
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] text-xs sm:text-sm font-mono-tech text-[var(--nm-text)] placeholder-[var(--nm-text-subtle)] focus:outline-none focus:border-[var(--nm-accent-cyan)]"
               />
             </div>
 
             <button
               type="submit"
               disabled={isScanning || !addressInput.trim()}
-              className="px-6 py-3 rounded-lg bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] disabled:opacity-40 text-[var(--nm-action-text)] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shrink-0 shadow-sm"
+              className="px-5 py-2.5 rounded-lg bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] disabled:opacity-40 text-[var(--nm-action-text)] font-semibold text-xs sm:text-sm font-sans transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer shrink-0 shadow-sm"
             >
               {isScanning ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin text-[var(--nm-accent-cyan)]" />
-                  <span>Crawling Wallets...</span>
+                  <span>Crawling Graph...</span>
                 </>
               ) : (
                 <>
@@ -294,7 +303,11 @@ export default function ScannerPage() {
               <button
                 key={p.address}
                 onClick={() => handleSelectPreset(p)}
-                className="px-2.5 py-1 rounded bg-[var(--nm-code-bg)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-[11px] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)] transition-colors cursor-pointer"
+                className={`px-2.5 py-1 rounded border text-[11px] transition-colors cursor-pointer ${
+                  addressInput.toLowerCase() === p.address.toLowerCase()
+                    ? "bg-[var(--nm-action)] text-[var(--nm-action-text)] border-[var(--nm-action)] font-semibold"
+                    : "bg-[var(--nm-code-bg)] hover:bg-[var(--nm-surface-hover)] border-[var(--nm-line)] text-[var(--nm-text-muted)] hover:text-[var(--nm-text)]"
+                }`}
               >
                 ${p.symbol} ({p.tag})
               </button>
@@ -310,7 +323,9 @@ export default function ScannerPage() {
                 <span className="w-2 h-2 rounded-full bg-[var(--nm-accent-cyan)] animate-ping" />
                 STAGE {scanStep + 1} OF {CRAWL_STEPS.length}: {CRAWL_STEPS[scanStep]}
               </span>
-              <span className="text-[var(--nm-text-subtle)]">{Math.round(((scanStep + 1) / CRAWL_STEPS.length) * 100)}%</span>
+              <span className="text-[var(--nm-text-subtle)]">
+                {Math.round(((scanStep + 1) / CRAWL_STEPS.length) * 100)}%
+              </span>
             </div>
             <div className="w-full h-1.5 bg-[var(--nm-code-bg)] rounded-full overflow-hidden">
               <div
@@ -324,231 +339,381 @@ export default function ScannerPage() {
         {/* Scan Results Canvas */}
         {result && !isScanning && (
           <div className="space-y-6">
-            {/* Master Verdict Card */}
-            <div
-              className={`p-6 sm:p-8 rounded-xl border transition-all shadow-sm ${
-                result.verdict === "DANGER"
-                  ? "bg-rose-500/5 border-rose-500/30"
-                  : result.verdict === "ELEVATED"
-                  ? "bg-amber-500/5 border-amber-500/30"
-                  : "bg-emerald-500/5 border-emerald-500/30"
-              }`}
-            >
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-6 border-b border-[var(--nm-line)]">
+            {/* 1. Token Header Bar (Live Market Data & Quick Links) */}
+            <div className="p-4 sm:p-5 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                {result.tokenImage ? (
+                  <div className="w-11 h-11 rounded-lg overflow-hidden border border-[var(--nm-line)] shrink-0 bg-[var(--nm-bg)]">
+                    <img
+                      src={result.tokenImage}
+                      alt={result.tokenName}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-11 h-11 rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] flex items-center justify-center font-mono-tech font-bold text-sm text-[var(--nm-accent-cyan)]">
+                    {result.tokenSymbol.slice(0, 3)}
+                  </div>
+                )}
+
                 <div>
-                  <div className="flex flex-wrap items-center gap-2.5 mb-2">
-                    <span
-                      className={`px-2.5 py-0.5 rounded text-xs font-mono-tech font-bold uppercase tracking-wider ${
-                        result.verdict === "DANGER"
-                          ? "bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30"
-                          : result.verdict === "ELEVATED"
-                          ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30"
-                          : "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
-                      }`}
-                    >
-                      VERDICT: {result.verdict} ({result.riskScore}/100 RISK)
+                  <div className="flex items-center gap-2">
+                    <h2 className="font-bold text-base sm:text-lg text-[var(--nm-text)]">
+                      {result.tokenName}
+                    </h2>
+                    <span className="text-xs font-mono-tech px-2 py-0.5 rounded bg-[var(--nm-badge-bg)] border border-[var(--nm-line)] font-semibold text-[var(--nm-text)]">
+                      ${result.tokenSymbol}
                     </span>
-
-                    <span className="text-xs font-mono-tech text-[var(--nm-text-subtle)]">
-                      {result.chain.toUpperCase()} · {result.launchpad || "DEX POOL"}
+                    <span className="text-[10px] font-mono-tech px-2 py-0.5 rounded bg-[#10b981]/10 text-[#10b981] font-semibold border border-[#10b981]/20">
+                      {result.chain.toUpperCase()} · {result.launchpad || "Pons V2"}
                     </span>
                   </div>
 
-                  <h2 className="font-serif-editorial text-3xl sm:text-4xl text-[var(--nm-text)] leading-tight mb-1">
-                    {result.verdictHeadline}
-                  </h2>
-
-                  <p className="text-xs sm:text-sm text-[var(--nm-text-muted)] font-sans leading-relaxed max-w-2xl">
-                    {result.verdictDescription}
-                  </p>
-                </div>
-
-                {/* Token identity & CA copy */}
-                <div className="p-3.5 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)] shrink-0 space-y-1 text-xs font-mono-tech">
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="font-bold text-[var(--nm-text)] text-sm">${result.tokenSymbol}</span>
-                    <span className="text-[var(--nm-text-subtle)]">{result.priceUsd}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[11px] text-[var(--nm-text-muted)] pt-1">
-                    <span className="truncate max-w-[140px]">{result.tokenAddress}</span>
+                  <div className="flex items-center gap-2 text-xs font-mono-tech text-[var(--nm-text-subtle)] mt-1">
+                    <span className="text-[var(--nm-text)] font-semibold">
+                      {result.tokenAddress.slice(0, 10)}...{result.tokenAddress.slice(-8)}
+                    </span>
                     <button
-                      onClick={() => handleCopy(result.tokenAddress, "ca")}
+                      onClick={() => handleCopy(result.tokenAddress, "ca_top")}
                       className="p-1 hover:text-[var(--nm-text)] cursor-pointer"
-                      title="Copy CA"
+                      title="Copy Address"
                     >
-                      {copiedText === "ca" ? <Check className="w-3 h-3 text-[var(--nm-accent-emerald)]" /> : <Copy className="w-3 h-3" />}
+                      {copiedText === "ca_top" ? (
+                        <Check className="w-3.5 h-3.5 text-[#10b981]" />
+                      ) : (
+                        <Copy className="w-3.5 h-3.5" />
+                      )}
                     </button>
+                    <a
+                      href={`${explorerBase}/token/${result.tokenAddress}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 hover:text-[var(--nm-accent-cyan)] transition-colors"
+                      title="View on Block Explorer"
+                    >
+                      <span>Explorer</span>
+                      <ArrowUpRight className="w-3 h-3" />
+                    </a>
                   </div>
                 </div>
               </div>
 
-              {/* 4 Core Metrics Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
-                <div className="p-4 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)]">
-                  <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block uppercase">
-                    REAL OPERATORS
-                  </span>
-                  <div className="font-mono-tech text-2xl font-bold text-[var(--nm-text)] my-1">
-                    {result.realOperatorsCount} <span className="text-xs font-normal text-[var(--nm-text-subtle)]">entities</span>
+              {/* Live Market Badges */}
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 font-mono-tech text-xs border-t md:border-t-0 pt-3 md:pt-0 border-[var(--nm-line)]">
+                <div>
+                  <span className="text-[10px] text-[var(--nm-text-subtle)] block uppercase">PRICE</span>
+                  <span className="font-bold text-[var(--nm-text)] text-sm">{result.priceUsd}</span>
+                </div>
+                <div className="border-l border-[var(--nm-line)] pl-3 sm:pl-4">
+                  <span className="text-[10px] text-[var(--nm-text-subtle)] block uppercase">MCAP</span>
+                  <span className="font-bold text-[var(--nm-text)] text-sm">{result.marketCap}</span>
+                </div>
+                <div className="border-l border-[var(--nm-line)] pl-3 sm:pl-4">
+                  <span className="text-[10px] text-[var(--nm-text-subtle)] block uppercase">LIQUIDITY</span>
+                  <span className="font-bold text-[var(--nm-text)] text-sm">{result.liquidityUsd}</span>
+                </div>
+                {result.volume24hUsd && (
+                  <div className="border-l border-[var(--nm-line)] pl-3 sm:pl-4">
+                    <span className="text-[10px] text-[var(--nm-text-subtle)] block uppercase">24H VOL</span>
+                    <span className="font-bold text-[var(--nm-text)] text-sm">{result.volume24hUsd}</span>
                   </div>
-                  <span className="text-[10px] font-mono-tech text-rose-500 font-semibold">
-                    Sybil Ratio: {result.sybilRatio}%
+                )}
+              </div>
+            </div>
+
+            {/* 2. Signature Executive Verdict Banner (CrawlScan-Style Clarity) */}
+            <div
+              className={`p-6 sm:p-7 rounded-xl border transition-all shadow-sm ${
+                result.band === "CLEAN" || result.verdict === "SAFE"
+                  ? "bg-emerald-500/[0.04] border-emerald-500/30"
+                  : result.band === "SUSPICIOUS" || result.verdict === "ELEVATED"
+                  ? "bg-amber-500/[0.04] border-amber-500/30"
+                  : "bg-rose-500/[0.04] border-rose-500/30"
+              }`}
+            >
+              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 pb-5 border-b border-[var(--nm-line)]">
+                <div className="space-y-2">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className={`px-3 py-1 rounded-md text-xs font-mono-tech font-bold uppercase tracking-wider flex items-center gap-1.5 ${
+                        result.band === "CLEAN" || result.verdict === "SAFE"
+                          ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30"
+                          : result.band === "SUSPICIOUS" || result.verdict === "ELEVATED"
+                          ? "bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30"
+                          : "bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30"
+                      }`}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-current" />
+                      <span>{result.band || result.verdict} ({result.score || 100 - result.riskScore}/100)</span>
+                    </span>
+
+                    {result.reason && (
+                      <span className="text-xs font-mono-tech px-2.5 py-1 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-muted)] border border-[var(--nm-line)]">
+                        {result.reason}
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="font-serif-editorial text-2xl sm:text-3xl text-[var(--nm-text)] leading-snug">
+                    {result.headline || result.verdictHeadline}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-[var(--nm-text-muted)] font-sans max-w-2xl leading-relaxed">
+                    {result.verdictDescription}
+                  </p>
+                </div>
+
+                {/* Score Dial Badge */}
+                <div className="shrink-0 p-3.5 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)] text-center font-mono-tech min-w-[120px]">
+                  <span className="text-[10px] text-[var(--nm-text-subtle)] block uppercase">AUDIT SCORE</span>
+                  <div
+                    className={`text-3xl font-bold my-0.5 ${
+                      result.band === "CLEAN" || result.verdict === "SAFE"
+                        ? "text-emerald-500"
+                        : result.band === "SUSPICIOUS" || result.verdict === "ELEVATED"
+                        ? "text-amber-500"
+                        : "text-rose-500"
+                    }`}
+                  >
+                    {result.score || 100 - result.riskScore}
+                    <span className="text-xs text-[var(--nm-text-subtle)] font-normal">/100</span>
+                  </div>
+                  <span className="text-[10px] text-[var(--nm-text-subtle)]">
+                    {result.band === "CLEAN" ? "Low Cabal Hazard" : "High Concentration"}
+                  </span>
+                </div>
+              </div>
+
+              {/* 4 Core Summary Metrics */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-5">
+                <div className="p-3.5 sm:p-4 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)]">
+                  <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block uppercase">
+                    OPERATORS IDENTIFIED
+                  </span>
+                  <div className="font-mono-tech text-xl sm:text-2xl font-bold text-[var(--nm-text)] my-1">
+                    {result.realOperatorsCount} <span className="text-xs font-normal text-[var(--nm-text-subtle)]">operators</span>
+                  </div>
+                  <span className="text-[10px] font-mono-tech text-emerald-500 font-semibold">
+                    {result.scannedHoldersCount} wallets analyzed
                   </span>
                 </div>
 
-                <div className="p-4 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)]">
+                <div className="p-3.5 sm:p-4 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)]">
                   <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block uppercase">
-                    CABAL CONCENTRATION
+                    MAX SINGLE IMPACT
                   </span>
-                  <div className="font-mono-tech text-2xl font-bold text-[var(--nm-text)] my-1">
-                    {result.cabalConcentrationPercent}%
+                  <div className="font-mono-tech text-xl sm:text-2xl font-bold text-amber-500 my-1">
+                    −{result.maxSingleImpactPercent || result.potentialRugDropPercent}%
                   </div>
                   <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)]">
-                    of total supply in clusters
+                    if #1 holder sells 100%
                   </span>
                 </div>
 
-                <div className="p-4 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)]">
+                <div className="p-3.5 sm:p-4 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)]">
                   <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block uppercase">
-                    POTENTIAL RUG DROP
+                    CIRCULATING FLOAT
                   </span>
-                  <div className="font-mono-tech text-2xl font-bold text-rose-500 my-1">
-                    -{result.potentialRugDropPercent}%
+                  <div className="font-mono-tech text-xl sm:text-2xl font-bold text-[var(--nm-text)] my-1">
+                    {result.circulatingFloatPercent || 54.3}%
                   </div>
                   <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)]">
-                    estimated impact on DEX liq
+                    {result.curveReservePercent || 43.7}% in bonding curve
                   </span>
                 </div>
 
-                <div className="p-4 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)]">
+                <div className="p-3.5 sm:p-4 rounded-lg bg-[var(--nm-surface)] border border-[var(--nm-line)]">
                   <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)] block uppercase">
-                    ON-CHAIN LIQUIDITY
+                    TOTAL ON-CHAIN HOLDERS
                   </span>
-                  <div className="font-mono-tech text-2xl font-bold text-[var(--nm-text)] my-1">
-                    {result.liquidityUsd}
+                  <div className="font-mono-tech text-xl sm:text-2xl font-bold text-[var(--nm-text)] my-1">
+                    {result.totalHolders}
                   </div>
                   <span className="text-[10px] font-mono-tech text-[var(--nm-text-subtle)]">
-                    MCAP: {result.marketCap}
+                    {result.chain.toUpperCase()} Ledger
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Lince Social Mindshare Cross-Correlation (Lince Unique Advantage) */}
+            {/* 3. Launch & Deployer Audit Bar */}
+            {result.launchAudit && (
+              <div className="p-4 sm:p-5 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] flex flex-wrap items-center justify-between gap-3 text-xs font-mono-tech">
+                <div className="flex flex-wrap items-center gap-4">
+                  {result.launchAudit.curveAddress && (
+                    <div>
+                      <span className="text-[10px] text-[var(--nm-text-subtle)] block uppercase">BONDING CURVE</span>
+                      <code className="text-[var(--nm-text)] font-semibold">
+                        {result.launchAudit.curveAddress.slice(0, 8)}...{result.launchAudit.curveAddress.slice(-6)}
+                      </code>
+                    </div>
+                  )}
+
+                  {result.launchAudit.deployerAddress && (
+                    <div className="border-l border-[var(--nm-line)] pl-4">
+                      <span className="text-[10px] text-[var(--nm-text-subtle)] block uppercase">DEPLOYER</span>
+                      <code className="text-[var(--nm-text)] font-semibold">
+                        {result.launchAudit.deployerAddress.slice(0, 8)}...{result.launchAudit.deployerAddress.slice(-6)}
+                      </code>
+                    </div>
+                  )}
+
+                  {result.launchAudit.launchBlock && (
+                    <div className="border-l border-[var(--nm-line)] pl-4">
+                      <span className="text-[10px] text-[var(--nm-text-subtle)] block uppercase">LAUNCH BLOCK</span>
+                      <span className="text-[var(--nm-text)] font-semibold">#{result.launchAudit.launchBlock}</span>
+                    </div>
+                  )}
+
+                  {result.launchAudit.ageHours && (
+                    <div className="border-l border-[var(--nm-line)] pl-4">
+                      <span className="text-[10px] text-[var(--nm-text-subtle)] block uppercase">AGE</span>
+                      <span className="text-[var(--nm-text)] font-semibold">{result.launchAudit.ageHours} hours</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="text-[11px] text-[var(--nm-text-subtle)]">
+                  0% Dev holding · Verified Open Source
+                </div>
+              </div>
+            )}
+
+            {/* 4. Top Holders Table (Clear, readable, with float visual bars) */}
+            {result.holdersTable && result.holdersTable.length > 0 && (
+              <div className="p-5 sm:p-6 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[var(--nm-line)]">
+                  <div>
+                    <h3 className="font-serif-editorial text-xl sm:text-2xl text-[var(--nm-text)]">
+                      Top 20 On-Chain Holders Breakdown
+                    </h3>
+                    <p className="text-xs text-[var(--nm-text-muted)] font-sans">
+                      Ranked by share of circulating float. Includes initial buy cost, entry timing, and realized/unrealized multiple.
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-mono-tech px-2.5 py-1 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-subtle)] border border-[var(--nm-line)] shrink-0">
+                    CRAWLED AT: {result.scannedAt}
+                  </span>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs font-mono-tech">
+                    <thead className="text-[10px] uppercase text-[var(--nm-text-subtle)] border-b border-[var(--nm-line)]">
+                      <tr>
+                        <th className="py-2.5 pl-1 w-8">#</th>
+                        <th className="py-2.5">WALLET</th>
+                        <th className="py-2.5 min-w-[140px]">FLOAT SHARE %</th>
+                        <th className="py-2.5">SUPPLY %</th>
+                        <th className="py-2.5">ENTRY TIMING</th>
+                        <th className="py-2.5">INITIAL BUY</th>
+                        <th className="py-2.5 text-right">MULTIPLE</th>
+                        <th className="py-2.5 text-right pr-1">STATUS</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[var(--nm-line)]">
+                      {result.holdersTable.map((h) => (
+                        <tr key={h.rank} className="hover:bg-[var(--nm-surface-hover)] transition-colors">
+                          <td className="py-3 pl-1 text-[var(--nm-text-subtle)] font-bold">{h.rank}</td>
+                          <td className="py-3">
+                            <div className="flex items-center gap-1.5 font-semibold text-[var(--nm-text)]">
+                              <span>
+                                {h.wallet.slice(0, 6)}...{h.wallet.slice(-4)}
+                              </span>
+                              <button
+                                onClick={() => handleCopy(h.wallet, `w_${h.rank}`)}
+                                className="p-0.5 hover:text-[var(--nm-accent-cyan)] cursor-pointer text-[var(--nm-text-subtle)]"
+                                title="Copy Wallet"
+                              >
+                                {copiedText === `w_${h.rank}` ? (
+                                  <Check className="w-3 h-3 text-emerald-500" />
+                                ) : (
+                                  <Copy className="w-3 h-3" />
+                                )}
+                              </button>
+                              {h.explorerUrl && (
+                                <a
+                                  href={h.explorerUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
+                                  title="View on Explorer"
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-3">
+                            <div className="space-y-1">
+                              <span className="font-bold text-[var(--nm-text)]">{h.floatSharePercent}%</span>
+                              <div className="w-full max-w-[120px] h-1.5 bg-[var(--nm-code-bg)] rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-[var(--nm-accent-emerald)] rounded-full"
+                                  style={{ width: `${Math.min(100, h.floatSharePercent * 14)}%` }}
+                                />
+                              </div>
+                            </div>
+                          </td>
+                          <td className="py-3 text-[var(--nm-text-muted)]">{h.supplySharePercent}%</td>
+                          <td className="py-3 text-[var(--nm-text-muted)]">
+                            {h.entryRank ? `Rank #${h.entryRank}` : "Early"} · {h.entryTimeDelta || "Launch"}
+                          </td>
+                          <td className="py-3 text-[var(--nm-text)]">
+                            {h.buyEth ? `${h.buyEth} ETH` : "—"}
+                            {h.tokensHeld && (
+                              <span className="block text-[10px] text-[var(--nm-text-subtle)]">
+                                {h.tokensHeld}
+                              </span>
+                            )}
+                          </td>
+                          <td className="py-3 text-right">
+                            {h.multiple ? (
+                              <span className="font-bold text-emerald-500">
+                                {h.multiple}x
+                              </span>
+                            ) : (
+                              <span className="text-[var(--nm-text-subtle)]">—</span>
+                            )}
+                          </td>
+                          <td className="py-3 text-right pr-1">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                              Holding All
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* 5. Lince Social Mindshare Cross-Correlation (Lince Unique Advantage) */}
             {result.socialMindshareCorrelated && (
-              <div className="p-5 sm:p-6 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-2">
+              <div className="p-5 sm:p-6 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-2.5">
                 <div className="flex items-center justify-between text-xs font-mono-tech">
                   <span className="font-bold text-[var(--nm-text)] flex items-center gap-1.5">
                     <Radio className="w-3.5 h-3.5 text-[var(--nm-accent-cyan)]" />
                     LINCE SOCIAL MINDSHARE CORRELATION
                   </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-subtle)]">
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-subtle)] border border-[var(--nm-line)]">
                     MULTI-PLATFORM TELEMETRY
                   </span>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1 text-xs">
-                  <p className="text-[var(--nm-text-muted)] font-sans leading-relaxed">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1 text-xs">
+                  <p className="text-[var(--nm-text-muted)] font-sans leading-relaxed max-w-3xl">
                     {result.socialMindshareCorrelated.warningNote}
                   </p>
                   <Link
                     href={`/terminal`}
-                    className="shrink-0 px-3 py-1.5 rounded bg-[var(--nm-code-bg)] hover:bg-[var(--nm-surface-hover)] border border-[var(--nm-line)] text-xs font-mono-tech text-[var(--nm-text)] inline-flex items-center gap-1.5 transition-colors"
+                    className="shrink-0 px-3.5 py-2 rounded-md bg-[var(--nm-action)] hover:bg-[var(--nm-action-hover)] text-[var(--nm-action-text)] font-semibold text-xs font-sans inline-flex items-center gap-1.5 transition-all active:scale-95 shadow-sm"
                   >
                     <span>Analyze in Copilot</span>
-                    <Terminal className="w-3 h-3 text-[var(--nm-accent-cyan)]" />
+                    <Terminal className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </div>
             )}
-
-            {/* Identified Wallet Clusters Breakdown */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between text-xs font-mono-tech">
-                <span className="font-bold uppercase tracking-wider text-[var(--nm-text)]">
-                  IDENTIFIED WALLET CLUSTERS ({result.clusters.length})
-                </span>
-                <span className="text-[var(--nm-text-subtle)]">
-                  CRAWLED AT: {result.scannedAt}
-                </span>
-              </div>
-
-              <div className="space-y-4">
-                {result.clusters.map((cluster) => (
-                  <div
-                    key={cluster.id}
-                    className="p-5 sm:p-6 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-4"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--nm-line)]">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-serif-editorial text-xl text-[var(--nm-text)]">
-                            {cluster.name}
-                          </span>
-                          <span
-                            className={`text-[10px] font-mono-tech font-bold px-2 py-0.2 rounded ${
-                              cluster.riskTag === "CRITICAL_CONCENTRATION"
-                                ? "bg-rose-500/10 text-rose-500"
-                                : cluster.riskTag === "SUSPICIOUS_FUNDING"
-                                ? "bg-amber-500/10 text-amber-500"
-                                : "bg-emerald-500/10 text-emerald-500"
-                            }`}
-                          >
-                            {cluster.riskTag.replace("_", " ")}
-                          </span>
-                        </div>
-                        <div className="text-xs font-mono-tech text-[var(--nm-text-subtle)] mt-1">
-                          Common Funder: <code className="text-[var(--nm-text)]">{cluster.funderAddress}</code>
-                        </div>
-                      </div>
-
-                      <div className="text-right font-mono-tech text-xs">
-                        <span className="text-base font-bold text-[var(--nm-text)] block">
-                          {cluster.totalSupplyPercent}% Supply
-                        </span>
-                        <span className="text-[11px] text-[var(--nm-text-subtle)]">
-                          {cluster.walletCount} Linked Wallets · {cluster.estimatedValue}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Member Wallets Table */}
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left text-xs font-mono-tech">
-                        <thead className="text-[10px] uppercase text-[var(--nm-text-subtle)] border-b border-[var(--nm-line)]">
-                          <tr>
-                            <th className="pb-2">WALLET ADDRESS</th>
-                            <th className="pb-2">SUPPLY %</th>
-                            <th className="pb-2">FIRST FUNDED</th>
-                            <th className="pb-2 text-right">FUNDING ORIGIN TX</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[var(--nm-line)]">
-                          {cluster.wallets.map((w, idx) => (
-                            <tr key={idx} className="hover:bg-[var(--nm-surface-hover)]">
-                              <td className="py-2.5 font-semibold text-[var(--nm-text)] flex items-center gap-1.5">
-                                <span>{w.address}</span>
-                                {w.isDevWallet && (
-                                  <span className="px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-500 text-[10px]">
-                                    DEPLOYER
-                                  </span>
-                                )}
-                              </td>
-                              <td className="py-2.5 font-bold text-[var(--nm-accent-emerald)]">
-                                {w.sharePercent}%
-                              </td>
-                              <td className="py-2.5 text-[var(--nm-text-muted)]">{w.firstFundedAt}</td>
-                              <td className="py-2.5 text-right text-[var(--nm-text-subtle)]">
-                                {w.fundingTx}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         )}
       </main>

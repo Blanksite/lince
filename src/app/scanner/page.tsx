@@ -850,7 +850,17 @@ export default function ScannerPage() {
                           </p>
 
                           <div className="flex items-center justify-between pt-1 border-t border-[var(--nm-line)] text-[10px] font-mono-tech">
-                            <span className="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-bold">
+                            <span
+                              className={`px-1.5 py-0.5 rounded font-bold ${
+                                q.sentiment === "bullish"
+                                  ? "bg-emerald-500/10 text-emerald-500"
+                                  : q.sentiment === "bearish"
+                                  ? "bg-rose-500/10 text-rose-500"
+                                  : q.sentiment === "cautious"
+                                  ? "bg-amber-500/10 text-amber-500"
+                                  : "bg-[var(--nm-surface)] text-[var(--nm-text-muted)]"
+                              }`}
+                            >
                               {q.sentiment.toUpperCase()}
                             </span>
                             <a

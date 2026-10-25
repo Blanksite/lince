@@ -126,7 +126,7 @@ export interface XQuoteItem {
   authorName: string;
   text: string;
   followers?: string;
-  sentiment: "bullish" | "neutral" | "cautious";
+  sentiment: "bullish" | "neutral" | "cautious" | "bearish";
   timestamp: string;
   tweetUrl: string;
 }

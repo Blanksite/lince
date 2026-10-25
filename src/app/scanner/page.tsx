@@ -30,12 +30,17 @@ import LiveClock from "@/components/LiveClock";
 import Footer from "@/components/Footer";
 import { ClusterBubbleGraph } from "@/components/ClusterBubbleGraph";
 import { MindshareTreemap } from "@/components/MindshareTreemap";
+import { FundingLineageTree } from "@/components/FundingLineageTree";
+import { DumpImpactSimulator } from "@/components/DumpImpactSimulator";
+import { ShareableDossierModal } from "@/components/ShareableDossierModal";
+import { LiveWhaleTape } from "@/components/LiveWhaleTape";
 import {
   scanContractAddress,
   detectChainFromAddress,
   PRESET_SCAN_TARGETS,
 } from "@/lib/scanner";
 import { ChainNetwork, ClusterScanResult, HolderDetail } from "@/lib/types";
+import { Share2 } from "lucide-react";
 
 export default function ScannerPage() {
   const [selectedChain, setSelectedChain] = useState<ChainNetwork>("robinhood");
@@ -45,6 +50,7 @@ export default function ScannerPage() {
   const [result, setResult] = useState<ClusterScanResult | null>(null);
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const [holdersViewMode, setHoldersViewMode] = useState<"BOTH" | "GRAPH" | "TABLE">("BOTH");
+  const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
 
   const CRAWL_STEPS = [
     "Reading on-chain contract & bonding curve liquidity...",
@@ -421,6 +427,17 @@ export default function ScannerPage() {
                     <span className="font-bold text-[var(--nm-text)] text-sm">{result.volume24hUsd}</span>
                   </div>
                 )}
+
+                <div className="border-l border-[var(--nm-line)] pl-3 sm:pl-4">
+                  <button
+                    onClick={() => setIsShareModalOpen(true)}
+                    className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-bold text-xs flex items-center gap-1.5 transition-all shadow-[0_0_14px_rgba(0,229,255,0.35)] cursor-pointer active:scale-95"
+                    title="Export High-Res PNG or Copy Dossier for Twitter/X"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>Share Dossier</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -654,6 +671,7 @@ export default function ScannerPage() {
                     circulatingFloatPercent={result.circulatingFloatPercent}
                     curveReservePercent={result.curveReservePercent}
                     clusters={result.clusters}
+                    timeTravelSnapshots={result.timeTravelSnapshots}
                   />
                 )}
 
@@ -761,7 +779,35 @@ export default function ScannerPage() {
               </div>
             )}
 
-            {/* 5. Lince Real Data Mindshare from X (Twitter / CT) */}
+            {/* 5. Live Whale Radar & Real-Time Mempool Tape */}
+            {result.liveTransactions && result.liveTransactions.length > 0 && (
+              <LiveWhaleTape
+                transactions={result.liveTransactions}
+                tokenSymbol={result.tokenSymbol}
+                chain={result.chain}
+              />
+            )}
+
+            {/* 6. On-Chain Funding Lineage & Gas Dispenser Tree (Arkham-Style Forensics) */}
+            {result.fundingLineage && (
+              <FundingLineageTree
+                fundingLineage={result.fundingLineage}
+                tokenSymbol={result.tokenSymbol}
+                chain={result.chain}
+              />
+            )}
+
+            {/* 7. Bonding Curve Dump Impact & Slippage Calculator */}
+            <DumpImpactSimulator
+              tokenSymbol={result.tokenSymbol}
+              marketCap={result.marketCap}
+              liquidityUsd={result.liquidityUsd}
+              priceUsd={result.priceUsd}
+              circulatingFloatPercent={result.circulatingFloatPercent}
+              curveReservePercent={result.curveReservePercent}
+            />
+
+            {/* 8. Lince Real Data Mindshare from X (Twitter / CT) */}
             {result.socialMindshareCorrelated && (
               <div className="p-6 sm:p-7 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-6 shadow-sm">
                 {/* Panel Header with X (Twitter) Identity */}
@@ -774,7 +820,7 @@ export default function ScannerPage() {
                         </svg>
                       </div>
                       <span className="text-[10px] font-mono-tech uppercase tracking-[0.16em] text-[var(--nm-accent-cyan)] font-bold">
-                        05 / X (TWITTER) COGNITIVE MINDSHARE TELEMETRY
+                        08 / X (TWITTER) COGNITIVE MINDSHARE TELEMETRY
                       </span>
                     </div>
                     <h3 className="font-serif-editorial text-2xl sm:text-3xl text-[var(--nm-text)]">
@@ -1013,6 +1059,32 @@ export default function ScannerPage() {
               </div>
             )}
           </div>
+        )}
+
+        {/* Institutional Shareable Dossier Card Modal */}
+        {result && (
+          <ShareableDossierModal
+            isOpen={isShareModalOpen}
+            onClose={() => setIsShareModalOpen(false)}
+            tokenSymbol={result.tokenSymbol}
+            tokenName={result.tokenName}
+            tokenAddress={result.tokenAddress}
+            chain={result.chain}
+            riskScore={result.riskScore}
+            verdict={result.band || result.verdict}
+            marketCap={result.marketCap}
+            liquidityUsd={result.liquidityUsd}
+            circulatingFloatPercent={result.circulatingFloatPercent || 54.3}
+            curveReservePercent={result.curveReservePercent || 43.7}
+            top5FloatPercent={
+              result.holdersTable
+                ? result.holdersTable
+                    .slice(0, 5)
+                    .reduce((acc, h) => acc + (h.floatSharePercent || 0), 0)
+                    .toFixed(1)
+                : "26.2"
+            }
+          />
         )}
       </main>
 

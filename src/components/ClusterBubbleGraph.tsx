@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from "react";
 import dynamic from "next/dynamic";
-import { HolderDetail, LaunchAudit, WalletCluster } from "@/lib/types";
+import { HolderDetail, LaunchAudit, WalletCluster, TimeTravelSnapshot } from "@/lib/types";
 import {
   ExternalLink,
   Copy,
@@ -61,6 +61,7 @@ interface ClusterBubbleGraphProps {
   circulatingFloatPercent?: number;
   curveReservePercent?: number;
   clusters?: WalletCluster[];
+  timeTravelSnapshots?: TimeTravelSnapshot[];
 }
 
 export function ClusterBubbleGraph({
@@ -79,6 +80,7 @@ export function ClusterBubbleGraph({
   circulatingFloatPercent = 54.3,
   curveReservePercent = 43.7,
   clusters = [],
+  timeTravelSnapshots,
 }: ClusterBubbleGraphProps) {
   // Default to G6 (AntV G6 with Animated Flow) as requested by the user
   const [engineMode, setEngineMode] = useState<"G6" | "WEBGL" | "SVG">("G6");
@@ -309,6 +311,7 @@ export function ClusterBubbleGraph({
           circulatingFloatPercent={circulatingFloatPercent}
           curveReservePercent={curveReservePercent}
           clusters={clusters}
+          timeTravelSnapshots={timeTravelSnapshots}
         />
       ) : engineMode === "WEBGL" ? (
         <ReagraphBubbleView

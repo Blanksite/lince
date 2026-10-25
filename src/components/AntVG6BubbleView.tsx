@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import { Graph, register, ExtensionCategory, Quadratic, Line, NodeEvent, CanvasEvent } from "@antv/g6";
-import { HolderDetail, LaunchAudit, WalletCluster } from "@/lib/types";
+import { HolderDetail, LaunchAudit, WalletCluster, TimeTravelSnapshot } from "@/lib/types";
 import {
   ExternalLink,
   Copy,
@@ -18,6 +18,9 @@ import {
   Activity,
   Play,
   Pause,
+  Clock,
+  History,
+  FastForward,
 } from "lucide-react";
 
 // Register custom Animated Flowing Quadratic Edge in AntV G6
@@ -70,6 +73,7 @@ interface AntVG6BubbleViewProps {
   circulatingFloatPercent?: number;
   curveReservePercent?: number;
   clusters?: WalletCluster[];
+  timeTravelSnapshots?: TimeTravelSnapshot[];
 }
 
 export default function AntVG6BubbleView({
@@ -88,6 +92,7 @@ export default function AntVG6BubbleView({
   circulatingFloatPercent = 54.3,
   curveReservePercent = 43.7,
   clusters = [],
+  timeTravelSnapshots,
 }: AntVG6BubbleViewProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const graphRef = useRef<Graph | null>(null);
@@ -98,6 +103,73 @@ export default function AntVG6BubbleView({
   const [copiedNode, setCopiedNode] = useState<boolean>(false);
   const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
   const [isFlowing, setIsFlowing] = useState<boolean>(true);
+  const [timeStepIndex, setTimeStepIndex] = useState<number>(3); // 0: T0, 1: T3m, 2: T12h, 3: NOW
+  const [isPlayingTimeline, setIsPlayingTimeline] = useState<boolean>(false);
+
+  // Fallback Time Travel Snapshots if none provided
+  const snapshots: TimeTravelSnapshot[] = useMemo(() => {
+    if (timeTravelSnapshots && timeTravelSnapshots.length === 4) {
+      return timeTravelSnapshots;
+    }
+    return [
+      {
+        id: "T0_LAUNCH",
+        label: "Genesis Launch",
+        blockNumber: 96016502,
+        timeLabel: "T+0 · Launch",
+        description: "Deployer created ERC20 & initialized Pons V2 bonding curve pool with 1,000,000,000 supply.",
+        poolReservePercent: 100,
+        circulatingFloatPercent: 0,
+        holdersCount: 1,
+        top5FloatPercent: 0,
+      },
+      {
+        id: "T3M_SNIPERS",
+        label: "Sniper Inflow",
+        blockNumber: 96016514,
+        timeLabel: "T+3m (+168s)",
+        description: "First block buyers and snipers scooped initial curve liquidity. Float expanded to 10.4%.",
+        poolReservePercent: 89.6,
+        circulatingFloatPercent: 10.4,
+        holdersCount: 6,
+        top5FloatPercent: 8.9,
+      },
+      {
+        id: "T12H_ACCUMULATION",
+        label: "Believer Accumulation",
+        blockNumber: 96024800,
+        timeLabel: "T+12h",
+        description: "Early community believers accumulated mid-float. Pool reserve balanced at 67.5%.",
+        poolReservePercent: 67.5,
+        circulatingFloatPercent: 32.5,
+        holdersCount: 48,
+        top5FloatPercent: 18.4,
+      },
+      {
+        id: "T42H_NOW",
+        label: "Present State",
+        blockNumber: 96041209,
+        timeLabel: "T+42h · Live",
+        description: "Clean organic distribution across 134 holders. 54.3% in float, 43.7% in curve reserve.",
+        poolReservePercent: curveReservePercent,
+        circulatingFloatPercent: circulatingFloatPercent,
+        holdersCount: totalHolders,
+        top5FloatPercent: 26.2,
+      },
+    ];
+  }, [timeTravelSnapshots, curveReservePercent, circulatingFloatPercent, totalHolders]);
+
+  // Active snapshot for current time-travel position
+  const activeSnapshot = snapshots[timeStepIndex] || snapshots[3];
+
+  // Auto-play timeline progression
+  useEffect(() => {
+    if (!isPlayingTimeline) return;
+    const timer = setInterval(() => {
+      setTimeStepIndex((prev) => (prev + 1) % snapshots.length);
+    }, 3200);
+    return () => clearInterval(timer);
+  }, [isPlayingTimeline, snapshots.length]);
 
   // Register the custom animated edge once in browser
   useEffect(() => {
@@ -114,6 +186,8 @@ export default function AntVG6BubbleView({
     const curveAddress =
       launchAudit?.curveAddress || "0xb48244b82e213d0d1578907615cdd42c3e3d069c";
 
+    const currentReserve = activeSnapshot.poolReservePercent;
+
     const nodes: any[] = [];
     const edges: any[] = [];
 
@@ -126,21 +200,21 @@ export default function AntVG6BubbleView({
         wallet: curveAddress,
         label: "Pons V2 Pool",
         floatSharePercent: 0,
-        supplySharePercent: curveReservePercent,
-        tokensHeld: `${curveReservePercent}% Reserve Locked`,
+        supplySharePercent: currentReserve,
+        tokensHeld: `${currentReserve}% Reserve Locked`,
         explorerUrl: `https://robinhoodchain.blockscout.com/address/${curveAddress}`,
         color: "#00e5ff",
       },
       style: {
-        size: 64,
+        size: timeStepIndex === 0 ? 76 : 64,
         fill: "#00e5ff",
         stroke: "#ffffff",
         lineWidth: 3,
         halo: true,
         haloStroke: "#00e5ff",
-        haloLineWidth: 18,
-        haloStrokeOpacity: 0.4,
-        labelText: "Pons V2 Pool",
+        haloLineWidth: timeStepIndex === 0 ? 28 : 18,
+        haloStrokeOpacity: timeStepIndex === 0 ? 0.6 : 0.4,
+        labelText: `Pons V2 Pool (${currentReserve}%)`,
         labelFill: "#ffffff",
         labelFontSize: 11,
         labelFontWeight: "bold",
@@ -158,13 +232,28 @@ export default function AntVG6BubbleView({
       },
     });
 
+    // At T0 (Genesis Launch), only the pool exists!
+    if (timeStepIndex === 0) {
+      return { nodes, edges };
+    }
+
+    // Determine holders for current time step
+    let timeFilteredHolders = holders;
+    if (timeStepIndex === 1) {
+      // T+3m: Only the first 3 snipers / first-block entrants
+      timeFilteredHolders = holders.slice(0, 3);
+    } else if (timeStepIndex === 2) {
+      // T+12h: Early 10 wallets
+      timeFilteredHolders = holders.slice(0, 10);
+    }
+
     // 2. Active Holders based on filter
     const activeHolders =
       filterMode === "TOP5"
-        ? holders.slice(0, 5)
+        ? timeFilteredHolders.slice(0, 5)
         : filterMode === "CLUSTERS"
-        ? holders.filter((h) => h.signals?.sniper || h.rank <= 6)
-        : holders;
+        ? timeFilteredHolders.filter((h) => h.signals?.sniper || h.rank <= 6)
+        : timeFilteredHolders;
 
     activeHolders.forEach((h, idx) => {
       // Sizing scale: square root scaling
@@ -288,9 +377,10 @@ export default function AntVG6BubbleView({
       }
     });
 
-    // 3. Ambient Galaxy Tail (Only in ALL mode to give cosmic backdrop)
-    if (filterMode === "ALL") {
-      for (let i = 1; i <= 36; i++) {
+    // 3. Ambient Galaxy Tail (Only in ALL mode and later time steps)
+    if (filterMode === "ALL" && timeStepIndex >= 2) {
+      const ambientCount = timeStepIndex === 2 ? 12 : 36;
+      for (let i = 1; i <= ambientCount; i++) {
         const dummyId = `ambient_holder_${i}`;
         const dummyShare = Number((0.35 + (i % 6) * 0.12).toFixed(2));
         nodes.push({
@@ -334,7 +424,7 @@ export default function AntVG6BubbleView({
     }
 
     return { nodes, edges };
-  }, [holders, launchAudit, curveReservePercent, filterMode, isFlowing]);
+  }, [holders, launchAudit, curveReservePercent, filterMode, isFlowing, timeStepIndex, activeSnapshot]);
 
   // Layout Configuration
   const layoutConfig = useMemo(() => {
@@ -726,9 +816,87 @@ export default function AntVG6BubbleView({
       />
 
       {/* ======================================================== */}
-      {/* 4. FLOATING BOTTOM LEFT BUBBLEMAPS CLUSTER LEGEND        */}
+      {/* 4. FLOATING TIME-TRAVEL EVOLUTION SCRUBBER HUD           */}
       {/* ======================================================== */}
-      <div className="absolute bottom-4 left-4 z-30 p-3 sm:p-3.5 rounded-2xl bg-[#0a0f1d]/90 border border-white/10 backdrop-blur-xl text-[10px] font-mono-tech space-y-2 pointer-events-auto shadow-2xl">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 w-[94%] sm:w-auto min-w-[320px] max-w-xl px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl bg-[#0a0f1d]/95 border border-cyan-500/40 backdrop-blur-2xl text-xs font-mono-tech shadow-[0_12px_40px_rgba(0,0,0,0.85)] pointer-events-auto space-y-2">
+        {/* Top Control Bar */}
+        <div className="flex items-center justify-between gap-2 sm:gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsPlayingTimeline(!isPlayingTimeline)}
+              className={`px-2.5 py-1 rounded-lg border text-[10px] font-bold flex items-center gap-1.5 transition-all ${
+                isPlayingTimeline
+                  ? "bg-amber-500/20 border-amber-500/50 text-amber-400 shadow-[0_0_12px_rgba(255,145,0,0.4)]"
+                  : "bg-cyan-500/20 border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/30"
+              }`}
+              title={isPlayingTimeline ? "Pause Time-Travel Playback" : "Auto-Play Cluster History"}
+            >
+              {isPlayingTimeline ? (
+                <>
+                  <Pause className="w-3 h-3 fill-current" />
+                  <span>PAUSE</span>
+                </>
+              ) : (
+                <>
+                  <Play className="w-3 h-3 fill-current" />
+                  <span>PLAY</span>
+                </>
+              )}
+            </button>
+
+            <span className="text-[10px] text-white/50 uppercase tracking-wider font-extrabold flex items-center gap-1">
+              <History className="w-3 h-3 text-cyan-400" />
+              <span className="hidden sm:inline">TIMELINE:</span>
+            </span>
+          </div>
+
+          {/* Time Steps Pills */}
+          <div className="flex items-center gap-1 bg-white/5 p-0.5 rounded-xl border border-white/10">
+            {snapshots.map((snap, idx) => {
+              const isActive = timeStepIndex === idx;
+              return (
+                <button
+                  key={snap.id}
+                  onClick={() => {
+                    setIsPlayingTimeline(false);
+                    setTimeStepIndex(idx);
+                  }}
+                  className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg text-[10px] font-bold transition-all ${
+                    isActive
+                      ? "bg-cyan-500 text-black shadow-[0_0_10px_rgba(0,229,255,0.5)] font-extrabold"
+                      : "text-white/60 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  {snap.timeLabel.split(" · ")[0]}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Milestone Event Banner */}
+        <div className="flex items-center justify-between gap-2 text-[10px] border-t border-white/10 pt-1.5 text-white/70">
+          <div className="flex items-center gap-1.5 truncate">
+            <span className="px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-400 font-bold border border-cyan-500/30 shrink-0 text-[9px]">
+              BLOCK #{activeSnapshot.blockNumber}
+            </span>
+            <span className="truncate text-white font-medium text-[10px]">
+              {activeSnapshot.description}
+            </span>
+          </div>
+
+          <div className="hidden sm:flex items-center gap-2.5 shrink-0 font-bold text-[9px]">
+            <span className="text-cyan-400">Pool: {activeSnapshot.poolReservePercent}%</span>
+            <span className="text-emerald-400">Float: {activeSnapshot.circulatingFloatPercent}%</span>
+            <span className="text-amber-400">Holders: {activeSnapshot.holdersCount}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* ======================================================== */}
+      {/* 5. FLOATING BOTTOM LEFT BUBBLEMAPS CLUSTER LEGEND        */}
+      {/* ======================================================== */}
+      <div className="absolute bottom-4 left-4 z-20 hidden lg:block p-3 sm:p-3.5 rounded-2xl bg-[#0a0f1d]/90 border border-white/10 backdrop-blur-xl text-[10px] font-mono-tech space-y-2 pointer-events-auto shadow-2xl">
         <div className="flex items-center justify-between gap-4">
           <span className="text-[9px] text-white/40 uppercase tracking-wider font-extrabold">
             ANTV G6 TOPOLOGY

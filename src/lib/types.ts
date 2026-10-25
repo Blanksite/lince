@@ -188,5 +188,45 @@ export interface ClusterScanResult {
   holdersTable?: HolderDetail[];
   launchAudit?: LaunchAudit;
   socialMindshareCorrelated?: SocialMindshareCorrelation;
+  liveTransactions?: LiveTransactionItem[];
+  fundingLineage?: FundingNode;
+  timeTravelSnapshots?: TimeTravelSnapshot[];
   scannedAt: string;
+}
+
+export interface LiveTransactionItem {
+  id: string;
+  type: "BUY" | "SELL" | "TRANSFER";
+  wallet: string;
+  walletLabel?: string;
+  tokenAmount: string;
+  ethAmount: number;
+  usdAmount: string;
+  timestamp: string;
+  txHash: string;
+  explorerUrl?: string;
+}
+
+export interface FundingNode {
+  address: string;
+  label: string;
+  role: "MASTER_FUNDER" | "SNIPER_BOT" | "DEPLOYER" | "INTERMEDIARY";
+  amountEth: number;
+  timeBeforeLaunch: string;
+  txHash: string;
+  explorerUrl?: string;
+  note?: string;
+  children?: FundingNode[];
+}
+
+export interface TimeTravelSnapshot {
+  id: "T0_LAUNCH" | "T3M_SNIPERS" | "T12H_ACCUMULATION" | "T42H_NOW";
+  label: string;
+  blockNumber: number;
+  timeLabel: string;
+  description: string;
+  poolReservePercent: number;
+  circulatingFloatPercent: number;
+  holdersCount: number;
+  top5FloatPercent: number;
 }

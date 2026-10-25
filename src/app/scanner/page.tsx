@@ -28,6 +28,8 @@ import {
 import ThemeToggle from "@/components/ThemeToggle";
 import LiveClock from "@/components/LiveClock";
 import Footer from "@/components/Footer";
+import { ClusterBubbleGraph } from "@/components/ClusterBubbleGraph";
+import { MindshareTreemap } from "@/components/MindshareTreemap";
 import {
   scanContractAddress,
   detectChainFromAddress,
@@ -42,6 +44,7 @@ export default function ScannerPage() {
   const [scanStep, setScanStep] = useState<number>(0);
   const [result, setResult] = useState<ClusterScanResult | null>(null);
   const [copiedText, setCopiedText] = useState<string | null>(null);
+  const [holdersViewMode, setHoldersViewMode] = useState<"BOTH" | "GRAPH" | "TABLE">("BOTH");
 
   const CRAWL_STEPS = [
     "Reading on-chain contract & bonding curve liquidity...",
@@ -579,112 +582,173 @@ export default function ScannerPage() {
               </div>
             )}
 
-            {/* 4. Top Holders Table (Clear, readable, with float visual bars) */}
+            {/* 4. Top Holders Breakdown: Interactive Cluster Bubble Graph & Table Ledger */}
             {result.holdersTable && result.holdersTable.length > 0 && (
-              <div className="p-5 sm:p-6 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[var(--nm-line)]">
+              <div className="space-y-4">
+                {/* View Switcher Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 sm:p-5 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)]">
                   <div>
                     <h3 className="font-serif-editorial text-xl sm:text-2xl text-[var(--nm-text)]">
-                      Top 20 On-Chain Holders Breakdown
+                      Top 20 On-Chain Holders &amp; Cluster Graph
                     </h3>
                     <p className="text-xs text-[var(--nm-text-muted)] font-sans">
-                      Ranked by share of circulating float. Includes initial buy cost, entry timing, and realized/unrealized multiple.
+                      Interactive Arkham/Bubblemaps topology and detailed ledger ranked by circulating float share.
                     </p>
                   </div>
-                  <span className="text-[10px] font-mono-tech px-2.5 py-1 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-subtle)] border border-[var(--nm-line)] shrink-0">
-                    CRAWLED AT: {result.scannedAt}
-                  </span>
+
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center rounded-lg bg-[var(--nm-code-bg)] border border-[var(--nm-line)] p-0.5 font-mono-tech text-xs">
+                      <button
+                        onClick={() => setHoldersViewMode("GRAPH")}
+                        className={`px-3 py-1 rounded text-[11px] font-semibold transition-all ${
+                          holdersViewMode === "GRAPH"
+                            ? "bg-[var(--nm-surface)] text-[var(--nm-text)] shadow-sm"
+                            : "text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
+                        }`}
+                      >
+                        Graph Only
+                      </button>
+                      <button
+                        onClick={() => setHoldersViewMode("TABLE")}
+                        className={`px-3 py-1 rounded text-[11px] font-semibold transition-all ${
+                          holdersViewMode === "TABLE"
+                            ? "bg-[var(--nm-surface)] text-[var(--nm-text)] shadow-sm"
+                            : "text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
+                        }`}
+                      >
+                        Table Only
+                      </button>
+                      <button
+                        onClick={() => setHoldersViewMode("BOTH")}
+                        className={`px-3 py-1 rounded text-[11px] font-semibold transition-all ${
+                          holdersViewMode === "BOTH"
+                            ? "bg-[var(--nm-surface)] text-[var(--nm-text)] shadow-sm"
+                            : "text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
+                        }`}
+                      >
+                        Both Views
+                      </button>
+                    </div>
+
+                    <span className="text-[10px] font-mono-tech px-2.5 py-1 rounded bg-[var(--nm-code-bg)] text-[var(--nm-text-subtle)] border border-[var(--nm-line)] shrink-0 hidden sm:inline-block">
+                      {result.scannedAt}
+                    </span>
+                  </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left text-xs font-mono-tech">
-                    <thead className="text-[10px] uppercase text-[var(--nm-text-subtle)] border-b border-[var(--nm-line)]">
-                      <tr>
-                        <th className="py-2.5 pl-1 w-8">#</th>
-                        <th className="py-2.5">WALLET</th>
-                        <th className="py-2.5 min-w-[140px]">FLOAT SHARE %</th>
-                        <th className="py-2.5">SUPPLY %</th>
-                        <th className="py-2.5">ENTRY TIMING</th>
-                        <th className="py-2.5">INITIAL BUY</th>
-                        <th className="py-2.5 text-right">MULTIPLE</th>
-                        <th className="py-2.5 text-right pr-1">STATUS</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[var(--nm-line)]">
-                      {result.holdersTable.map((h) => (
-                        <tr key={h.rank} className="hover:bg-[var(--nm-surface-hover)] transition-colors">
-                          <td className="py-3 pl-1 text-[var(--nm-text-subtle)] font-bold">{h.rank}</td>
-                          <td className="py-3">
-                            <div className="flex items-center gap-1.5 font-semibold text-[var(--nm-text)]">
-                              <span>
-                                {h.wallet.slice(0, 6)}...{h.wallet.slice(-4)}
-                              </span>
-                              <button
-                                onClick={() => handleCopy(h.wallet, `w_${h.rank}`)}
-                                className="p-0.5 hover:text-[var(--nm-accent-cyan)] cursor-pointer text-[var(--nm-text-subtle)]"
-                                title="Copy Wallet"
-                              >
-                                {copiedText === `w_${h.rank}` ? (
-                                  <Check className="w-3 h-3 text-emerald-500" />
-                                ) : (
-                                  <Copy className="w-3 h-3" />
+                {/* 4A. Interactive Cluster Bubble Graph (Bubblemaps / Arkham style) */}
+                {(holdersViewMode === "GRAPH" || holdersViewMode === "BOTH") && (
+                  <ClusterBubbleGraph
+                    holders={result.holdersTable}
+                    launchAudit={result.launchAudit}
+                    tokenSymbol={result.tokenSymbol}
+                    chain={result.chain}
+                    circulatingFloatPercent={result.circulatingFloatPercent}
+                    curveReservePercent={result.curveReservePercent}
+                  />
+                )}
+
+                {/* 4B. Detailed On-Chain Holders Ledger Table */}
+                {(holdersViewMode === "TABLE" || holdersViewMode === "BOTH") && (
+                  <div className="p-5 sm:p-6 rounded-xl bg-[var(--nm-surface)] border border-[var(--nm-line)] space-y-4">
+                    <div className="flex items-center justify-between pb-3 border-b border-[var(--nm-line)] text-xs font-mono-tech text-[var(--nm-text-subtle)]">
+                      <span className="font-bold uppercase tracking-wider text-[var(--nm-text)]">
+                        TOP 20 FLOAT HOLDER LEDGER
+                      </span>
+                      <span>20 WALLETS ANALYZED</span>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs font-mono-tech">
+                        <thead className="text-[10px] uppercase text-[var(--nm-text-subtle)] border-b border-[var(--nm-line)]">
+                          <tr>
+                            <th className="py-2.5 pl-1 w-8">#</th>
+                            <th className="py-2.5">WALLET</th>
+                            <th className="py-2.5 min-w-[140px]">FLOAT SHARE %</th>
+                            <th className="py-2.5">SUPPLY %</th>
+                            <th className="py-2.5">ENTRY TIMING</th>
+                            <th className="py-2.5">INITIAL BUY</th>
+                            <th className="py-2.5 text-right">MULTIPLE</th>
+                            <th className="py-2.5 text-right pr-1">STATUS</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[var(--nm-line)]">
+                          {result.holdersTable.map((h) => (
+                            <tr key={h.rank} className="hover:bg-[var(--nm-surface-hover)] transition-colors">
+                              <td className="py-3 pl-1 text-[var(--nm-text-subtle)] font-bold">{h.rank}</td>
+                              <td className="py-3">
+                                <div className="flex items-center gap-1.5 font-semibold text-[var(--nm-text)]">
+                                  <span>
+                                    {h.wallet.slice(0, 6)}...{h.wallet.slice(-4)}
+                                  </span>
+                                  <button
+                                    onClick={() => handleCopy(h.wallet, `w_${h.rank}`)}
+                                    className="p-0.5 hover:text-[var(--nm-accent-cyan)] cursor-pointer text-[var(--nm-text-subtle)]"
+                                    title="Copy Wallet"
+                                  >
+                                    {copiedText === `w_${h.rank}` ? (
+                                      <Check className="w-3 h-3 text-emerald-500" />
+                                    ) : (
+                                      <Copy className="w-3 h-3" />
+                                    )}
+                                  </button>
+                                  {h.explorerUrl && (
+                                    <a
+                                      href={h.explorerUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
+                                      title="View on Explorer"
+                                    >
+                                      <ExternalLink className="w-3 h-3" />
+                                    </a>
+                                  )}
+                                </div>
+                              </td>
+                              <td className="py-3">
+                                <div className="space-y-1">
+                                  <span className="font-bold text-[var(--nm-text)]">{h.floatSharePercent}%</span>
+                                  <div className="w-full max-w-[120px] h-1.5 bg-[var(--nm-code-bg)] rounded-full overflow-hidden">
+                                    <div
+                                      className="h-full bg-[var(--nm-accent-emerald)] rounded-full"
+                                      style={{ width: `${Math.min(100, h.floatSharePercent * 14)}%` }}
+                                    />
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="py-3 text-[var(--nm-text-muted)]">{h.supplySharePercent}%</td>
+                              <td className="py-3 text-[var(--nm-text-muted)]">
+                                {h.entryRank ? `Rank #${h.entryRank}` : "Early"} · {h.entryTimeDelta || "Launch"}
+                              </td>
+                              <td className="py-3 text-[var(--nm-text)]">
+                                {h.buyEth ? `${h.buyEth} ETH` : "—"}
+                                {h.tokensHeld && (
+                                  <span className="block text-[10px] text-[var(--nm-text-subtle)]">
+                                    {h.tokensHeld}
+                                  </span>
                                 )}
-                              </button>
-                              {h.explorerUrl && (
-                                <a
-                                  href={h.explorerUrl}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-[var(--nm-text-subtle)] hover:text-[var(--nm-text)]"
-                                  title="View on Explorer"
-                                >
-                                  <ExternalLink className="w-3 h-3" />
-                                </a>
-                              )}
-                            </div>
-                          </td>
-                          <td className="py-3">
-                            <div className="space-y-1">
-                              <span className="font-bold text-[var(--nm-text)]">{h.floatSharePercent}%</span>
-                              <div className="w-full max-w-[120px] h-1.5 bg-[var(--nm-code-bg)] rounded-full overflow-hidden">
-                                <div
-                                  className="h-full bg-[var(--nm-accent-emerald)] rounded-full"
-                                  style={{ width: `${Math.min(100, h.floatSharePercent * 14)}%` }}
-                                />
-                              </div>
-                            </div>
-                          </td>
-                          <td className="py-3 text-[var(--nm-text-muted)]">{h.supplySharePercent}%</td>
-                          <td className="py-3 text-[var(--nm-text-muted)]">
-                            {h.entryRank ? `Rank #${h.entryRank}` : "Early"} · {h.entryTimeDelta || "Launch"}
-                          </td>
-                          <td className="py-3 text-[var(--nm-text)]">
-                            {h.buyEth ? `${h.buyEth} ETH` : "—"}
-                            {h.tokensHeld && (
-                              <span className="block text-[10px] text-[var(--nm-text-subtle)]">
-                                {h.tokensHeld}
-                              </span>
-                            )}
-                          </td>
-                          <td className="py-3 text-right">
-                            {h.multiple ? (
-                              <span className="font-bold text-emerald-500">
-                                {h.multiple}x
-                              </span>
-                            ) : (
-                              <span className="text-[var(--nm-text-subtle)]">—</span>
-                            )}
-                          </td>
-                          <td className="py-3 text-right pr-1">
-                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                              Holding All
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                              </td>
+                              <td className="py-3 text-right">
+                                {h.multiple ? (
+                                  <span className="font-bold text-emerald-500">
+                                    {h.multiple}x
+                                  </span>
+                                ) : (
+                                  <span className="text-[var(--nm-text-subtle)]">—</span>
+                                )}
+                              </td>
+                              <td className="py-3 text-right pr-1">
+                                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                                  Holding All
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -815,6 +879,15 @@ export default function ScannerPage() {
                     </div>
                   </div>
                 </div>
+
+                {/* Interactive Sector & Narrative Mindshare Treemap Graphic (Kaito / Cookie.fun style) */}
+                <MindshareTreemap
+                  tokenSymbol={result.tokenSymbol}
+                  tokenName={result.tokenName}
+                  tokenAddress={result.tokenAddress}
+                  chain={result.chain}
+                  xHandle={result.socialMindshareCorrelated.xHandle}
+                />
 
                 {/* Real Quotes Stream from X */}
                 {result.socialMindshareCorrelated.recentXQuotes && result.socialMindshareCorrelated.recentXQuotes.length > 0 && (

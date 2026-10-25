@@ -642,7 +642,15 @@ export default function ScannerPage() {
                     holders={result.holdersTable}
                     launchAudit={result.launchAudit}
                     tokenSymbol={result.tokenSymbol}
+                    tokenName={result.tokenName}
+                    tokenAddress={result.tokenAddress}
                     chain={result.chain}
+                    marketCap={result.marketCap}
+                    liquidityUsd={result.liquidityUsd}
+                    totalHolders={result.totalHolders}
+                    riskScore={result.riskScore}
+                    verdict={result.verdict}
+                    launchpad={result.launchpad}
                     circulatingFloatPercent={result.circulatingFloatPercent}
                     curveReservePercent={result.curveReservePercent}
                     clusters={result.clusters}
